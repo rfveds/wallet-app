@@ -1,12 +1,12 @@
 <?php
 /**
- * Operation controller.
+ * Category controller.
  */
 
 namespace App\Controller;
 
-use App\Entity\Operation;
-use App\Repository\OperationRepository;
+use App\Entity\Category;
+use App\Repository\CategoryRepository;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,34 +14,34 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class OperationController.
+ * Class CategoryController.
  */
-#[Route('/operation')]
-class OperationController extends AbstractController
+#[Route('/category')]
+class CategoryController extends AbstractController
 {
     /**
      * Index action.
      *
      * @param Request             $request              HTTP request
-     * @param OperationRepository $operationRepository  Operation repository
+     * @param CategoryRepository $categoryRepository  Category repository
      * @param PaginatorInterface  $paginator            Paginator
      *
      * @return Response HTTP response
      */
     #[Route(
-        name: 'operation_index',
+        name: 'category_index',
         methods: 'GET'
     )]
-    public function index(Request $request, OperationRepository $operationRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request, CategoryRepository $categoryRepository, PaginatorInterface $paginator): Response
     {
         $pagination = $paginator->paginate(
-            $operationRepository->queryAll(),
+            $categoryRepository->queryAll(),
             $request->query->getInt('page', 1),
-            OperationRepository::PAGINATOR_ITEMS_PER_PAGE
+            CategoryRepository::PAGINATOR_ITEMS_PER_PAGE
         );
 
         return $this->render(
-            'operation/index.html.twig',
+            'category/index.html.twig',
             ['pagination' => $pagination]
         );
     }
@@ -49,22 +49,22 @@ class OperationController extends AbstractController
     /**
      * Show action.
      *
-     * @param Operation $operation Operation entity
+     * @param Category $category Category entity
      *
      * @return Response HTTP response
      *
      */
     #[Route(
         '/{id}',
-        name: 'operation_show',
+        name: 'category_show',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET'
     )]
-    public function show(Operation $operation): Response
+    public function show(Category $category): Response
     {
         return $this->render(
-            'operation/show.html.twig',
-            ['operation' => $operation]
+            'category/show.html.twig',
+            ['category' => $category]
         );
     }
 }

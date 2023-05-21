@@ -5,6 +5,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Category;
 use App\Entity\Operation;
 
 /**
@@ -14,22 +15,47 @@ class OperationFixtures extends AbstractBaseFixtures
 {
     /**
      * Load data.
+     *
+     * @psalm-suppress PossiblyNullPropertyFetch
+     * @psalm-suppress PossiblyNullReference
+     * @psalm-suppress UnusedClosureParam
      */
     public function loadData(): void
     {
-        for ($i = 0; $i < 10; ++$i) {
-            $task = new Operation();
-            $task->setTitle($this->faker->word);
-            $task->setAmount($this->faker->randomFloat(2, 1, 1000));
-            $task->setCreatedAt(
-                \DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-100 days', '-1 days'))
-            );
-            $task->setUpdatedAt(
-                \DateTimeImmutable::createFromMutable($this->faker->dateTimeBetween('-100 days', '-1 days'))
-            );
-            $this->manager->persist($task);
+        if (null === $this->manager || null === $this->faker) {
+            return;
         }
 
+        $this->createMany(100, 'operations', function (int $i) {
+            $operation = new Operation();
+            $operation->setTitle($this->faker->sentence);
+            $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
+            $operation->setCreatedAt(
+                $this->faker->dateTimeBetween('-100 days', '-1 days')
+            );
+            $operation->setUpdatedAt(
+                $this->faker->dateTimeBetween('-100 days', '-1 days')
+            );
+            /** @var Category $category */
+            $category = $this->getRandomReference('categories');
+            $operation->setCategory($category);
+
+            return $operation;
+        });
+
         $this->manager->flush();
+    }
+
+    /**
+     * This method must return an array of fixtures classes
+     * on which the implementing class depends on.
+     *
+     * @return string[] of dependencies
+     *
+     * @psalm-return array{0: CategoryFixtures::class}
+     */
+    public function getDependencies(): array
+    {
+        return [CategoryFixtures::class];
     }
 }

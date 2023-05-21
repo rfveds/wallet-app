@@ -20,6 +20,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label.updated_at'|trans, 'operation.updatedAt') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.title'|trans, 'operation.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.amount'|trans, 'operation.amount') }}</th>
+                <th>{{ 'label.category'|trans }}</th>
                 <th>{{ 'label.actions'|trans }}</th>
             </tr>
             </thead>
@@ -31,6 +32,7 @@
                     <td>{{ operation.updatedAt|date('Y/m/d') }}</td>
                     <td>{{ operation.title }}</td>
                     <td>{{ operation.amount }}</td>
+                    <td>{{ operation.category.title }}</td>
                     <td>
                         <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}

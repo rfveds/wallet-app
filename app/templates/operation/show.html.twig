@@ -16,6 +16,8 @@
             <dd>{{ operation.updatedAt|date('Y/m/d') }}</dd>
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{  operation.title }}</dd>
+            <dt>{{ 'label.category'|trans }}</dt>
+            <dd>{{  operation.category.title }}</dd>
         </dl>
         <p>
             <a href="{{ url('operation_index') }}" title="{{ 'action.back_to_list'|trans }}">
