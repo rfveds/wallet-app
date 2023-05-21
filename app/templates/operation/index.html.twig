@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.operation_list'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.operation_list'|trans }}</h1>
+    {% if operations is defined and operations|length %}
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ 'label.id'|trans }}</th>
+                <th>{{ 'label.created_at'|trans }}</th>
+                <th>{{ 'label.updated_at'|trans }}</th>
+                <th>{{ 'label.title'|trans }}</th>
+                <th>{{ 'label.amount'|trans }}</th>
+                <th>{{ 'label.actions'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for operation in operations %}
+                <tr>
+                    <td>{{ operation.id }}</td>
+                    <td>{{ operation.createdAt|date('Y/m/d') }}</td>
+                    <td>{{ operation.updatedAt|date('Y/m/d') }}</td>
+                    <td>{{ operation.title }}</td>
+                    <td>{{ operation.amount }}</td>
+                    <td>
+                        <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.view'|trans }}">
+                            {{ 'action.view'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>
+            {{ 'message.empty_list'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

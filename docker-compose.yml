@@ -19,10 +19,10 @@ services:
         command: "--default-authentication-plugin=mysql_native_password"
         container_name: symfony_mysql
         environment:
-            MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: symfony
             MYSQL_USER: symfony
             MYSQL_PASSWORD: symfony
+
 
     php:
         build: .docker/php

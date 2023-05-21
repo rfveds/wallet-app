@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.operation_details'|trans({'%id%': operation.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.operation_details'|trans({'%id%': operation.id|default('')}) }}</h1>
+    {% if operation is defined and operation|length %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label.id'|trans }}</dt>
+            <dd>{{ operation.id }}</dd>
+            <dt>{{ 'label.created_at'|trans }}</dt>
+            <dd>{{ operation.createdAt|date('Y/m/d') }}</dd>
+            <dt>{{ 'label.updated_at'|trans }}</dt>
+            <dd>{{ operation.updatedAt|date('Y/m/d') }}</dd>
+            <dt>{{ 'label.title'|trans }}</dt>
+            <dd>{{  operation.title }}</dd>
+        </dl>
+        <p>
+            <a href="{{ url('operation_index') }}" title="{{ 'action.back_to_list'|trans }}">
+                {{ 'action.back_to_list'|trans }}
+            </a>
+        </p>
+    {% else %}
+        <p>
+            {{ 'message.record_not_found'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}

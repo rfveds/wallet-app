@@ -1,4 +1,7 @@
 <?php
+/**
+ * Operation entity.
+ */
 
 namespace App\Entity;
 
@@ -6,76 +9,136 @@ use App\Repository\OperationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+/**
+ * Class Operation.
+ *
+ * @psalm-suppress MissingConstructor
+ */
 #[ORM\Entity(repositoryClass: OperationRepository::class)]
+#[ORM\Table(
+    name: 'operations',
+)]
 class Operation
 {
+    /**
+     * Primary key.
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: Types::INTEGER)]
     private ?int $id = null;
 
-    #[ORM\Column(length: 45)]
-    private ?string $name = null;
+    /**
+     * Title.
+     */
+    #[ORM\Column(type: Types::INTEGER, length: 45)]
+    private ?string $title = null;
 
+    /**
+     * Amount.
+     */
     #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 2)]
-    private ?string $value = null;
+    private ?string $amount = null;
 
+    /**
+     * Created at.
+     */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
+    /**
+     * Updated at.
+     */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
+    /**
+     * Getter for id.
+     *
+     * @return int|null Id
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    /**
+     * Getter for title.
+     *
+     * @return string|null Title
+     */
+    public function getTitle(): ?string
     {
-        return $this->name;
+        return $this->title;
     }
 
-    public function setName(string $name): self
+    /**
+     * Setter for title.
+     *
+     * @param string $title Title
+     */
+    public function setTitle(string $title): void
     {
-        $this->name = $name;
-
-        return $this;
+        $this->title = $title;
     }
 
-    public function getValue(): ?string
+    /**
+     * Getter for amount.
+     *
+     * @return string|null Amount
+     */
+    public function getAmount(): ?string
     {
-        return $this->value;
+        return $this->amount;
     }
 
-    public function setValue(string $value): self
+    /**
+     * Setter for amount.
+     *
+     * @param string $amount Amount
+     */
+    public function setAmount(string $amount): void
     {
-        $this->value = $value;
-
-        return $this;
+        $this->amount = $amount;
     }
 
+    /**
+     * Getter for createdAt.
+     *
+     * @return \DateTimeInterface|null Created at
+     */
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    /**
+     * Setter for createdAt.
+     *
+     * @param \DateTimeInterface $createdAt Created at
+     */
+    public function setCreatedAt(\DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
+    /**
+     * Getter for updatedAt.
+     *
+     * @return \DateTimeInterface|null Updated at
+     */
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
+    /**
+     * Setter for updatedAt.
+     *
+     * @param \DateTimeInterface|null $updatedAt Updated at
+     */
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 }
