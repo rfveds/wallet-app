@@ -6,20 +6,25 @@
 
 {% block body %}
     <h1>{{ 'title.operation_list'|trans }}</h1>
-    {% if operations is defined and operations|length %}
+    {% if pagination is defined and pagination.items|length %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
         <table class="table table-striped">
             <thead>
             <tr>
-                <th>{{ 'label.id'|trans }}</th>
-                <th>{{ 'label.created_at'|trans }}</th>
-                <th>{{ 'label.updated_at'|trans }}</th>
-                <th>{{ 'label.title'|trans }}</th>
-                <th>{{ 'label.amount'|trans }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'operation.id') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.created_at'|trans, 'operation.createdAt') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.updated_at'|trans, 'operation.updatedAt') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.title'|trans, 'operation.title') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.amount'|trans, 'operation.amount') }}</th>
                 <th>{{ 'label.actions'|trans }}</th>
             </tr>
             </thead>
             <tbody>
-            {% for operation in operations %}
+            {% for operation in pagination.items %}
                 <tr>
                     <td>{{ operation.id }}</td>
                     <td>{{ operation.createdAt|date('Y/m/d') }}</td>
@@ -27,14 +32,19 @@
                     <td>{{ operation.title }}</td>
                     <td>{{ operation.amount }}</td>
                     <td>
-                        <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.view'|trans }}">
-                            {{ 'action.view'|trans }}
+                        <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
+                            {{ 'action.show'|trans }}
                         </a>
                     </td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
     {% else %}
         <p>
             {{ 'message.empty_list'|trans }}
