@@ -27,7 +27,7 @@
             {% for operation in pagination.items %}
                 <tr>
                     <td>{{ operation.id }}</td>
-                    <td>{{ operation.createdAt|date('Y/m/d') }}</td>
+                    <td>{{ operation.createdAt|format_date('long') }}</td>
                     <td>{{ operation.updatedAt|date('Y/m/d') }}</td>
                     <td>{{ operation.title }}</td>
                     <td>{{ operation.amount }}</td>
