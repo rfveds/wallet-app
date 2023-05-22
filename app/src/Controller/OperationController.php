@@ -8,8 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Operation;
-use App\Repository\OperationRepository;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Service\OperationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,15 +21,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class OperationController extends AbstractController
 {
     /**
-
+     * Operation service.
      */
+    private OperationService $operationService;
+
+    /**
+     * OperationController constructor.
+     *
+     * @param OperationService $operationService Operation service
+     */
+    public function __construct(OperationService $operationService)
+    {
+        $this->operationService = $operationService;
+    }
 
     /**
      * Index action.
      *
      * @param Request             $request             HTTP request
-     * @param OperationRepository $operationRepository Operation repository
-     * @param PaginatorInterface  $paginator           Paginator
      *
      * @return Response HTTP response
      */
@@ -38,12 +46,10 @@ class OperationController extends AbstractController
         name: 'operation_index',
         methods: 'GET'
     )]
-    public function index(Request $request, OperationRepository $operationRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request): Response
     {
-        $pagination = $paginator->paginate(
-            $operationRepository->queryAll(),
-            $request->query->getInt('page', 1),
-            OperationRepository::PAGINATOR_ITEMS_PER_PAGE
+        $pagination = $this->operationService->createPaginatedList(
+            $request->query->getInt('page', 1)
         );
 
         return $this->render(
