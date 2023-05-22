@@ -15,6 +15,9 @@
     </head>
     <body>
         <nav>
+            <a href="{{ path('homepage') }}">
+                {{ 'title.homepage'|trans }}
+            </a>
             <a href="{{ path('operation_index') }}">
                 {{ 'title.operation_list'|trans }}
             </a>
@@ -27,8 +30,6 @@
             <a href="{{ path('category_index') }}">
                 {{ 'title.category_list'|trans }}
             </a>
-
-
         </nav>
         {% block body %}{% endblock %}
     </body>

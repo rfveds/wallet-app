@@ -1,6 +1,8 @@
 <?php
 /**
- * Wallet controller.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Controller;
@@ -19,8 +21,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/wallet')]
 class WalletController extends AbstractController
 {
+
     /**
      * Index action.
+     *
+     * @param Request            $request          HTTP request
+     * @param WalletRepository   $walletRepository Wallet repository
+     * @param PaginatorInterface $paginator        Paginator
      *
      * @return Response HTTP response
      */

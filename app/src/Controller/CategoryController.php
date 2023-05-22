@@ -1,6 +1,8 @@
 <?php
 /**
- * Category controller.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Controller;
@@ -22,9 +24,9 @@ class CategoryController extends AbstractController
     /**
      * Index action.
      *
-     * @param Request             $request              HTTP request
-     * @param CategoryRepository $categoryRepository  Category repository
-     * @param PaginatorInterface  $paginator            Paginator
+     * @param Request            $request            HTTP request
+     * @param CategoryRepository $categoryRepository Category repository
+     * @param PaginatorInterface $paginator          Paginator
      *
      * @return Response HTTP response
      */
@@ -53,7 +55,6 @@ class CategoryController extends AbstractController
      * @param Category $category Category entity
      *
      * @return Response HTTP response
-     *
      */
     #[Route(
         '/{id}',

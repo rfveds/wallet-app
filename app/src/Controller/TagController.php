@@ -1,6 +1,8 @@
 <?php
 /**
- * Tag controller.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Controller;
@@ -22,6 +24,10 @@ class TagController extends AbstractController
     /**
      * Index action.
      *
+     * @param Request            $request       HTTP request
+     * @param TagRepository      $tagRepository Tag repository
+     * @param PaginatorInterface $paginator     Paginator
+     *
      * @return Response HTTP response
      */
     #[Route(
@@ -42,6 +48,7 @@ class TagController extends AbstractController
             ['pagination' => $pagination]
         );
     }
+
 
     /**
      * Show action.

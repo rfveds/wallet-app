@@ -1,5 +1,9 @@
 <?php
-
+/**
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
+ */
 namespace App\Repository;
 
 use App\Entity\Wallet;

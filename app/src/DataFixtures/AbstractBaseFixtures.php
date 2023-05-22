@@ -1,15 +1,15 @@
 <?php
 /**
- * Base fixtures.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
-
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use Faker\Generator;
-
 
 /**
  * Class AbstractBaseFixtures.

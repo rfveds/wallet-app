@@ -1,6 +1,8 @@
 <?php
 /**
- * Operation controller.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Controller;
@@ -22,9 +24,9 @@ class OperationController extends AbstractController
     /**
      * Index action.
      *
-     * @param Request             $request              HTTP request
-     * @param OperationRepository $operationRepository  Operation repository
-     * @param PaginatorInterface  $paginator            Paginator
+     * @param Request             $request             HTTP request
+     * @param OperationRepository $operationRepository Operation repository
+     * @param PaginatorInterface  $paginator           Paginator
      *
      * @return Response HTTP response
      */
@@ -52,7 +54,6 @@ class OperationController extends AbstractController
      * @param Operation $operation Operation entity
      *
      * @return Response HTTP response
-     *
      */
     #[Route(
         '/{id}',

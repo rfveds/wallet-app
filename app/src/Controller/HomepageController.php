@@ -1,6 +1,8 @@
 <?php
 /**
- * Homepage controller.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Controller;
@@ -18,6 +20,7 @@ class HomepageController extends AbstractController
     /**
      * Index action.
      *
+     * @return Response HTTP response
      */
     #[Route(
         name: 'homepage',
@@ -29,6 +32,4 @@ class HomepageController extends AbstractController
             'homepage/index.html.twig'
         );
     }
-
-
 }

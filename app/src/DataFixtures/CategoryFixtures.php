@@ -1,6 +1,8 @@
 <?php
 /**
- * Category fixtures.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\DataFixtures;

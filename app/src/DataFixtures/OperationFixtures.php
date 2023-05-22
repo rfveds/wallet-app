@@ -1,13 +1,14 @@
 <?php
 /**
- * Task fixtures.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Operation;
-use App\Entity\Tag;
 
 /**
  * Class TaskFixtures.
@@ -40,7 +41,6 @@ class OperationFixtures extends AbstractBaseFixtures
             /** @var Category $category */
             $category = $this->getRandomReference('categories');
             $operation->setCategory($category);
-
 
             return $operation;
         });

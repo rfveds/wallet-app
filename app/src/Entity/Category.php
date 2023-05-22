@@ -1,6 +1,8 @@
 <?php
 /**
- * Category entity.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Entity;
@@ -53,7 +55,7 @@ class Category
      * Admin only.
      */
     #[ORM\Column(type: Types::BOOLEAN)]
-    private ?bool $admin_only;
+    private ?bool $adminOnly;
 
     /**
      * Getter for id.
@@ -126,22 +128,22 @@ class Category
     }
 
     /**
-     * Getter for admin_only.
+     * Getter for adminOnly.
      *
      * @return bool|null Admin only
      */
     public function isAdminOnly(): ?bool
     {
-        return $this->admin_only;
+        return $this->adminOnly;
     }
 
     /**
-     * Setter for admin_only.
+     * Setter for adminOnly.
      *
-     * @param bool $admin_only Admin only
+     * @param bool $adminOnly Admin only
      */
-    public function setAdminOnly(bool $admin_only): void
+    public function setAdminOnly(bool $adminOnly): void
     {
-        $this->admin_only = $admin_only;
+        $this->adminOnly = $adminOnly;
     }
 }

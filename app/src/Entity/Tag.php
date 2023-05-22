@@ -1,13 +1,13 @@
 <?php
 /**
- * Tag entity.
+ * wallet-app.
+ *
+ * (c) Karol Kijowski , 2023
  */
 
 namespace App\Entity;
 
 use App\Repository\TagRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -38,7 +38,7 @@ class Tag
      * Admin only.
      */
     #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
-    private ?bool $admin_only = null;
+    private ?bool $adminOnly = null;
 
     /**
      * Getter for id.
@@ -77,16 +77,16 @@ class Tag
      */
     public function isAdminOnly(): ?bool
     {
-        return $this->admin_only;
+        return $this->adminOnly;
     }
 
     /**
      * Setter for admin only.
      *
-     * @param bool $admin_only Admin only
+     * @param bool $adminOnly Admin only
      */
-    public function setAdminOnly(bool $admin_only): void
+    public function setAdminOnly(bool $adminOnly): void
     {
-        $this->admin_only = $admin_only;
+        $this->adminOnly = $adminOnly;
     }
 }
