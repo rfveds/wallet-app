@@ -14,7 +14,7 @@ use Knp\Component\Pager\PaginatorInterface;
 /**
  * Class OperationService.
  */
-class OperationService
+class OperationService implements OperationServiceInterface
 {
     /**
      * Operation repository.

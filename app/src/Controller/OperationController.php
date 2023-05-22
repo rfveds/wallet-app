@@ -9,6 +9,7 @@ namespace App\Controller;
 
 use App\Entity\Operation;
 use App\Service\OperationService;
+use App\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,14 +24,14 @@ class OperationController extends AbstractController
     /**
      * Operation service.
      */
-    private OperationService $operationService;
+    private OperationServiceInterface $operationService;
 
     /**
      * OperationController constructor.
      *
-     * @param OperationService $operationService Operation service
+     * @param OperationServiceInterface $operationService Operation service interface
      */
-    public function __construct(OperationService $operationService)
+    public function __construct(OperationServiceInterface $operationService)
     {
         $this->operationService = $operationService;
     }
@@ -38,7 +39,7 @@ class OperationController extends AbstractController
     /**
      * Index action.
      *
-     * @param Request             $request             HTTP request
+     * @param Request $request HTTP request
      *
      * @return Response HTTP response
      */
