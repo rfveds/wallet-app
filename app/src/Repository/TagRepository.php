@@ -21,8 +21,6 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
  * @extends ServiceEntityRepository<Tag>
- *
- * @psalm-supress LessSpecificImplementedReturnType
  */
 class TagRepository extends ServiceEntityRepository
 {

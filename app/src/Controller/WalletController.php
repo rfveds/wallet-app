@@ -21,7 +21,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/wallet')]
 class WalletController extends AbstractController
 {
-
     /**
      * Index action.
      *

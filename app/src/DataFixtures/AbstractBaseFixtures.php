@@ -4,6 +4,7 @@
  *
  * (c) Karol Kijowski , 2023
  */
+
 namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;

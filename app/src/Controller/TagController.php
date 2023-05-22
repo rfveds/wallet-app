@@ -49,7 +49,6 @@ class TagController extends AbstractController
         );
     }
 
-
     /**
      * Show action.
      *
