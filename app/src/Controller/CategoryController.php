@@ -100,26 +100,75 @@ class CategoryController extends AbstractController
         name: 'category_create',
         methods: 'GET|POST',
     )]
- public function create(Request $request): Response
- {
-     $category = new Category();
-     $form = $this->createForm(CategoryType::class, $category);
-     $form->handleRequest($request);
+    public function create(Request $request): Response
+    {
+        $category = new Category();
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
 
-     if ($form->isSubmitted() && $form->isValid()) {
-         $this->categoryService->save($category);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->categoryService->save($category);
 
-         $this->addFlash(
-             'success',
-             $this->translator->trans('message.created_successfully')
-         );
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
 
-         return $this->redirectToRoute('category_index');
-     }
+            return $this->redirectToRoute('category_index');
+        }
 
-     return $this->render(
-         'category/create.html.twig',
-         ['form' => $form->createView()]
-     );
- }
+        return $this->render(
+            'category/create.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+
+    /**
+     * Edit action.
+     *
+     * @param Request  $request  HTTP request
+     * @param Category $category Category entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/edit',
+        name: 'category_edit',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|PUT',
+    )]
+    public function edit(Request $request, Category $category): Response
+    {
+        $form = $this->createForm(
+            CategoryType::class,
+            $category,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'category_edit',
+                    ['id' => $category->getId()]
+                ),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->categoryService->save($category);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully')
+            );
+
+            return $this->redirectToRoute('category_index');
+        }
+
+        return $this->render(
+            'category/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'category' => $category,
+            ]
+        );
+    }
 }

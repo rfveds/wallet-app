@@ -21,6 +21,8 @@
             <a href="{{ url('category_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
+            <a href="{{ url('category_edit', {'id': category.id}) }}" title="{{ 'action.edit'|trans }}">
+                {{ 'action.edit'|trans }}
         </p>
     {% else %}
         <p>
