@@ -14,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class CategoryController.
@@ -27,13 +28,19 @@ class CategoryController extends AbstractController
     private CategoryServiceInterface $categoryService;
 
     /**
+     * Tranlator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * CategoryController constructor.
      *
      * @param CategoryServiceInterface $categoryService Category service interface
      */
-    public function __construct(CategoryServiceInterface $categoryService)
+    public function __construct(CategoryServiceInterface $categoryService, TranslatorInterface $translator)
     {
         $this->categoryService = $categoryService;
+        $this->translator = $translator;
     }
 
     /**
@@ -101,6 +108,11 @@ class CategoryController extends AbstractController
 
      if ($form->isSubmitted() && $form->isValid()) {
          $this->categoryService->save($category);
+
+         $this->addFlash(
+             'success',
+             $this->translator->trans('message.created_successfully')
+         );
 
          return $this->redirectToRoute('category_index');
      }
