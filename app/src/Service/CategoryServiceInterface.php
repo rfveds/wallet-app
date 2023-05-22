@@ -10,9 +10,9 @@ namespace App\Service;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
- * Interface OperationServiceInterface.
+ * Interface CategoryServiceInterface.
  */
-interface OperationServiceInterface
+interface CategoryServiceInterface
 {
     /**
      * Create paginated list.

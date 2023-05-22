@@ -8,8 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Tag;
-use App\Repository\TagRepository;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Service\TagServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +21,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class TagController extends AbstractController
 {
     /**
+     * Tag service.
+     */
+    private TagServiceInterface $tagService;
+
+    /**
+     * TagController constructor.
+     *
+     * @param TagServiceInterface $tagService Tag service interface
+     */
+    public function __construct(TagServiceInterface $tagService)
+    {
+        $this->tagService = $tagService;
+    }
+
+    /**
      * Index action.
      *
-     * @param Request            $request       HTTP request
-     * @param TagRepository      $tagRepository Tag repository
-     * @param PaginatorInterface $paginator     Paginator
+     * @param Request $request HTTP request
      *
      * @return Response HTTP response
      */
@@ -35,12 +47,10 @@ class TagController extends AbstractController
         name: 'tag_index',
         methods: 'GET'
     )]
-    public function index(Request $request, TagRepository $tagRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request): Response
     {
-        $pagination = $paginator->paginate(
-            $tagRepository->queryAll(),
-            $request->query->getInt('page', 1),
-            TagRepository::PAGINATOR_ITEMS_PER_PAGE
+        $pagination = $this->tagService->createPaginatedList(
+            $request->query->getInt('page', 1)
         );
 
         return $this->render(
