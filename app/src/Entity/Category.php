@@ -47,7 +47,6 @@ class Category
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $title;
 
-
     /**
      * Getter for id.
      *
