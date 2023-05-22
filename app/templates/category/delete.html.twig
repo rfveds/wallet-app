@@ -1,18 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {{ 'title.category_edit'|trans({'%id%': category.id|default('')}) }}
+    {{ 'title.category_delete'|trans({'%id%': category.id|default('')}) }}
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.category_edit'|trans({'%id%': category.id|default('')}) }}</h1>
+    <h1>{{ 'title.category_delete'|trans({'%id%': category.id|default('')}) }}</h1>
     {{ form_start(form) }}
     {{ form_widget(form) }}
     <div>
-        <input type="submit" value="{{ 'action.save'|trans }}"/>
+        <input type="submit" value="{{ 'action.delete'|trans }}" />
     </div>
     <div>
-        <a href="{{ url('category_index') }}" >
+        <a href="{{ url('category_index') }}">
             {{ 'action.back_to_list'|trans }}
         </a>
     </div>
