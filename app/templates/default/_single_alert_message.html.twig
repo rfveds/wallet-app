@@ -1,0 +1,10 @@
+{#
+Single flash message template.
+
+parameters:
+    - type: Message type according to Bootstrap alert types,
+    - message: Message content,
+#}
+<div class="alert alert-{{ type }}" role="alert">
+    {{ message }}
+</div>

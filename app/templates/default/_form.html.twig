@@ -1,0 +1,36 @@
+{#
+Default template for forms.
+
+parameters:
+    - page_title: page title
+    - form: form view variable
+    - submit_label: label for submit button
+#}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ page_title }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ page_title }}</h1>
+    {{ form_start(form) }}
+    {% if false == form.vars.valid %}
+        {% include 'default/_single_alert_message.html.twig' with {
+            type: 'danger',
+            message: 'message.form_error'|trans,
+        }%}
+    {% endif %}
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ submit_label }}"/>
+    </div>
+    {% if back_to_list_path|default(false) %}
+        <div>
+            <a href="{{ url(back_to_list_path) }}">
+                {{ 'action.back_to_list'|trans }}
+            </a>
+        </div>
+    {% endif %}
+    {{ form_end(form) }}
+{% endblock %}

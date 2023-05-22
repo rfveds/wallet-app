@@ -1,20 +1,6 @@
-{% extends 'base.html.twig' %}
-
-{% block title %}
-    {{ 'title.category_edit'|trans({'%id%': category.id|default('')}) }}
-{% endblock %}
-
-{% block body %}
-    <h1>{{ 'title.category_edit'|trans({'%id%': category.id|default('')}) }}</h1>
-    {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'action.save'|trans }}"/>
-    </div>
-    <div>
-        <a href="{{ url('category_index') }}" >
-            {{ 'action.back_to_list'|trans }}
-        </a>
-    </div>
-    {{ form_end(form) }}
-{% endblock %}
+{% include 'default/_form.html.twig' with {
+    page_title: 'title.category_edit'|trans({'%id%': category.id|default('')}),
+    form: form,
+    submit_label: 'action.edit'|trans,
+    back_to_list_path: 'category_index',
+} %}
