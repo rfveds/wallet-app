@@ -10,6 +10,9 @@
             <file>src/Kernel.php</file>
             <directory>src/DataFixtures</directory>
         </exclude>
+        <report>
+            <text outputFile="php://stdout" showUncoveredFiles="true" showOnlySummary="false"/>
+        </report>
     </coverage>
     <php>
         <ini name="error_reporting" value="-1"/>

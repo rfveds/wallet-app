@@ -8,6 +8,7 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -15,7 +16,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 /**
  * Class Category.
  *
- * @psalm-supress MissingConstructor
  */
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\Table(name: 'categories')]
@@ -40,9 +40,9 @@ class Category
     /**
      * Updated at.
      *
-     * @var \DateTimeImmutable|null
+     * @var DateTime|null
      */
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $updatedAt;
 
     /**
