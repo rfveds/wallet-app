@@ -35,12 +35,6 @@ class Tag
     private ?string $title = null;
 
     /**
-     * Admin only.
-     */
-    #[ORM\Column(type: Types::BOOLEAN, options: ['default' => false])]
-    private ?bool $adminOnly = null;
-
-    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -68,25 +62,5 @@ class Tag
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
-
-    /**
-     * Getter for admin only.
-     *
-     * @return bool|null Admin only
-     */
-    public function isAdminOnly(): ?bool
-    {
-        return $this->adminOnly;
-    }
-
-    /**
-     * Setter for admin only.
-     *
-     * @param bool $adminOnly Admin only
-     */
-    public function setAdminOnly(bool $adminOnly): void
-    {
-        $this->adminOnly = $adminOnly;
     }
 }

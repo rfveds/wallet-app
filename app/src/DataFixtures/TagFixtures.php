@@ -31,8 +31,6 @@ class TagFixtures extends AbstractBaseFixtures
         $this->createMany(10, 'tags', function () {
             $tag = new Tag();
             $tag->setTitle($this->faker->word);
-            $tag->setAdminOnly($this->faker->boolean(75));
-
             return $tag;
         });
 

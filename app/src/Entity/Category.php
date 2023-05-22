@@ -37,11 +37,9 @@ class Category
 
     /**
      * Updated at.
-     *
-     * @var \DateTime|null
      */
-    #[ORM\Column(type: 'datetime')]
-    private ?\DateTimeInterface $updatedAt;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeImmutable $updatedAt;
 
     /**
      * Title.
@@ -49,11 +47,6 @@ class Category
     #[ORM\Column(type: Types::STRING, length: 255)]
     private ?string $title;
 
-    /**
-     * Admin only.
-     */
-    #[ORM\Column(type: Types::BOOLEAN)]
-    private ?bool $adminOnly;
 
     /**
      * Getter for id.
@@ -123,25 +116,5 @@ class Category
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
-
-    /**
-     * Getter for adminOnly.
-     *
-     * @return bool|null Admin only
-     */
-    public function isAdminOnly(): ?bool
-    {
-        return $this->adminOnly;
-    }
-
-    /**
-     * Setter for adminOnly.
-     *
-     * @param bool $adminOnly Admin only
-     */
-    public function setAdminOnly(bool $adminOnly): void
-    {
-        $this->adminOnly = $adminOnly;
     }
 }

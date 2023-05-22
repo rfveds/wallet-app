@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.category_create'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.category_create'|trans }}</h1>
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    <div>
+        <input type="submit" value="{{ 'action.save'|trans }}"/>
+    </div>
+    <div >
+        <a href="{{ url('category_index') }}">
+            {{ 'action.back_to_list'|trans }}
+        </a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

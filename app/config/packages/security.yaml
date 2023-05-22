@@ -45,7 +45,7 @@ security:
         - { path: ^/register, roles: PUBLIC_ACCESS}
         - { path: ^/homepage, roles: PUBLIC_ACCESS}}
         - { path: ^/logout, roles: ROLE_USER}
-        - { path: ^/category, roles: ROLE_USER}
+
 
 when@test:
     security:
