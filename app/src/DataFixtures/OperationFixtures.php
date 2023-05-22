@@ -7,6 +7,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\Tag;
 
 /**
  * Class TaskFixtures.
@@ -26,9 +27,9 @@ class OperationFixtures extends AbstractBaseFixtures
             return;
         }
 
-        $this->createMany(100, 'operations', function (int $i) {
+        $this->createMany(100, 'operations', function () {
             $operation = new Operation();
-            $operation->setTitle($this->faker->sentence);
+            $operation->setTitle($this->faker->word);
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $operation->setCreatedAt(
                 $this->faker->dateTimeBetween('-100 days', '-1 days')
@@ -39,6 +40,7 @@ class OperationFixtures extends AbstractBaseFixtures
             /** @var Category $category */
             $category = $this->getRandomReference('categories');
             $operation->setCategory($category);
+
 
             return $operation;
         });
@@ -52,7 +54,7 @@ class OperationFixtures extends AbstractBaseFixtures
      *
      * @return string[] of dependencies
      *
-     * @psalm-return array{0: CategoryFixtures::class}
+     * @psalm-return array{0: CategoryFixtures::class, 1:}
      */
     public function getDependencies(): array
     {

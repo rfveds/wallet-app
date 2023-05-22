@@ -29,6 +29,7 @@ class CategoryController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(
+        '/',
         name: 'category_index',
         methods: 'GET'
     )]

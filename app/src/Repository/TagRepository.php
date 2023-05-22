@@ -1,28 +1,28 @@
 <?php
 /**
- * Operation repository.
+ * Tag repository.
  */
 
 namespace App\Repository;
 
-use App\Entity\Operation;
+use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * Class OperationRepository.
+ * Class TagRepository.
  *
- * @method Operation|null find($id, $lockMode = null, $lockVersion = null)
- * @method Operation|null findOneBy(array $criteria, array $orderBy = null)
- * @method Operation[]    findAll()
- * @method Operation[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Tag|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Tag|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Tag[]    findAll()
+ * @method Tag[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  *
- * @extends ServiceEntityRepository<Operation>
+ * @extends ServiceEntityRepository<Tag>
  *
  * @psalm-supress LessSpecificImplementedReturnType
  */
-class OperationRepository extends ServiceEntityRepository
+class TagRepository extends ServiceEntityRepository
 {
     /**
      * Items per page.
@@ -42,7 +42,7 @@ class OperationRepository extends ServiceEntityRepository
      */
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Operation::class);
+        parent::__construct($registry, Tag::class);
     }
 
     /**
@@ -53,9 +53,7 @@ class OperationRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
-            ->select('operation', 'category')
-            ->join('operation.category', 'category')
-            ->orderBy('operation.updatedAt', 'DESC');
+            ->orderBy('tag.title', 'DESC');
     }
 
     /**
@@ -67,6 +65,6 @@ class OperationRepository extends ServiceEntityRepository
      */
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
-        return $queryBuilder ?? $this->createQueryBuilder('operation');
+        return $queryBuilder ?? $this->createQueryBuilder('tag');
     }
 }

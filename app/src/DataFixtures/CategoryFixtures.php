@@ -22,7 +22,11 @@ class CategoryFixtures extends AbstractBaseFixtures
      */
     public function loadData(): void
     {
-        $this->createMany(20, 'categories', function (int $i) {
+        if (null === $this->manager || null === $this->faker) {
+            return;
+        }
+
+        $this->createMany(20, 'categories', function () {
             $category = new Category();
             $category->setTitle($this->faker->unique()->word);
             $category->setAdminOnly($this->faker->boolean(20));

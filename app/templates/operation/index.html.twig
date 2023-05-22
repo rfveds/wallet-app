@@ -21,6 +21,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label.title'|trans, 'operation.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.amount'|trans, 'operation.amount') }}</th>
                 <th>{{ 'label.category'|trans }}</th>
+                <th>{{ 'label.tags'|trans }}</th>
                 <th>{{ 'label.actions'|trans }}</th>
             </tr>
             </thead>
@@ -33,6 +34,10 @@
                     <td>{{ operation.title }}</td>
                     <td>{{ operation.amount }}</td>
                     <td>{{ operation.category.title }}</td>
+                    <td>
+                        {% for tag in operation.tags %}
+                            <span class="label label-default">{{ tag.title }}</span>
+                        {% endfor %}
                     <td>
                         <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}

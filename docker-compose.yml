@@ -22,6 +22,7 @@ services:
             MYSQL_DATABASE: symfony
             MYSQL_USER: symfony
             MYSQL_PASSWORD: symfony
+            MYSQL_ROOT_PASSWORD: MYSQL_ALLOW_EMPTY_PASSWORD
 
 
     php:

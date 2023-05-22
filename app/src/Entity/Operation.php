@@ -6,8 +6,11 @@
 namespace App\Entity;
 
 use App\Repository\OperationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Operation.
@@ -31,7 +34,7 @@ class Operation
     /**
      * Title.
      */
-    #[ORM\Column(type: Types::INTEGER, length: 45)]
+    #[ORM\Column(type: Types::STRING, length: 45)]
     private ?string $title = null;
 
     /**
@@ -55,11 +58,27 @@ class Operation
     /**
      * Category.
      *
-     * @var Category
+     * @var Category|null Category
      */
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
+    /**
+     * Tags.
+     *
+     * @var Collection
+     *
+     * @Assert\Type(type="Doctrine\Common\Collections\Collection")
+     */
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'operations', fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinTable(name: 'operations_tags')]
+    private Collection $tags;
+
+    public function __construct()
+    {
+        $this->tags = new ArrayCollection();
+    }
 
     /**
      * Getter for id.
@@ -169,5 +188,37 @@ class Operation
     public function setCategory(?Category $category): void
     {
         $this->category = $category;
+    }
+
+    /**
+     * Getter for tags.
+     *
+     * @return Collection Tag collection
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    /**
+     * Add tag to collection.
+     *
+     * @param Tag $tag Tag entity
+     */
+    public function addTag(Tag $tag): void
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+        }
+    }
+
+    /**
+     * Remove tag from collection.
+     *
+     * @param Tag $tag Tag entity
+     */
+    public function removeTag(Tag $tag): void
+    {
+        $this->tags->removeElement($tag);
     }
 }
