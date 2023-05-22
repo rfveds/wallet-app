@@ -65,22 +65,6 @@ class Operation
     private ?Category $category = null;
 
     /**
-     * Tags.
-     *
-     * @var Collection
-     *
-     * @Assert\Type(type="Doctrine\Common\Collections\Collection")
-     */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'operations', fetch: 'EXTRA_LAZY')]
-    #[ORM\JoinTable(name: 'operations_tags')]
-    private Collection $tags;
-
-    public function __construct()
-    {
-        $this->tags = new ArrayCollection();
-    }
-
-    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -188,37 +172,5 @@ class Operation
     public function setCategory(?Category $category): void
     {
         $this->category = $category;
-    }
-
-    /**
-     * Getter for tags.
-     *
-     * @return Collection Tag collection
-     */
-    public function getTags(): Collection
-    {
-        return $this->tags;
-    }
-
-    /**
-     * Add tag to collection.
-     *
-     * @param Tag $tag Tag entity
-     */
-    public function addTag(Tag $tag): void
-    {
-        if (!$this->tags->contains($tag)) {
-            $this->tags->add($tag);
-        }
-    }
-
-    /**
-     * Remove tag from collection.
-     *
-     * @param Tag $tag Tag entity
-     */
-    public function removeTag(Tag $tag): void
-    {
-        $this->tags->removeElement($tag);
     }
 }

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang='en'>
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
@@ -14,6 +14,22 @@
         {% endblock %}
     </head>
     <body>
+        <nav>
+            <a href="{{ path('operation_index') }}">
+                {{ 'title.operation_list'|trans }}
+            </a>
+            <a href="{{ path('wallet_index') }}">
+                {{ 'title.wallet_list'|trans }}
+            </a>
+            <a href="{{ path('tag_index') }}">
+                {{ 'title.tag_list'|trans }}
+            </a>
+            <a href="{{ path('category_index') }}">
+                {{ 'title.category_list'|trans }}
+            </a>
+
+
+        </nav>
         {% block body %}{% endblock %}
     </body>
 </html>
