@@ -8,8 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Wallet;
-use App\Repository\WalletRepository;
-use Knp\Component\Pager\PaginatorInterface;
+use App\Service\WalletServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +21,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class WalletController extends AbstractController
 {
     /**
+     * Wallet service.
+     */
+    private WalletServiceInterface $walletService;
+
+    /**
+     * WalletController constructor.
+     *
+     * @param WalletServiceInterface $walletService Wallet service interface
+     */
+    public function __construct(WalletServiceInterface $walletService)
+    {
+        $this->walletService = $walletService;
+    }
+
+    /**
      * Index action.
      *
-     * @param Request            $request          HTTP request
-     * @param WalletRepository   $walletRepository Wallet repository
-     * @param PaginatorInterface $paginator        Paginator
+     * @param Request $request HTTP request
      *
      * @return Response HTTP response
      */
@@ -35,12 +47,10 @@ class WalletController extends AbstractController
         name: 'wallet_index',
         methods: 'GET',
     )]
-    public function index(Request $request, WalletRepository $walletRepository, PaginatorInterface $paginator): Response
+    public function index(Request $request): Response
     {
-        $pagination = $paginator->paginate(
-            $walletRepository->queryAll(),
+        $pagination = $this->walletService->createPaginatedList(
             $request->query->getInt('page', 1),
-            WalletRepository::PAGINATOR_ITEMS_PER_PAGE,
         );
 
         return $this->render(
