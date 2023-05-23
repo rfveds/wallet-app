@@ -79,9 +79,8 @@ class Operation
      * Category.
      *
      * @var Category|null Category
-     *
-     * @Assert\Type(type="App\Entity\Category")
      */
+    #[Assert\Type(type: 'App\Entity\Category')]
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
@@ -90,9 +89,8 @@ class Operation
      * Wallet.
      *
      * @var Wallet|null Wallet
-     *
-     * @Assert\Type(type="App\Entity\Wallet")
      */
+    #[Assert\Type(type: 'App\Entity\Wallet')]
     #[ORM\ManyToOne(targetEntity: Wallet::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Wallet $wallet = null;
@@ -100,14 +98,10 @@ class Operation
     /**
      * Tags.
      *
-     * @var Collection|Tag[] Tags
-     *
-     * @Assert\All({
-     *
-     *     @Assert\Type(type="App\Entity\Tag")
-     * })
+     * @var ArrayCollection<int, Tag>|Tag[] Tags
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: 'operations')]
+    #[Assert\Valid]
+    #[ORM\ManyToMany(targetEntity: Tag::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
     #[ORM\JoinTable(name: 'operations_tags')]
     private Collection|array $tags;
 

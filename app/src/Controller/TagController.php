@@ -8,11 +8,14 @@
 namespace App\Controller;
 
 use App\Entity\Tag;
+use App\Form\Type\TagType;
 use App\Service\TagServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class TagController.
@@ -26,13 +29,20 @@ class TagController extends AbstractController
     private TagServiceInterface $tagService;
 
     /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * TagController constructor.
      *
      * @param TagServiceInterface $tagService Tag service interface
+     * @param TranslatorInterface $translator Translator interface
      */
-    public function __construct(TagServiceInterface $tagService)
+    public function __construct(TagServiceInterface $tagService, TranslatorInterface $translator)
     {
         $this->tagService = $tagService;
+        $this->translator = $translator;
     }
 
     /**
@@ -77,6 +87,137 @@ class TagController extends AbstractController
         return $this->render(
             'tag/show.html.twig',
             ['tag' => $tag]
+        );
+    }
+
+    /**
+     * Create action.
+     *
+     * @param Request $request HTTP request
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/create',
+        name: 'tag_create',
+        methods: 'GET|POST',
+    )]
+    public function create(Request $request): Response
+    {
+        $tag = new Tag();
+        $form = $this->createForm(TagType::class, $tag);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagService->save($tag);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('tag_index');
+        }
+
+        return $this->render(
+            'tag/create.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+
+    /**
+     * Edit action.
+     *
+     * @param Request $request HTTP request
+     * @param Tag     $tag     Tag entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/edit',
+        name: 'tag_edit',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|PUT',
+    )]
+    public function edit(Request $request, Tag $tag): Response
+    {
+        $form = $this->createForm(
+            TagType::class,
+            $tag,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'tag_edit',
+                    ['id' => $tag->getId()]
+                ),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagService->save($tag);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully')
+            );
+
+            return $this->redirectToRoute('tag_index');
+        }
+
+        return $this->render(
+            'tag/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'tag' => $tag,
+            ]
+        );
+    }
+
+    /**
+     * Delete action.
+     *
+     * @param Request $request HTTP request
+     * @param Tag     $tag     Tag entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}',
+        name: 'tag_delete',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'DELETE',
+    )]
+    public function delete(Request $request, Tag $tag): Response
+    {
+        $form = $this->createForm(
+            FormType::class,
+            $tag,
+            [
+                'method' => 'DELETE',
+                'action' => $this->generateUrl(
+                    'tag_delete',
+                    ['id' => $tag->getId()]
+                ),
+            ]
+        );
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->tagService->delete($tag);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message_deleted_successfully')
+            );
+
+            return $this->redirectToRoute('tag_index');
+        }
+
+        return $this->render(
+            'tag/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'tag' => $tag,
+            ]
         );
     }
 }

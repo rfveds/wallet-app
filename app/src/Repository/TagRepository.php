@@ -9,6 +9,7 @@ namespace App\Repository;
 
 use App\Entity\Tag;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,7 +44,7 @@ class TagRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Tag::class);
-    }
+    }// end __construct()
 
     /**
      * Query all records.
@@ -52,9 +53,46 @@ class TagRepository extends ServiceEntityRepository
      */
     public function queryAll(): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
-            ->orderBy('tag.title', 'DESC');
-    }
+        return $this->getOrCreateQueryBuilder()->orderBy('tag.title', 'DESC');
+    }// end queryAll()
+
+    /**
+     * Find one by title.
+     *
+     * @param string $title Title
+     *
+     * @return Tag|null Tag entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneByTitle(string $title): ?Tag
+    {
+        $queryBuilder = $this->createQueryBuilder('tag')->where('tag.title = :title')->setParameter('title', $title);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }// end findOneByTitle()
+
+    /**
+     * Save record.
+     *
+     * @param Tag $tag Tag entity
+     */
+    public function save(Tag $tag): void
+    {
+        $this->_em->persist($tag);
+        $this->_em->flush();
+    }// end save()
+
+    /**
+     * Delete record.
+     *
+     * @param Tag $tag Tag entity
+     */
+    public function delete(Tag $tag): void
+    {
+        $this->_em->remove($tag);
+        $this->_em->flush();
+    }// end delete()
 
     /**
      * Get or create new query builder.
@@ -66,5 +104,5 @@ class TagRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('tag');
-    }
-}
+    }// end getOrCreateQueryBuilder()
+}// end class

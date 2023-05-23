@@ -51,7 +51,6 @@ class Tag
     #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt;
 
-
     /**
      * Title.
      *
@@ -73,7 +72,6 @@ class Tag
     #[Assert\Length(min: 3, max: 64)]
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
-
 
     /**
      * Getter for id.

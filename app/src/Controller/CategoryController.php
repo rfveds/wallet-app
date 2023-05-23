@@ -216,9 +216,10 @@ class CategoryController extends AbstractController
 
         return $this->render(
             'category/delete.html.twig',
-            ['form' => $form->createView(),
+            [
+                'form' => $form->createView(),
                  'category' => $category,
-                ]
+            ]
         );
     }
 }
