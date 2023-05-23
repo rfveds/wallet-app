@@ -183,7 +183,7 @@ class WalletController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(
-        '/{id}',
+        '/{id}/delete',
         name: 'wallet_delete',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|DELETE'
