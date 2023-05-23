@@ -10,6 +10,8 @@ namespace App\Entity;
 use App\Repository\WalletRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * Class Wallet.
@@ -24,7 +26,7 @@ class Wallet
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
@@ -33,6 +35,10 @@ class Wallet
      * @var string|null $type Type
      */
     #[ORM\Column(length: 32)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 32)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Choice(choices: ['cash', 'bank', 'credit_card', 'other'], )]
     private ?string $type = null;
 
     /**
@@ -40,7 +46,10 @@ class Wallet
      *
      * @var string|null $balance Balance
      */
-    #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 16, scale: 2)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 16)]
+    #[Assert\Type(type: 'numeric')]
     private ?string $balance = null;
 
     /**
@@ -48,7 +57,10 @@ class Wallet
      *
      * @var string|null $title Title
      */
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 64)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64)]
+    #[Assert\Type(type: 'string')]
     private ?string $title = null;
 
     /**

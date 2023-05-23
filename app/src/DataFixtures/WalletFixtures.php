@@ -32,7 +32,7 @@ class WalletFixtures extends AbstractBaseFixtures
             $wallet = new Wallet();
             $wallet->setTitle($this->faker->word);
             $wallet->setBalance($this->faker->randomFloat(2, 10, 1000));
-            $wallet->setType($this->faker->randomElement(['cash', 'bank', 'credit_card']));
+            $wallet->setType($this->faker->randomElement(['cash', 'bank', 'credit_card', 'other']));
 
             return $wallet;
         });
