@@ -11,6 +11,7 @@ use App\Repository\OperationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Operation.
@@ -69,10 +70,23 @@ class Operation
      * Category.
      *
      * @var Category|null Category
+     *
+     * @Assert\Type(type="App\Entity\Category")
      */
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
+
+    /**
+     * Wallet.
+     *
+     * @var Wallet|null Wallet
+     *
+     * @Assert\Type(type="App\Entity\Wallet")
+     */
+    #[ORM\ManyToOne(targetEntity: Wallet::class)]
+    //    #[ORM\JoinColumn(nullable: false)]
+    private ?Wallet $wallet = null;
 
     /**
      * Getter for id.
@@ -182,5 +196,15 @@ class Operation
     public function setCategory(?Category $category): void
     {
         $this->category = $category;
+    }
+
+    public function getWallet(): ?Wallet
+    {
+        return $this->wallet;
+    }
+
+    public function setWallet(?Wallet $wallet): void
+    {
+        $this->wallet = $wallet;
     }
 }

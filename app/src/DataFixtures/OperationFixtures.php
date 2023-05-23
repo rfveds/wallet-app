@@ -9,11 +9,13 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\Wallet;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
 /**
  * Class TaskFixtures.
  */
-class OperationFixtures extends AbstractBaseFixtures
+class OperationFixtures extends AbstractBaseFixtures implements DependentFixtureInterface
 {
     /**
      * Load data.
@@ -38,9 +40,15 @@ class OperationFixtures extends AbstractBaseFixtures
             $operation->setUpdatedAt(
                 $this->faker->dateTimeBetween('-100 days', '-1 days')
             );
+
+
             /** @var Category $category */
             $category = $this->getRandomReference('categories');
             $operation->setCategory($category);
+
+            /** @var Wallet $wallet */
+            $wallet = $this->getRandomReference('wallets');
+            $operation->setWallet($wallet);
 
             return $operation;
         });
@@ -53,11 +61,9 @@ class OperationFixtures extends AbstractBaseFixtures
      * on which the implementing class depends on.
      *
      * @return string[] of dependencies
-     *
-     * @psalm-return array{0: CategoryFixtures::class, 1:}
      */
     public function getDependencies(): array
     {
-        return [CategoryFixtures::class];
+        return [WalletFixtures::class, CategoryFixtures::class];
     }
 }
