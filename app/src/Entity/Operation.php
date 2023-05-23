@@ -198,11 +198,21 @@ class Operation
         $this->category = $category;
     }
 
+    /**
+     * Getter for wallet.
+     *
+     * @return Wallet|null Wallet
+     */
     public function getWallet(): ?Wallet
     {
         return $this->wallet;
     }
 
+    /**
+     * Setter for wallet.
+     *
+     * @param Wallet|null $wallet Wallet
+     */
     public function setWallet(?Wallet $wallet): void
     {
         $this->wallet = $wallet;

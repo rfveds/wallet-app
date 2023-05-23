@@ -41,7 +41,6 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
                 $this->faker->dateTimeBetween('-100 days', '-1 days')
             );
 
-
             /** @var Category $category */
             $category = $this->getRandomReference('categories');
             $operation->setCategory($category);

@@ -64,5 +64,4 @@ class OperationService implements OperationServiceInterface
     {
         $this->operationRepository->save($operation);
     }
-
 }

@@ -109,7 +109,8 @@ class OperationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->operationService->save($operation);
 
-            $this->addFlash('success',
+            $this->addFlash(
+                'success',
                 $this->translator->trans('message.created_successfully')
             );
 
@@ -136,38 +137,38 @@ class OperationController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: ['GET', 'POST']
     )]
-public function edit(Request $request, Operation $operation): Response
-{
-    $form = $this->createForm(
-        OperationType::class,
-        $operation,
-        [
-            'method' => 'PUT',
-            'action' => $this->generateUrl(
-                'operation_edit',
-                ['id' => $operation->getId()]
-            ),
-        ]
-    );
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        $this->operationService->save($operation);
-
-        $this->addFlash(
-            'success',
-            $this->translator->trans('message.updated_successfully')
+    public function edit(Request $request, Operation $operation): Response
+    {
+        $form = $this->createForm(
+            OperationType::class,
+            $operation,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'operation_edit',
+                    ['id' => $operation->getId()]
+                ),
+            ]
         );
+        $form->handleRequest($request);
 
-        return $this->redirectToRoute('operation_index');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->operationService->save($operation);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully')
+            );
+
+            return $this->redirectToRoute('operation_index');
+        }
+
+        return $this->render(
+            'operation/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'operation' => $operation,
+            ]
+        );
     }
-
-    return $this->render(
-        'operation/edit.html.twig',
-        [
-            'form' => $form->createView(),
-            'operation' => $operation,
-        ]
-    );
-}
 }
