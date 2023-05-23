@@ -11,7 +11,6 @@ use App\Repository\TagRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 /**
  * Class Tag.
  */
@@ -39,7 +38,7 @@ class Tag
     #[ORM\Column(type: 'string', length: 64)]
     #[Assert\Type(type: 'string')]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64, )]
+    #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
     /**
@@ -66,8 +65,6 @@ class Tag
      * Setter for title.
      *
      * @param string $title Title
-     *
-     * @return void
      */
     public function setTitle(string $title): void
     {

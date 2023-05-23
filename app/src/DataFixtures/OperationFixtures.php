@@ -20,10 +20,6 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
 {
     /**
      * Load data.
-     *
-     * @psalm-suppress PossiblyNullPropertyFetch
-     * @psalm-suppress PossiblyNullReference
-     * @psalm-suppress UnusedClosureParam
      */
     public function loadData(): void
     {
@@ -36,10 +32,14 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             $operation->setTitle($this->faker->word);
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $operation->setCreatedAt(
-                $this->faker->dateTimeBetween('-100 days', '-1 days')
+                \DateTimeImmutable::createFromMutable(
+                    $this->faker->dateTimeBetween('-100 days', '-1 days')
+                )
             );
             $operation->setUpdatedAt(
-                $this->faker->dateTimeBetween('-100 days', '-1 days')
+                \DateTimeImmutable::createFromMutable(
+                    $this->faker->dateTimeBetween('-100 days', '-1 days')
+                )
             );
 
             /** @var Category $category */

@@ -38,10 +38,10 @@ class Operation
      *
      * @var string|null Title
      */
-    #[ORM\Column(type: 'integer', length: 64)]
+    #[ORM\Column(type: 'string', length: 64)]
     #[Assert\Type(type: 'string')]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 3, max: 64, )]
+    #[Assert\Length(min: 3, max: 64)]
     private ?string $title = null;
 
     /**
@@ -182,9 +182,9 @@ class Operation
     /**
      * Setter for createdAt.
      *
-     * @param \DateTimeInterface $createdAt Created at
+     * @param \DateTimeImmutable $createdAt Created at
      */
-    public function setCreatedAt(\DateTimeInterface $createdAt): void
+    public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
     }// end setCreatedAt()
@@ -192,9 +192,9 @@ class Operation
     /**
      * Getter for updatedAt.
      *
-     * @return \DateTimeInterface|null Updated at
+     * @return \DateTimeImmutable|null Updated at
      */
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
     }// end getUpdatedAt()
@@ -202,9 +202,9 @@ class Operation
     /**
      * Setter for updatedAt.
      *
-     * @param \DateTimeInterface|null $updatedAt Updated at
+     * @param \DateTimeImmutable|null $updatedAt Updated at
      */
-    public function setUpdatedAt(?\DateTimeInterface $updatedAt): void
+    public function setUpdatedAt(?\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }// end setUpdatedAt()

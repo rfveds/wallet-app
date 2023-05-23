@@ -8,10 +8,8 @@
 namespace App\Entity;
 
 use App\Repository\WalletRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-
 
 /**
  * Class Wallet.
@@ -38,7 +36,7 @@ class Wallet
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 32)]
     #[Assert\Type(type: 'string')]
-    #[Assert\Choice(choices: ['cash', 'bank', 'credit_card', 'other'], )]
+    #[Assert\Choice(choices: ['cash', 'bank', 'credit_card', 'other'])]
     private ?string $type = null;
 
     /**
