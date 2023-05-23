@@ -9,6 +9,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\Tag;
 use App\Entity\Wallet;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -48,6 +49,12 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             /** @var Wallet $wallet */
             $wallet = $this->getRandomReference('wallets');
             $operation->setWallet($wallet);
+
+            /** @var Tag $tag */
+            $tags = $this->getRandomReferences('tags', $this->faker->numberBetween(0, 5));
+            foreach ($tags as $tag) {
+                $operation->addTag($tag);
+            }
 
             return $operation;
         });

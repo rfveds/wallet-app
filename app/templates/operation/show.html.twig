@@ -18,6 +18,20 @@
             <dd>{{  operation.title }}</dd>
             <dt>{{ 'label.category'|trans }}</dt>
             <dd>{{  operation.category.title }}</dd>
+            <dt>{{ 'label_operation_tags'|trans }}</dt>
+            <dd>
+                {% if operation.tags is defined and operation.tags|length %}
+                    <ul>
+                        {% for tag in operation.tags %}
+                            <li>
+                                {{ tag.title }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    -
+                {% endif %}
+            </dd>
         </dl>
         <p>
             <a href="{{ url('operation_index') }}" title="{{ 'action.back_to_list'|trans }}">
