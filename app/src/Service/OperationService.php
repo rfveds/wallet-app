@@ -64,4 +64,14 @@ class OperationService implements OperationServiceInterface
     {
         $this->operationRepository->save($operation);
     }
+
+    /**
+     * Delete entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function delete(Operation $operation): void
+    {
+        $this->operationRepository->delete($operation);
+    }
 }

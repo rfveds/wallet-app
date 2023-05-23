@@ -30,4 +30,11 @@ interface OperationServiceInterface
      * @param Operation $operation Operation entity
      */
     public function save(Operation $operation);
+
+    /**
+     * Delete entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function delete(Operation $operation);
 }

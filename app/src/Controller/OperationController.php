@@ -11,6 +11,7 @@ use App\Entity\Operation;
 use App\Form\Type\OperationType;
 use App\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -98,7 +99,7 @@ class OperationController extends AbstractController
     #[Route(
         '/create',
         name: 'operation_create',
-        methods: ['GET', 'POST']
+        methods: 'GET|POST'
     )]
     public function create(Request $request): Response
     {
@@ -135,7 +136,7 @@ class OperationController extends AbstractController
         '/{id}/edit',
         name: 'operation_edit',
         requirements: ['id' => '[1-9]\d*'],
-        methods: ['GET', 'POST']
+        methods: 'GET|PUT'
     )]
     public function edit(Request $request, Operation $operation): Response
     {
@@ -165,6 +166,56 @@ class OperationController extends AbstractController
 
         return $this->render(
             'operation/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'operation' => $operation,
+            ]
+        );
+    }
+
+    /**
+     * Delete action.
+     *
+     * @param Request   $request   HTTP request
+     * @param Operation $operation Operation entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/delete',
+        name: 'operation_delete',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|DELETE'
+    )]
+    public function delete(Request $request, Operation $operation): Response
+    {
+        $form = $this->createForm(
+            FormType::class,
+            $operation,
+            [
+                'method' => 'DELETE',
+                'action' => $this->generateUrl(
+                    'operation_delete',
+                    ['id' => $operation->getId()]
+                ),
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->operationService->delete($operation);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully')
+            );
+
+            return $this->redirectToRoute('operation_index');
+        }
+
+        return $this->render(
+            'operation/delete.html.twig',
             [
                 'form' => $form->createView(),
                 'operation' => $operation,

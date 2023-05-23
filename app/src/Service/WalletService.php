@@ -7,6 +7,7 @@
 
 namespace App\Service;
 
+use App\Entity\Wallet;
 use App\Repository\WalletRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -52,5 +53,25 @@ class WalletService implements WalletServiceInterface
             $page,
             WalletRepository::PAGINATOR_ITEMS_PER_PAGE
         );
+    }
+
+    /**
+     * Save entity.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function save(Wallet $wallet): void
+    {
+        $this->walletRepository->save($wallet);
+    }
+
+    /**
+     * Delete entity.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function delete(Wallet $wallet): void
+    {
+        $this->walletRepository->delete($wallet);
     }
 }

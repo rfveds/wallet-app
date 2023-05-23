@@ -56,6 +56,28 @@ class WalletRepository extends ServiceEntityRepository
     }
 
     /**
+     * Save record.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function save(Wallet $wallet): void
+    {
+        $this->_em->persist($wallet);
+        $this->_em->flush();
+    }
+
+    /**
+     * Delete record.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function delete(Wallet $wallet): void
+    {
+        $this->_em->remove($wallet);
+        $this->_em->flush();
+    }
+
+    /**
      * Get or create new query builder.
      *
      * @param QueryBuilder|null $queryBuilder Query builder

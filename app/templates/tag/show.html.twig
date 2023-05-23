@@ -17,6 +17,12 @@
             <a href="{{ url('tag_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
+            <a href="{{ url('tag_edit', {'id': tag.id}) }}" title="{{ 'action.edit'|trans }}">
+                {{ 'action.edit'|trans }}
+            </a>
+            <a href="{{ url('tag_delete', {'id': tag.id}) }}" title="{{ 'action.delete'|trans }}">
+                {{ 'action.delete'|trans }}
+            </a>
         </p>
     {% else %}
         <p>

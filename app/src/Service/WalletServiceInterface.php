@@ -7,6 +7,7 @@
 
 namespace App\Service;
 
+use App\Entity\Wallet;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
@@ -22,4 +23,18 @@ interface WalletServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function createPaginatedList(int $page): PaginationInterface;
+
+    /**
+     * Save entity.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function save(Wallet $wallet);
+
+    /**
+     * Delete entity.
+     *
+     * @param Wallet $wallet Wallet entity
+     */
+    public function delete(Wallet $wallet);
 }

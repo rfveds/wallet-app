@@ -37,6 +37,13 @@
             <a href="{{ url('operation_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
+            <a href="{{ url('operation_edit', {'id': operation.id}) }}" title="{{ 'action.edit'|trans }}">
+                {{ 'action.edit'|trans }}
+            </a>
+            <a href="{{ url('operation_delete', {'id': operation.id}) }}" title="{{ 'action.delete'|trans }}">
+                {{ 'action.delete'|trans }}
+            </a>
+
         </p>
     {% else %}
         <p>
