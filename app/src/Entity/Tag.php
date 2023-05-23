@@ -8,8 +8,9 @@
 namespace App\Entity;
 
 use App\Repository\TagRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * Class Tag.
@@ -22,16 +23,23 @@ class Tag
 {
     /**
      * Primary key.
+     *
+     * @var int|null Id
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
      * Title.
+     *
+     * @var string|null Title
      */
-    #[ORM\Column(type: Types::STRING, length: 45)]
+    #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64, )]
     private ?string $title = null;
 
     /**
@@ -58,6 +66,8 @@ class Tag
      * Setter for title.
      *
      * @param string $title Title
+     *
+     * @return void
      */
     public function setTitle(string $title): void
     {
