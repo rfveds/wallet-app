@@ -12,6 +12,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Category.
@@ -24,10 +25,12 @@ class Category
 {
     /**
      * Primary key.
+     *
+     * @var int|null Id
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
@@ -35,7 +38,8 @@ class Category
      *
      * @var \DateTimeImmutable|null Created at
      */
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\Type(\DateTimeInterface::class)]
     #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt;
 
@@ -44,7 +48,8 @@ class Category
      *
      * @var \DateTimeImmutable|null Updated at
      */
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\Type(\DateTimeInterface::class)]
     #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt;
 
@@ -53,7 +58,10 @@ class Category
      *
      * @var string|null Title
      */
-    #[ORM\Column(type: Types::STRING, length: 255)]
+    #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64)]
     private ?string $title;
 
     /**
@@ -61,7 +69,9 @@ class Category
      *
      * @var string|null Slug
      */
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\Length(min: 3, max: 64)]
     #[Gedmo\Slug(fields: ['title'])]
     private ?string $slug = null;
 
