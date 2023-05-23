@@ -29,7 +29,7 @@ class CategoryController extends AbstractController
     private CategoryServiceInterface $categoryService;
 
     /**
-     * Tranlator.
+     * Translator.
      */
     private TranslatorInterface $translator;
 

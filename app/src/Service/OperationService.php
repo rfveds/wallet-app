@@ -7,6 +7,7 @@
 
 namespace App\Service;
 
+use App\Entity\Operation;
 use App\Repository\OperationRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -53,4 +54,15 @@ class OperationService implements OperationServiceInterface
             OperationRepository::PAGINATOR_ITEMS_PER_PAGE
         );
     }
+
+    /**
+     * Save entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function save(Operation $operation): void
+    {
+        $this->operationRepository->save($operation);
+    }
+
 }

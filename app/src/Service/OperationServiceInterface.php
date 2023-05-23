@@ -7,6 +7,7 @@
 
 namespace App\Service;
 
+use App\Entity\Operation;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
@@ -22,4 +23,11 @@ interface OperationServiceInterface
      * @return PaginationInterface<string, mixed> Paginated list
      */
     public function createPaginatedList(int $page): PaginationInterface;
+
+    /**
+     * Save entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function save(Operation $operation);
 }

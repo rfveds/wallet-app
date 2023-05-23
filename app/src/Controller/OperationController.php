@@ -8,11 +8,13 @@
 namespace App\Controller;
 
 use App\Entity\Operation;
+use App\Form\Type\OperationType;
 use App\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class OperationController.
@@ -26,13 +28,20 @@ class OperationController extends AbstractController
     private OperationServiceInterface $operationService;
 
     /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * OperationController constructor.
      *
      * @param OperationServiceInterface $operationService Operation service interface
+     * @param TranslatorInterface       $translator       Translator interface
      */
-    public function __construct(OperationServiceInterface $operationService)
+    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator)
     {
         $this->operationService = $operationService;
+        $this->translator = $translator;
     }
 
     /**
@@ -78,4 +87,87 @@ class OperationController extends AbstractController
             ['operation' => $operation]
         );
     }
+
+    /**
+     * Create action.
+     *
+     * @param Request $request HTTP request
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/create',
+        name: 'operation_create',
+        methods: ['GET', 'POST']
+    )]
+    public function create(Request $request): Response
+    {
+        $operation = new Operation();
+        $form = $this->createForm(OperationType::class, $operation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->operationService->save($operation);
+
+            $this->addFlash('success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('operation_index');
+        }
+
+        return $this->render(
+            'operation/create.html.twig',
+            ['form' => $form->createView()]
+        );
+    }
+
+    /**
+     * Edit action.
+     *
+     * @param Request   $request   HTTP request
+     * @param Operation $operation Operation entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/edit',
+        name: 'operation_edit',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: ['GET', 'POST']
+    )]
+public function edit(Request $request, Operation $operation): Response
+{
+    $form = $this->createForm(
+        OperationType::class,
+        $operation,
+        [
+            'method' => 'PUT',
+            'action' => $this->generateUrl(
+                'operation_edit',
+                ['id' => $operation->getId()]
+            ),
+        ]
+    );
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        $this->operationService->save($operation);
+
+        $this->addFlash(
+            'success',
+            $this->translator->trans('message.updated_successfully')
+        );
+
+        return $this->redirectToRoute('operation_index');
+    }
+
+    return $this->render(
+        'operation/edit.html.twig',
+        [
+            'form' => $form->createView(),
+            'operation' => $operation,
+        ]
+    );
+}
 }

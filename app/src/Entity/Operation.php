@@ -10,11 +10,10 @@ namespace App\Entity;
 use App\Repository\OperationRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Operation.
- *
- * @psalm-suppress MissingConstructor
  */
 #[ORM\Entity(repositoryClass: OperationRepository::class)]
 #[ORM\Table(
@@ -24,6 +23,8 @@ class Operation
 {
     /**
      * Primary key.
+     *
+     * @var int|null Id
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -32,26 +33,36 @@ class Operation
 
     /**
      * Title.
+     *
+     * @var string|null Title
      */
     #[ORM\Column(type: Types::STRING, length: 45)]
     private ?string $title = null;
 
     /**
      * Amount.
+     *
+     * @var string|null Amount
      */
     #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 2)]
     private ?string $amount = null;
 
     /**
      * Created at.
+     *
+     * @var \DateTimeInterface|null Created at
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeInterface $createdAt = null;
 
     /**
      * Updated at.
+     *
+     * @var \DateTimeInterface|null Updated at
      */
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeInterface $updatedAt = null;
 
     /**

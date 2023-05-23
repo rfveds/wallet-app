@@ -61,6 +61,28 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
+     * Save entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function save(Operation $operation): void
+    {
+        $this->_em->persist($operation);
+        $this->_em->flush();
+    }
+
+    /**
+     * Delete entity.
+     *
+     * @param Operation $operation Operation entity
+     */
+    public function delete(Operation $operation): void
+    {
+        $this->_em->remove($operation);
+        $this->_em->flush();
+    }
+
+    /**
      * Get or create new query builder.
      *
      * @param QueryBuilder|null $queryBuilder Query builder
