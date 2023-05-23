@@ -31,7 +31,7 @@ class Operation
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: Types::INTEGER)]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     /**
@@ -39,7 +39,10 @@ class Operation
      *
      * @var string|null Title
      */
-    #[ORM\Column(type: Types::STRING, length: 45)]
+    #[ORM\Column(type: 'integer', length: 64)]
+    #[Assert\Type(type: 'string')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 3, max: 64, )]
     private ?string $title = null;
 
     /**
@@ -47,26 +50,31 @@ class Operation
      *
      * @var string|null Amount
      */
-    #[ORM\Column(type: Types::DECIMAL, precision: 16, scale: 2)]
+    #[ORM\Column(type: 'decimal', precision: 16, scale: 2)]
+    #[Assert\Type(type: 'numeric')]
+    #[Assert\NotBlank]
+    #[Assert\Length(min: 1, max: 16)]
     private ?string $amount = null;
 
     /**
      * Created at.
      *
-     * @var \DateTimeInterface|null Created at
+     * @var \DateTimeImmutable|null Created at
      */
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'create')]
-    private ?\DateTimeInterface $createdAt = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     /**
      * Updated at.
      *
-     * @var \DateTimeInterface|null Updated at
+     * @var \DateTimeImmutable|null Updated at
      */
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'update')]
-    private ?\DateTimeInterface $updatedAt = null;
+    private ?\DateTimeImmutable $updatedAt = null;
 
     /**
      * Category.
