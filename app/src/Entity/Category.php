@@ -11,6 +11,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Class Category.
@@ -31,14 +32,20 @@ class Category
 
     /**
      * Created at.
+     *
+     * @var \DateTimeImmutable|null Created at
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt;
 
     /**
      * Updated at.
+     *
+     * @var \DateTimeImmutable|null Updated at
      */
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    #[Gedmo\Timestampable(on: 'update')]
     private ?\DateTimeImmutable $updatedAt;
 
     /**
