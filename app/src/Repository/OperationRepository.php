@@ -58,10 +58,11 @@ class OperationRepository extends ServiceEntityRepository
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
-            ->select('operation', 'category', 'wallet', 'tags')
+            ->select('operation', 'category', 'wallet', 'tags', 'author')
             ->join('operation.wallet', 'wallet')
             ->join('operation.category', 'category')
             ->join('operation.tags', 'tags')
+            ->join('operation.author', 'author')
             ->orderBy('operation.updatedAt', 'DESC');
     }
 

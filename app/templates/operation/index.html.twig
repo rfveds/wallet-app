@@ -22,6 +22,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label.amount'|trans, 'operation.amount') }}</th>
                 <th>{{ 'label.category'|trans }}</th>
                 <th>{{ 'label.wallet'|trans }}</th>
+                <th>{{ 'label.author'|trans }}</th>
                 <th>{{ 'label.actions'|trans }}</th>
             </tr>
             </thead>
@@ -35,6 +36,7 @@
                     <td>{{ operation.amount }}</td>
                     <td>{{ operation.category.title }}</td>
                     <td>{{ operation.wallet.title }}</td>
+                    <td>{{ operation.author.email }}</td>
                     <td>
                         <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}
