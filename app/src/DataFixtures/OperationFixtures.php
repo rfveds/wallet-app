@@ -10,6 +10,7 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Operation;
 use App\Entity\Tag;
+use App\Entity\User;
 use App\Entity\Wallet;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -56,6 +57,10 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
                 $operation->addTag($tag);
             }
 
+            /** @var User $author */
+            $author = $this->getRandomReference('users');
+            $operation->setAuthor($author);
+
             return $operation;
         });
 
@@ -70,6 +75,6 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
      */
     public function getDependencies(): array
     {
-        return [WalletFixtures::class, CategoryFixtures::class];
+        return [WalletFixtures::class, CategoryFixtures::class, TagFixtures::class, UserFixtures::class];
     }
 }

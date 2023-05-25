@@ -105,8 +105,16 @@ class Operation
     #[ORM\JoinTable(name: 'operations_tags')]
     private Collection|array $tags;
 
-    #[ORM\ManyToOne]
-    private ?User $author = null;
+    /**
+     * Author.
+     *
+     * @var User|null Author
+     */
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: User::class)]
+    private ?User $author;
 
     /**
      * Operation constructor.
@@ -278,15 +286,23 @@ class Operation
         $this->tags->removeElement($tag);
     }// end removeTag()
 
+    /**
+     * Getter for author.
+     *
+     * @return User|null Author
+     */
     public function getAuthor(): ?User
     {
         return $this->author;
     }
 
-    public function setAuthor(?User $author): self
+    /**
+     * Setter for author.
+     *
+     * @param User|null $author Author
+     */
+    public function setAuthor(?User $author): void
     {
         $this->author = $author;
-
-        return $this;
     }
 }// end class
