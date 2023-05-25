@@ -105,4 +105,21 @@ class TagRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('tag');
     }// end getOrCreateQueryBuilder()
+
+
+    /**
+     * Find one by id.
+     *
+     * @param int $id Id
+     *
+     * @return Tag|null Tag entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Tag
+    {
+        $queryBuilder = $this->createQueryBuilder('tag')->where('tag.id = :id')->setParameter('id', $id);
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
 }// end class

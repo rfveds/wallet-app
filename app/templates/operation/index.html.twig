@@ -21,6 +21,7 @@
                 <th>{{ knp_pagination_sortable(pagination, 'label.title'|trans, 'operation.title') }}</th>
                 <th>{{ knp_pagination_sortable(pagination, 'label.amount'|trans, 'operation.amount') }}</th>
                 <th>{{ 'label.category'|trans }}</th>
+                <th>{{ 'label.tags'|trans }}</th>
                 <th>{{ 'label.wallet'|trans }}</th>
                 <th>{{ 'label.author'|trans }}</th>
                 <th>{{ 'label.actions'|trans }}</th>
@@ -34,11 +35,26 @@
                     <td>{{ operation.updatedAt|date('Y/m/d') }}</td>
                     <td>{{ operation.title }}</td>
                     <td>{{ operation.amount }}</td>
-                    <td>{{ operation.category.title }}</td>
+                    <td>
+                        <a href="{{ url('operation_index', {'filters.category_id' : operation.category.id}) }}" title="{{ operation.category.title }}">
+                            {{ operation.category.title }}
+                        </a>
+                    </td>
+                    <td>
+                        {% if operation.tags is defined and operation.tags|length %}
+                            {% for tag in operation.tags %}
+                                <a href="{{ url('operation_index', {'filters.tag_id' : tag.id}) }}" title="{{ tag.title }}">
+                                    {{ tag.title }}
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            &nbsp;
+                        {% endif %}
+                    </td>
                     <td>{{ operation.wallet.title }}</td>
                     <td>{{ operation.author.email }}</td>
                     <td>
-                        {% if is_granted('VIEW', operation) %}
+                        {% if is_granted('VIEW', operation ) %}
                         <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}
                         </a>

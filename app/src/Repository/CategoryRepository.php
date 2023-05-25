@@ -9,6 +9,7 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -45,7 +46,7 @@ class CategoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Category::class);
-    }
+    }// end __construct()
 
     /**
      * Query all records.
@@ -54,10 +55,8 @@ class CategoryRepository extends ServiceEntityRepository
      */
     public function queryAll(): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
-            ->select('partial category.{id, title, createdAt, updatedAt}')
-            ->orderBy('category.updatedAt', 'DESC');
-    }
+        return $this->getOrCreateQueryBuilder()->select('partial category.{id, title, createdAt, updatedAt}')->orderBy('category.updatedAt', 'DESC');
+    }// end queryAll()
 
     /**
      * Save entity.
@@ -68,7 +67,7 @@ class CategoryRepository extends ServiceEntityRepository
     {
         $this->_em->persist($category);
         $this->_em->flush();
-    }
+    }// end save()
 
     /**
      * Delete entity.
@@ -79,7 +78,7 @@ class CategoryRepository extends ServiceEntityRepository
     {
         $this->_em->remove($category);
         $this->_em->flush();
-    }
+    }// end delete()
 
     /**
      * Get or create new query builder.
@@ -91,5 +90,19 @@ class CategoryRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('category');
-    }
-}
+    }// end getOrCreateQueryBuilder()
+
+    /**
+     * Find one by id.
+     *
+     * @param int $id Id
+     *
+     * @return Category|null Category entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Category
+    {
+        return $this->createQueryBuilder('category')->andWhere('category.id = :id')->setParameter('id', $id)->getQuery()->getOneOrNullResult();
+    }// end findOneById()
+}// end class

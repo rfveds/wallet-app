@@ -15,6 +15,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Class OperationRepository.
@@ -54,17 +55,45 @@ class OperationRepository extends ServiceEntityRepository
     /**
      * Query all records.
      *
+     * @param array $filters Filters
+     *
      * @return QueryBuilder Query builder
      */
-    public function queryAll(): QueryBuilder
+    public function queryAll(array $filters): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
-            ->select('operation', 'category', 'wallet', 'tags', 'author')
+        $queryBuilder = $this->getOrCreateQueryBuilder()
+            ->select(
+                'partial operation.{id, amount, title, createdAt, updatedAt}',
+                'partial category.{id, title}',
+                'partial wallet.{id, title}',
+                'partial tags.{id, title}',
+                'partial author.{id, email}'
+            )
             ->join('operation.wallet', 'wallet')
             ->join('operation.category', 'category')
-            ->join('operation.tags', 'tags')
+            ->leftJoin('operation.tags', 'tags')
             ->join('operation.author', 'author')
             ->orderBy('operation.updatedAt', 'DESC');
+
+        return $this->applyFiltersToList($queryBuilder, $filters);
+    }
+
+    /**
+     * Query tasks by author.
+     *
+     * @param UserInterface         $user    User entity
+     * @param array<string, object> $filters Filters
+     *
+     * @return QueryBuilder Query builder
+     */
+    public function queryByAuthor(UserInterface $user, array $filters = []): QueryBuilder
+    {
+        $queryBuilder = $this->queryAll($filters);
+
+        $queryBuilder->andWhere('operation.author = :author')
+            ->setParameter('author', $user);
+
+        return $queryBuilder;
     }
 
     /**
@@ -86,23 +115,6 @@ class OperationRepository extends ServiceEntityRepository
             ->setParameter(':category', $category)
             ->getQuery()
             ->getSingleScalarResult();
-    }
-
-    /**
-     * Query tasks by author.
-     *
-     * @param User $user User entity
-     *
-     * @return QueryBuilder Query builder
-     */
-    public function queryByAuthor(User $user): QueryBuilder
-    {
-        $queryBuilder = $this->queryAll();
-
-        $queryBuilder->andWhere('operation.author = :author')
-            ->setParameter('author', $user);
-
-        return $queryBuilder;
     }
 
     /**
@@ -137,5 +149,28 @@ class OperationRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('operation');
+    }
+
+    /**
+     * Apply filters to paginated list.
+     *
+     * @param QueryBuilder          $queryBuilder Query builder
+     * @param array<string, object> $filters      Filters array
+     *
+     * @return QueryBuilder Query builder
+     */
+    private function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
+    {
+        if (isset($filters['category']) && $filters['category'] instanceof Category) {
+            $queryBuilder->andWhere('category = :category')
+                ->setParameter('category', $filters['category']);
+        }
+
+        if (isset($filters['tag']) && $filters['tag'] instanceof Tag) {
+            $queryBuilder->andWhere('tags IN (:tag)')
+                ->setParameter('tag', $filters['tag']);
+        }
+
+        return $queryBuilder;
     }
 }
