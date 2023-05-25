@@ -11,6 +11,7 @@ use App\Entity\Operation;
 use App\Entity\User;
 use App\Form\Type\OperationType;
 use App\Service\OperationServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -60,7 +61,8 @@ class OperationController extends AbstractController
     public function index(Request $request): Response
     {
         $pagination = $this->operationService->createPaginatedList(
-            $request->query->getInt('page', 1)
+            $request->query->getInt('page', 1),
+            $this->getUser()
         );
 
         return $this->render(
@@ -82,8 +84,21 @@ class OperationController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET'
     )]
+    #[IsGranted(
+        'VIEW',
+        subject: 'operation'
+    )]
     public function show(Operation $operation): Response
     {
+        if ($operation->getAuthor() !== $this->getUser()) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('message.record_not_found')
+            );
+
+            return $this->redirectToRoute('task_index');
+        }
+
         return $this->render(
             'operation/show.html.twig',
             ['operation' => $operation]
@@ -150,6 +165,15 @@ class OperationController extends AbstractController
     )]
     public function edit(Request $request, Operation $operation): Response
     {
+        if ($operation->getAuthor() !== $this->getUser()) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('message.record_not_found')
+            );
+
+            return $this->redirectToRoute('task_index');
+        }
+
         $form = $this->createForm(
             OperationType::class,
             $operation,
@@ -199,6 +223,16 @@ class OperationController extends AbstractController
     )]
     public function delete(Request $request, Operation $operation): Response
     {
+        if ($operation->getAuthor() !== $this->getUser()) {
+            $this->addFlash(
+                'warning',
+                $this->translator->trans('message.record_not_found')
+            );
+
+            return $this->redirectToRoute('task_index');
+        }
+
+
         $form = $this->createForm(
             FormType::class,
             $operation,

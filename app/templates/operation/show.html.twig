@@ -37,13 +37,16 @@
             <a href="{{ url('operation_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
+            {% if is_granted('EDIT', operation) %}
             <a href="{{ url('operation_edit', {'id': operation.id}) }}" title="{{ 'action.edit'|trans }}">
                 {{ 'action.edit'|trans }}
             </a>
+            {% endif %}
+            {% if is_granted('DELETE', operation) %}
             <a href="{{ url('operation_delete', {'id': operation.id}) }}" title="{{ 'action.delete'|trans }}">
                 {{ 'action.delete'|trans }}
             </a>
-
+            {% endif %}
         </p>
     {% else %}
         <p>

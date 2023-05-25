@@ -38,9 +38,11 @@
                     <td>{{ operation.wallet.title }}</td>
                     <td>{{ operation.author.email }}</td>
                     <td>
+                        {% if is_granted('VIEW', operation) %}
                         <a href="{{ url('operation_show', {id: operation.id}) }}" title="{{ 'action.show'|trans }}">
                             {{ 'action.show'|trans }}
                         </a>
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}

@@ -8,6 +8,7 @@
 namespace App\Service;
 
 use App\Entity\Operation;
+use App\Entity\User;
 use App\Repository\OperationRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -42,14 +43,15 @@ class OperationService implements OperationServiceInterface
     /**
      * Get paginated list.
      *
-     * @param int $page Page number
+     * @param int  $page   Page number
+     * @param User $author Author
      *
      * @return PaginationInterface Paginated list
      */
-    public function createPaginatedList(int $page): PaginationInterface
+    public function createPaginatedList(int $page, User $author): PaginationInterface
     {
         return $this->paginator->paginate(
-            $this->operationRepository->queryAll(),
+            $this->operationRepository->queryByAuthor($author),
             $page,
             OperationRepository::PAGINATOR_ITEMS_PER_PAGE
         );
