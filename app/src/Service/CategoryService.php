@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+ * Category Service.
  */
 
 namespace App\Service;

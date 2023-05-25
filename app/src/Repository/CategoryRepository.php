@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+ * Category repository.
  */
 
 namespace App\Repository;
@@ -81,18 +79,6 @@ class CategoryRepository extends ServiceEntityRepository
     }// end delete()
 
     /**
-     * Get or create new query builder.
-     *
-     * @param QueryBuilder|null $queryBuilder Query builder
-     *
-     * @return QueryBuilder Query builder
-     */
-    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
-    {
-        return $queryBuilder ?? $this->createQueryBuilder('category');
-    }// end getOrCreateQueryBuilder()
-
-    /**
      * Find one by id.
      *
      * @param int $id Id
@@ -104,5 +90,18 @@ class CategoryRepository extends ServiceEntityRepository
     public function findOneById(int $id): ?Category
     {
         return $this->createQueryBuilder('category')->andWhere('category.id = :id')->setParameter('id', $id)->getQuery()->getOneOrNullResult();
-    }// end findOneById()
+    }
+
+// end findOneById()
+    /**
+     * Get or create new query builder.
+     *
+     * @param QueryBuilder|null $queryBuilder Query builder
+     *
+     * @return QueryBuilder Query builder
+     */
+    private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
+    {
+        return $queryBuilder ?? $this->createQueryBuilder('category');
+    }// end getOrCreateQueryBuilder()
 }// end class

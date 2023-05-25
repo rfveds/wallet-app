@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+ * Operation controller.
  */
 
 namespace App\Controller;
@@ -235,7 +233,6 @@ class OperationController extends AbstractController
 
             return $this->redirectToRoute('task_index');
         }
-
 
         $form = $this->createForm(
             FormType::class,

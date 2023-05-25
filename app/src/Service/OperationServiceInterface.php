@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+ * Operation Service Interface.
  */
 
 namespace App\Service;
@@ -19,7 +17,7 @@ interface OperationServiceInterface
     /**
      * Create paginated list.
      *
-     * @param int $page Page number
+     * @param int  $page   Page number
      * @param User $author Author
      *
      * @return PaginationInterface<string, mixed> Paginated list

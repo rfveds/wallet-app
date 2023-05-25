@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+ * Tag Form Type.
  */
 
 namespace App\Form\Type;
