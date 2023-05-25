@@ -7,8 +7,11 @@
 
 namespace App\Repository;
 
+use App\Entity\Category;
 use App\Entity\Operation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -60,6 +63,27 @@ class OperationRepository extends ServiceEntityRepository
             ->join('operation.category', 'category')
             ->join('operation.tags', 'tags')
             ->orderBy('operation.updatedAt', 'DESC');
+    }
+
+    /**
+     * Count tasks by category.
+     *
+     * @param Category $category Category
+     *
+     * @return int Number of tasks in category
+     *
+     * @throws NoResultException
+     * @throws NonUniqueResultException
+     */
+    public function countByCategory(Category $category): int
+    {
+        $qb = $this->getOrCreateQueryBuilder();
+
+        return $qb->select($qb->expr()->countDistinct('task.id'))
+            ->where('task.category = :category')
+            ->setParameter(':category', $category)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     /**

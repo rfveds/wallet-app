@@ -9,7 +9,10 @@ namespace App\Service;
 
 use App\Entity\Category;
 use App\Repository\CategoryRepository;
+use App\Repository\OperationRepository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -31,6 +34,11 @@ class CategoryService implements CategoryServiceInterface
     private CategoryRepository $categoryRepository;
 
     /**
+     * Operation repository.
+     */
+    private OperationRepository $operationRepository;
+
+    /**
      * Paginator.
      */
     private PaginatorInterface $paginator;
@@ -38,12 +46,14 @@ class CategoryService implements CategoryServiceInterface
     /**
      * CategoryService constructor.
      *
-     * @param CategoryRepository $categoryRepository Category repository
-     * @param PaginatorInterface $paginator          Paginator
+     * @param CategoryRepository  $categoryRepository  Category repository
+     * @param OperationRepository $operationRepository Operation repository
+     * @param PaginatorInterface  $paginator           Paginator
      */
-    public function __construct(CategoryRepository $categoryRepository, PaginatorInterface $paginator)
+    public function __construct(CategoryRepository $categoryRepository, OperationRepository $operationRepository, PaginatorInterface $paginator)
     {
         $this->categoryRepository = $categoryRepository;
+        $this->operationRepository = $operationRepository;
         $this->paginator = $paginator;
     }
 
@@ -81,5 +91,23 @@ class CategoryService implements CategoryServiceInterface
     public function delete(Category $category): void
     {
         $this->categoryRepository->delete($category);
+    }
+
+    /**
+     * Can Category be deleted?
+     *
+     * @param Category $category Category entity
+     *
+     * @return bool Result
+     */
+    public function canBeDeleted(Category $category): bool
+    {
+        try {
+            $result = $this->operationRepository->countByCategory($category);
+
+            return !($result > 0);
+        } catch (NoResultException|NonUniqueResultException) {
+            return false;
+        }
     }
 }

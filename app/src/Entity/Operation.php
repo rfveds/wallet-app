@@ -105,6 +105,9 @@ class Operation
     #[ORM\JoinTable(name: 'operations_tags')]
     private Collection|array $tags;
 
+    #[ORM\ManyToOne]
+    private ?User $author = null;
+
     /**
      * Operation constructor.
      */
@@ -274,4 +277,16 @@ class Operation
     {
         $this->tags->removeElement($tag);
     }// end removeTag()
+
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
 }// end class
