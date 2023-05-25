@@ -30,36 +30,36 @@ class Wallet
     /**
      * Type.
      *
-     * @var string|null $type Type
+     * @var string $type Type
      */
     #[ORM\Column(length: 32)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 32)]
     #[Assert\Type(type: 'string')]
     #[Assert\Choice(choices: ['cash', 'bank', 'credit_card', 'other'])]
-    private ?string $type = null;
+    private string $type;
 
     /**
      * Balance.
      *
-     * @var string|null $balance Balance
+     * @var string $balance Balance
      */
     #[ORM\Column(type: 'decimal', precision: 16, scale: 2)]
     #[Assert\NotBlank]
-    #[Assert\Length(min: 1, max: 16)]
+    #[Assert\Length(min: 0, max: 16)]
     #[Assert\Type(type: 'numeric')]
-    private ?string $balance = null;
+    private string $balance;
 
     /**
      * Title.
      *
-     * @var string|null $title Title
+     * @var string $title Title
      */
     #[ORM\Column(length: 64)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 64)]
     #[Assert\Type(type: 'string')]
-    private ?string $title = null;
+    private string $title;
 
     /**
      * Getter for id.
