@@ -8,6 +8,7 @@
 namespace App\Controller;
 
 use App\Entity\Operation;
+use App\Entity\User;
 use App\Form\Type\OperationType;
 use App\Service\OperationServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -103,8 +104,17 @@ class OperationController extends AbstractController
     )]
     public function create(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $operation = new Operation();
-        $form = $this->createForm(OperationType::class, $operation);
+        $operation->setAuthor($user);
+        $form = $this->createForm(
+            OperationType::class,
+            $operation,
+            [
+                'action' => $this->generateUrl('operation_create'),
+            ]
+        );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
