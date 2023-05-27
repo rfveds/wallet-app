@@ -1,8 +1,6 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+* Tag service tests.
  */
 
 namespace App\Tests\Service;
