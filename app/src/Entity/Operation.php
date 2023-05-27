@@ -45,13 +45,13 @@ class Operation
     /**
      * Amount.
      *
-     * @var string|null Amount
+     * @var string Amount
      */
     #[ORM\Column(type: 'decimal', precision: 16, scale: 2)]
     #[Assert\Type(type: 'numeric')]
     #[Assert\NotBlank]
     #[Assert\Length(min: 1, max: 16)]
-    private ?string $amount = null;
+    private string $amount;
 
     /**
      * Created at.

@@ -1,6 +1,6 @@
 <?php
 /**
- * Category Controller Test.
+ * Category controller tests.
  */
 
 namespace App\Tests\Controller;
