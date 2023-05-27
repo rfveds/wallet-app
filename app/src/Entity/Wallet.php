@@ -66,7 +66,7 @@ class Wallet
      */
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotBlank]
+    // #[Assert\NotBlank]
     #[Assert\Type(type: User::class)]
     private ?User $user = null;
 

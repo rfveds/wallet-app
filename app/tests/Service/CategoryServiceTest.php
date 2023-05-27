@@ -22,14 +22,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class CategoryServiceTest extends KernelTestCase
 {
     /**
+     * Category service.
+     *
+     * @var CategoryService|null
+     */
+    private ?CategoryServiceInterface $categoryService;
+
+    /**
      * Category repository.
      */
     private ?EntityManagerInterface $entityManager;
-
-    /**
-     * Category service.
-     */
-    private ?CategoryServiceInterface $categoryService;
 
     /**
      * Set up test.

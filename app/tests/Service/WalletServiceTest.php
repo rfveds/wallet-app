@@ -1,16 +1,18 @@
 <?php
 /**
- * wallet-app.
- *
- * (c) Karol Kijowski , 2023
+* Wallet service tests.
  */
 
 namespace App\Tests\Service;
 
+use App\Entity\Enum\UserRole;
+use App\Entity\User;
 use App\Entity\Wallet;
+use App\Repository\UserRepository;
 use App\Service\WalletService;
 use App\Service\WalletServiceInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -22,20 +24,19 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class WalletServiceTest extends KernelTestCase
 {
     /**
+     * Wallet service.
+     *
+     * @var WalletService|null
+     */
+    private ?WalletServiceInterface $walletService;
+
+    /**
      * Wallet repository.
      */
     private ?EntityManagerInterface $entityManager;
 
     /**
-     * Wallet service.
-     */
-    private ?WalletServiceInterface $walletService;
-
-    /**
      * Set up test.
-     *
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
      */
     public function setUp(): void
     {
@@ -47,7 +48,7 @@ class WalletServiceTest extends KernelTestCase
     /**
      * Test save.
      *
-     * @throws ORMException
+     * @throws OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface|ORMException
      */
     public function testSave(): void
     {
@@ -56,6 +57,7 @@ class WalletServiceTest extends KernelTestCase
         $expectedWallet->setTitle('Test Wallet');
         $expectedWallet->setBalance(0);
         $expectedWallet->setType('cash');
+        $expectedWallet->setUser($this->createUser([UserRole::ROLE_USER->value], 'wallet_save@example.com'));
 
         // when
         $this->walletService->save($expectedWallet);
@@ -73,11 +75,10 @@ class WalletServiceTest extends KernelTestCase
         $this->assertEquals($expectedWallet, $resultWallet);
     }
 
-
     /**
      * Test delete.
      *
-     * @throws ORMException
+     * @throws OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface|ORMException
      */
     public function testDelete(): void
     {
@@ -86,6 +87,7 @@ class WalletServiceTest extends KernelTestCase
         $walletToDelete->setTitle('Test Wallet');
         $walletToDelete->setBalance(0);
         $walletToDelete->setType('cash');
+        $walletToDelete->setUser($this->createUser([UserRole::ROLE_USER->value], 'wallet_delete@example.com'));
 
         $this->entityManager->persist($walletToDelete);
         $this->entityManager->flush();
@@ -108,6 +110,8 @@ class WalletServiceTest extends KernelTestCase
 
     /**
      * Test pagination.
+     *
+     * @throws OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface|ORMException
      */
     public function testCreatePaginatedList(): void
     {
@@ -115,6 +119,7 @@ class WalletServiceTest extends KernelTestCase
         $page = 1;
         $dataSetSize = 15;
         $expectedResultSize = 10;
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'wallet_list@example.com');
 
         $counter = 0;
         while ($counter < $dataSetSize) {
@@ -122,6 +127,7 @@ class WalletServiceTest extends KernelTestCase
             $wallet->setTitle('Test Category #'.$counter);
             $wallet->setBalance(0);
             $wallet->setType('cash');
+            $wallet->setUser($user);
 
             $this->walletService->save($wallet);
 
@@ -133,5 +139,32 @@ class WalletServiceTest extends KernelTestCase
 
         // then
         $this->assertEquals($expectedResultSize, $result->count());
+    }
+
+    /**
+     * Create user.
+     *
+     * @param array $roles User roles
+     *
+     * @return User User entity
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    protected function createUser(array $roles, string $email): User
+    {
+        $passwordHasher = static::getContainer()->get('security.password_hasher');
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($roles);
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                'p@55w0rd'
+            )
+        );
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $userRepository->save($user);
+
+        return $user;
     }
 }

@@ -65,7 +65,7 @@ class CategoryControllerTest extends WebTestCase
     {
         // given
         $expectedStatusCode = 200;
-        $user = $this->createUser([UserRole::ROLE_USER->value]);
+        $user = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value]);
         $this->httpClient->loginUser($user);
 
         // when
@@ -89,7 +89,7 @@ class CategoryControllerTest extends WebTestCase
     {
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
-        $user->setEmail('user@example.com');
+        $user->setEmail('controller@example.com');
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(
