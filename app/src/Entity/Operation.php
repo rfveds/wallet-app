@@ -24,7 +24,7 @@ class Operation
     /**
      * Primary key.
      *
-     * @var int|null Id
+     * @var int|null $id Id
      */
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -76,7 +76,7 @@ class Operation
     /**
      * Category.
      *
-     * @var Category|null Category
+     * @var Category|null $category Category
      */
     #[Assert\Type(type: 'App\Entity\Category')]
     #[ORM\ManyToOne(targetEntity: Category::class)]
@@ -86,7 +86,7 @@ class Operation
     /**
      * Wallet.
      *
-     * @var Wallet|null Wallet
+     * @var Wallet|null $wallet Wallet
      */
     #[Assert\Type(type: 'App\Entity\Wallet')]
     #[ORM\ManyToOne(targetEntity: Wallet::class)]
@@ -106,7 +106,7 @@ class Operation
     /**
      * Author.
      *
-     * @var User|null Author
+     * @var User|null $author Author
      */
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
     #[ORM\JoinColumn(nullable: false)]

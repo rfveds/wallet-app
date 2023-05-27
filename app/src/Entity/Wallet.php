@@ -28,14 +28,14 @@ class Wallet
     /**
      * Type.
      *
-     * @var string $type Type
+     * @var string|null $type Type
      */
     #[ORM\Column(length: 32)]
     #[Assert\NotBlank]
     #[Assert\Length(min: 3, max: 32)]
     #[Assert\Type(type: 'string')]
     #[Assert\Choice(choices: ['cash', 'bank', 'credit_card', 'other'])]
-    private string $type;
+    private ?string $type = null;
 
     /**
      * Balance.
@@ -60,6 +60,17 @@ class Wallet
     private string $title;
 
     /**
+     * User.
+     *
+     * @var User|null $user User
+     */
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Assert\NotBlank]
+    #[Assert\Type(type: User::class)]
+    private ?User $user = null;
+
+    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -67,7 +78,7 @@ class Wallet
     public function getId(): ?int
     {
         return $this->id;
-    }
+    }// end getId()
 
     /**
      * Getter for type.
@@ -77,7 +88,7 @@ class Wallet
     public function getType(): ?string
     {
         return $this->type;
-    }
+    }// end getType()
 
     /**
      * Setter for type.
@@ -87,7 +98,7 @@ class Wallet
     public function setType(string $type): void
     {
         $this->type = $type;
-    }
+    }// end setType()
 
     /**
      * Getter for balance.
@@ -97,7 +108,7 @@ class Wallet
     public function getBalance(): ?string
     {
         return $this->balance;
-    }
+    }// end getBalance()
 
     /**
      * Setter for balance.
@@ -107,7 +118,7 @@ class Wallet
     public function setBalance(string $balance): void
     {
         $this->balance = $balance;
-    }
+    }// end setBalance()
 
     /**
      * Getter for title.
@@ -117,7 +128,7 @@ class Wallet
     public function getTitle(): ?string
     {
         return $this->title;
-    }
+    }// end getTitle()
 
     /**
      * Setter for title.
@@ -127,5 +138,21 @@ class Wallet
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
-}
+    }// end setTitle()
+
+    /**
+     * Getter for user.
+     */
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }// end getUser()
+
+    /**
+     * Setter for user.
+     */
+    public function setUser(?User $user): void
+    {
+        $this->user = $user;
+    }// end setUser()
+}// end class
