@@ -1,6 +1,6 @@
 <?php
 /**
- * Registration type form.
+ * Registration Type.
  */
 
 namespace App\Form\Type;
@@ -9,7 +9,6 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
-use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -35,32 +34,27 @@ class RegistrationType extends AbstractType
                 'attr' => ['max_length' => 64],
             ]
         );
+
         $builder->add(
             'password',
-            RepeatedType::class,
+            PasswordType::class,
             [
-                'type' => PasswordType::class,
                 'label' => 'label.password',
                 'required' => true,
-                'first_options' => ['label' => 'label.password'],
-                'second_options' => ['label' => 'label.repeat_password'],
-                'attr' => [
-                    'min_length' => 8,
-                    'max_length' => 64,
-                ],
+                'attr' => ['max_length' => 255],
             ]
         );
-    }// end buildForm()
+    }
 
     /**
-     * Configure options.
+     * @param OptionsResolver $resolver resolver
      *
-     * @param OptionsResolver $resolver Options resolver
+     * @return void return noene
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-                'data_class' => User::class,
-            ]);
-    }// end configureOptions()
-}
+            'data_class' => User::class,
+        ]);
+    }
+}// end class
