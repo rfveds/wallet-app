@@ -6,11 +6,21 @@
 namespace App\Tests\Service;
 
 use App\Entity\Category;
+use App\Entity\Enum\UserRole;
+use App\Entity\Operation;
+use App\Entity\Tag;
+use App\Entity\User;
+use App\Entity\Wallet;
+use App\Repository\TagRepository;
+use App\Repository\UserRepository;
+use App\Repository\WalletRepository;
 use App\Service\CategoryService;
 use App\Service\CategoryServiceInterface;
+use App\Service\OperationServiceInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -29,6 +39,11 @@ class CategoryServiceTest extends KernelTestCase
     private ?CategoryServiceInterface $categoryService;
 
     /**
+     * Operation service.
+     */
+    private ?OperationServiceInterface $operationService;
+
+    /**
      * Category repository.
      */
     private ?EntityManagerInterface $entityManager;
@@ -44,6 +59,7 @@ class CategoryServiceTest extends KernelTestCase
         $container = static::getContainer();
         $this->entityManager = $container->get('doctrine.orm.entity_manager');
         $this->categoryService = $container->get(CategoryService::class);
+        $this->operationService = $container->get(OperationServiceInterface::class);
     }
 
     /**
@@ -155,5 +171,99 @@ class CategoryServiceTest extends KernelTestCase
         $this->assertEquals($expectedResultSize, $result->count());
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws \Doctrine\ORM\Exception\ORMException
+     * @throws ContainerExceptionInterface
+     * @throws OptimisticLockException
+     */
+    public function testCanBeDeleted(): void
+    {
+        $categoryToDelete = new Category();
+        $categoryToDelete->setTitle('Test Can Delete Category');
+        $categoryToDelete->setCreatedAt(new \DateTimeImmutable('now'));
+        $categoryToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
+        $this->entityManager->persist($categoryToDelete);
+        $this->entityManager->flush();
+
+        $operation = new Operation();
+        $author = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'operation_cat_save@example.com');
+        $operation->setAuthor($author);
+        $operation->setTitle('Test Can Delete Operation Save');
+        $operation->setAmount('100.00');
+        $operation->setCreatedAt(new \DateTimeImmutable('now'));
+        $operation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operation->addTag($this->createTag('save c'));
+        $operation->setWallet($this->createWallet($author, 'save c'));
+        $operation->setCategory($categoryToDelete);
+
+        $this->operationService->save($operation);
+
+        $this->assertFalse($this->categoryService->canBeDeleted($categoryToDelete));
+    }
+
+    /**
+     * Create Wallet.
+     *
+     * @throws OptimisticLockException|\Doctrine\ORM\Exception\ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
+     * @throws ORMException
+     */
+    private function createWallet($author, $walletTitle): Wallet
+    {
+        $wallet = new Wallet();
+        $wallet->setTitle($walletTitle);
+        $wallet->setType('cash');
+        $wallet->setBalance('999');
+        $wallet->setUser($author);
+        $walletRepository = self::getContainer()->get(WalletRepository::class);
+        $walletRepository->save($wallet);
+
+        return $wallet;
+    }
+
+    /**
+     * Create Tag.
+     *
+     * @throws OptimisticLockException|\Doctrine\ORM\Exception\ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
+     */
+    private function createTag($tagTitle): Tag
+    {
+        $tag = new Tag();
+        $tag->setTitle($tagTitle);
+        $tag->setCreatedAt(new \DateTimeImmutable('now'));
+        $tag->setUpdatedAt(new \DateTimeImmutable('now'));
+        $tagRepository = self::getContainer()->get(TagRepository::class);
+        $tagRepository->save($tag);
+
+        return $tag;
+    }
+
+    /**
+     * Create user.
+     *
+     * @param array $roles User roles
+     *
+     * @return User User entity
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    protected function createUser(array $roles, string $email): User
+    {
+        $passwordHasher = static::getContainer()->get('security.password_hasher');
+        $user = new User();
+        $user->setEmail($email);
+        $user->setRoles($roles);
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                'p@55w0rd'
+            )
+        );
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $userRepository->save($user);
+
+        return $user;
+    }
     // other tests for paginated list
 }

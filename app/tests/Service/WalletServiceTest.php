@@ -24,16 +24,16 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 class WalletServiceTest extends KernelTestCase
 {
     /**
+     * Wallet repository.
+     */
+    private ?EntityManagerInterface $entityManager;
+
+    /**
      * Wallet service.
      *
      * @var WalletService|null
      */
     private ?WalletServiceInterface $walletService;
-
-    /**
-     * Wallet repository.
-     */
-    private ?EntityManagerInterface $entityManager;
 
     /**
      * Set up test.

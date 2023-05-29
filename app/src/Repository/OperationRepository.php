@@ -107,8 +107,8 @@ class OperationRepository extends ServiceEntityRepository
     {
         $qb = $this->getOrCreateQueryBuilder();
 
-        return $qb->select($qb->expr()->countDistinct('task.id'))
-            ->where('task.category = :category')
+        return $qb->select($qb->expr()->countDistinct('operation.id'))
+            ->where('operation.category = :category')
             ->setParameter(':category', $category)
             ->getQuery()
             ->getSingleScalarResult();

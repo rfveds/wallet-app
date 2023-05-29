@@ -11,12 +11,13 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormTypeInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class WalletType.
  */
-class WalletType extends AbstractType
+class WalletType extends AbstractType implements FormTypeInterface
 {
     /**
      * Builds the form.
