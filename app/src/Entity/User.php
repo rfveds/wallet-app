@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
+    }// end getId()
 
     /**
      * Getter for password.
@@ -79,7 +79,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getEmail(): ?string
     {
         return $this->email;
-    }
+    }// end getEmail()
 
     /**
      * Setter for password.
@@ -89,7 +89,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): void
     {
         $this->email = $email;
-    }
+    }// end setEmail()
 
     /**
      * A visual identifier that represents this user.
@@ -101,7 +101,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->email;
-    }
+    }// end getUserIdentifier()
 
     /**
      * @deprecated since Symfony 5.3, use getUserIdentifier instead
@@ -111,7 +111,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUsername(): string
     {
         return (string) $this->email;
-    }
+    }// end getUsername()
 
     /**
      * Getter for roles.
@@ -127,7 +127,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);
-    }
+    }// end getRoles()
 
     /**
      * Setter for roles.
@@ -141,7 +141,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->roles = $roles;
 
         return $this;
-    }
+    }// end setRoles()
 
     /**
      * Getter for password.
@@ -153,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getPassword(): string
     {
         return $this->password;
-    }
+    }// end getPassword()
 
     /**
      * Setter for password.
@@ -163,7 +163,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): void
     {
         $this->password = $password;
-    }
+    }// end setPassword()
 
     /**
      * Returning a salt is only needed, if you are not using a modern
@@ -176,7 +176,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getSalt(): ?string
     {
         return null;
-    }
+    }// end getSalt()
 
     /**
      * Removes sensitive information from the token.
@@ -187,5 +187,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
-    }
-}
+    }// end eraseCredentials()
+
+}// end class

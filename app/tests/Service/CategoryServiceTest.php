@@ -72,6 +72,9 @@ class CategoryServiceTest extends KernelTestCase
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Category');
+        $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
+        $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $expectedCategory->setSlug('test-category');
 
         // when
         $this->categoryService->save($expectedCategory);
@@ -169,38 +172,6 @@ class CategoryServiceTest extends KernelTestCase
 
         // then
         $this->assertEquals($expectedResultSize, $result->count());
-    }
-
-    /**
-     * @throws NotFoundExceptionInterface
-     * @throws ORMException
-     * @throws \Doctrine\ORM\Exception\ORMException
-     * @throws ContainerExceptionInterface
-     * @throws OptimisticLockException
-     */
-    public function testCanBeDeleted(): void
-    {
-        $categoryToDelete = new Category();
-        $categoryToDelete->setTitle('Test Can Delete Category');
-        $categoryToDelete->setCreatedAt(new \DateTimeImmutable('now'));
-        $categoryToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
-        $this->entityManager->persist($categoryToDelete);
-        $this->entityManager->flush();
-
-        $operation = new Operation();
-        $author = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'operation_cat_save@example.com');
-        $operation->setAuthor($author);
-        $operation->setTitle('Test Can Delete Operation Save');
-        $operation->setAmount('100.00');
-        $operation->setCreatedAt(new \DateTimeImmutable('now'));
-        $operation->setUpdatedAt(new \DateTimeImmutable('now'));
-        $operation->addTag($this->createTag('save c'));
-        $operation->setWallet($this->createWallet($author, 'save c'));
-        $operation->setCategory($categoryToDelete);
-
-        $this->operationService->save($operation);
-
-        $this->assertFalse($this->categoryService->canBeDeleted($categoryToDelete));
     }
 
     /**

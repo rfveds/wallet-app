@@ -21,9 +21,14 @@
             <a href="{{ url('wallet_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
-            <a href="{{ url('wallet_edit', {'id': wallet.id}) }}" title="{{ 'action.edit'|trans }}">
+
+    {% if is_granted('EDIT', wallet) %}
+
+        <a href="{{ url('wallet_edit', {'id': wallet.id}) }}" title="{{ 'action.edit'|trans }}">
                 {{ 'action.edit'|trans }}
             </a>
+    {% endif %}
+
             <a href="{{ url('wallet_delete', {'id': wallet.id}) }}" title="{{ 'action.delete'|trans }}">
                 {{ 'action.delete'|trans }}
             </a>

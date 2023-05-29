@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.user_list'|trans }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ 'title.user_list'|trans }}</h1>
+    {% if pagination is defined and pagination.items|length %}
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'user.id')  }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.email'|trans, 'user.email') }}</th>
+                <th>{{ knp_pagination_sortable(pagination, 'label.roles'|trans, 'user.roles') }}</th>
+                <th>{{ 'label.action'|trans }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for u in pagination.items %}
+                <tr>
+                    <td>{{ u.id }}</td>
+                    <td>{{ u.email }}</td>
+                    {% if 'ROLE_ADMIN' in  u.roles|json_encode() %}
+                        <td>{{ 'title.admin'|trans  }}</td>
+                    {% else %}
+                        <td>{{ 'title.user'|trans }}</td>
+                    {% endif %}
+                    <td>
+                        <a href="{{ url('user_show', {id: u.id}) }}" title="{{ 'action.view'|trans }}">
+                            {{ 'action.view'|trans }}
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="navigation text-center">
+            {{ knp_pagination_render(pagination) }}
+        </div>
+
+    {% else %}
+        {% include 'default/_single_alert_message.html.twig' with {
+            type: 'warning',
+            message: 'message.empty_list'|trans
+        } %}
+    {% endif %}
+{#    <div class="btn btn-light">#}
+{#        <a href="{{ url('user_create') }}" title="{{ 'action.create'|trans }}">#}
+{#            {{ 'action.create'|trans }}</a>#}
+{#    </div>#}
+{% endblock %}

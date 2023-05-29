@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\Wallet;
 use App\Repository\WalletRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -44,10 +45,10 @@ class WalletService implements WalletServiceInterface
      *
      * @return PaginationInterface Paginated list
      */
-    public function createPaginatedList(int $page): PaginationInterface
+    public function createPaginatedList(int $page, User $author): PaginationInterface
     {
         return $this->paginator->paginate(
-            $this->walletRepository->queryAll(),
+            $this->walletRepository->queryByAuthor($author),
             $page,
             WalletRepository::PAGINATOR_ITEMS_PER_PAGE
         );

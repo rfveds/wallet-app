@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Entity\Wallet;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
@@ -17,10 +18,11 @@ interface WalletServiceInterface
      * Create paginated list.
      *
      * @param int $page Page number
+     * @param User $author Author
      *
      * @return PaginationInterface<string, mixed> Paginated list
      */
-    public function createPaginatedList(int $page): PaginationInterface;
+    public function createPaginatedList(int $page, User $author): PaginationInterface;
 
     /**
      * Save entity.

@@ -1,18 +1,18 @@
 <?php
 /**
- * Wallet Form Type tests.
+ * Tag Form Type tests.
  */
 
 namespace App\Tests\Form\Type;
 
-use App\Entity\Wallet;
-use App\Form\Type\WalletType;
+use App\Entity\Tag;
+use App\Form\Type\TagType;
 use Symfony\Component\Form\Test\TypeTestCase;
 
 /**
- * Class WalletTypeTest.
+ * Class TagTypeTest.
  */
-class WalletTypeTest extends TypeTestCase
+class TagTypeTest extends TypeTestCase
 {
     /**
      * Test build form.
@@ -22,17 +22,13 @@ class WalletTypeTest extends TypeTestCase
         $formData =
             [
                 'title' => 'test',
-                'type' => 'cash',
-                'balance' => 100,
             ];
 
-        $model = new Wallet();
-        $form = $this->factory->create(WalletType::class, $model);
+        $model = new Tag();
+        $form = $this->factory->create(TagType::class, $model);
 
-        $expected = new Wallet();
+        $expected = new Tag();
         $expected->setTitle($formData['title']);
-        $expected->setType($formData['type']);
-        $expected->setBalance($formData['balance']);
 
         $form->submit($formData);
 
@@ -40,4 +36,5 @@ class WalletTypeTest extends TypeTestCase
 
         $this->assertEquals($expected, $model);
     }
+
 }

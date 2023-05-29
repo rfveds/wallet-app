@@ -5,9 +5,11 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
 use App\Entity\Wallet;
 use App\Form\Type\WalletType;
 use App\Service\WalletServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -57,8 +59,12 @@ class WalletController extends AbstractController
     )]
     public function index(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
         $pagination = $this->walletService->createPaginatedList(
             $request->query->getInt('page', 1),
+            $user,
         );
 
         return $this->render(
@@ -102,7 +108,10 @@ class WalletController extends AbstractController
     )]
     public function create(Request $request): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
         $wallet = new Wallet();
+        $wallet->setUser($user);
         $form = $this->createForm(WalletType::class, $wallet);
         $form->handleRequest($request);
 
@@ -137,6 +146,7 @@ class WalletController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: ['GET|PUT']
     )]
+    #[isGranted('EDIT', subject: 'wallet')]
     public function edit(Request $request, Wallet $wallet): Response
     {
         $form = $this->createForm(

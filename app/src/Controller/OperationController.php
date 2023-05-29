@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Form\Type\OperationType;
+use App\Repository\WalletRepository;
 use App\Service\OperationServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,11 +40,11 @@ class OperationController extends AbstractController
      * @param OperationServiceInterface $operationService Operation service interface
      * @param TranslatorInterface       $translator       Translator interface
      */
-    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator)
+    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator, WalletRepository $walletRepository)
     {
         $this->operationService = $operationService;
         $this->translator = $translator;
-    }
+    }// end __construct()
 
     /**
      * Index action.
@@ -71,7 +72,7 @@ class OperationController extends AbstractController
             'operation/index.html.twig',
             ['pagination' => $pagination]
         );
-    }
+    }// end index()
 
     /**
      * Show action.
@@ -105,7 +106,7 @@ class OperationController extends AbstractController
             'operation/show.html.twig',
             ['operation' => $operation]
         );
-    }
+    }// end show()
 
     /**
      * Create action.
@@ -113,6 +114,7 @@ class OperationController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
+     *
      */
     #[Route(
         '/create',
@@ -149,7 +151,7 @@ class OperationController extends AbstractController
             'operation/create.html.twig',
             ['form' => $form->createView()]
         );
-    }
+    }// end create()
 
     /**
      * Edit action.
@@ -207,7 +209,7 @@ class OperationController extends AbstractController
                 'operation' => $operation,
             ]
         );
-    }
+    }// end edit()
 
     /**
      * Delete action.
@@ -266,7 +268,7 @@ class OperationController extends AbstractController
                 'operation' => $operation,
             ]
         );
-    }
+    }// end delete()
 
     /**
      * Get filters from request.
@@ -284,5 +286,5 @@ class OperationController extends AbstractController
         $filters['tag_id'] = $request->query->getInt('filters_tag_id');
 
         return $filters;
-    }
-}
+    }// end getFilters()
+}// end class

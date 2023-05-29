@@ -135,7 +135,7 @@ class WalletServiceTest extends KernelTestCase
         }
 
         // when
-        $result = $this->walletService->createPaginatedList($page);
+        $result = $this->walletService->createPaginatedList($page, $user);
 
         // then
         $this->assertEquals($expectedResultSize, $result->count());

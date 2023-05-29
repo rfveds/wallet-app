@@ -17,7 +17,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class WalletType.
  */
-class WalletType extends AbstractType implements FormTypeInterface
+class WalletType extends AbstractType
 {
     /**
      * Builds the form.
