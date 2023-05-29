@@ -12,6 +12,9 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class HomePageControllerTest extends WebTestCase
 {
+    /**
+     * Test index page.
+     */
     public function testIndex(): void
     {
         // given
