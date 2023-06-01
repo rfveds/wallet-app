@@ -55,28 +55,28 @@ class CategoryControllerTest extends WebTestCase
         $this->assertEquals($expectedStatusCode, $resultStatusCode);
     }
 
-//    /**
-//     * Test index route for admin user.
-//     *
-//     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-//     */
-//    public function testIndexRouteAdminUser(): void
-//    {
-//        // given
-//        $expectedStatusCode = 200;
-//
-//        $userService = static::getContainer()->get(UserRepository::class);
-//
-//        $user = $this->createUser(['ROLE_ADMIN']);
-//        // $adminUser = $userService->findOneByEmail('operation_save@example.com');
-//        $this->httpClient->loginUser($user);
-//        // when
-//        $this->httpClient->request('GET', self::TEST_ROUTE);
-//        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
-//
-//        // then
-//        $this->assertResponseIsSuccessful();
-//    }
+    /**
+     * Test index route for admin user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testIndexRouteAdminUser(): void
+    {
+        // given
+        $expectedStatusCode = 200;
+
+        $userService = static::getContainer()->get(UserRepository::class);
+
+        $user = $this->createUser(['ROLE_ADMIN']);
+        // $adminUser = $userService->findOneByEmail('operation_save@example.com');
+        $this->httpClient->loginUser($user);
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE);
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+
+        // then
+        $this->assertResponseIsSuccessful();
+    }
 
     /**
      * Create user.
