@@ -58,35 +58,37 @@ class CategoryControllerTest extends WebTestCase
         $this->assertEquals($expectedStatusCode, $resultStatusCode);
     }
 
-//    /**
-//     * Test index route for admin user.
-//     *
-//     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-//     */
-//    public function testIndexRouteAdminUser(): void
-//    {
-//        // given
-//        $expectedStatusCode = 200;
-//        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value]);
-//        $this->httpClient->loginUser($adminUser);
-//        // when
-//        $this->httpClient->loginUser($adminUser); // login as admin user
-//        $this->httpClient->request('GET', self::TEST_ROUTE);
-//        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
-//
-//        // then
-//        $this->assertEquals($expectedStatusCode, $resultStatusCode);
-//    }
+    /**
+     * Test index route for admin user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     * @throws \Exception
+     */
+    public function testIndexRouteAdminUser(): void
+    {
+        // given
+        $email = 'user_'.random_int(0, 1000).'@example.com';
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], $email);
+        $this->httpClient->loginUser($adminUser);
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/');
+        $result = $this->httpClient->getResponse();
+
+        // then
+        $this->assertEquals(200, $result->getStatusCode());
+    }
 
     /**
      * Test show single category.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     * @throws \Exception
      */
     public function testShowCategory(): void
     {
         // given
-        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value]);
+        $email = 'user_'.random_int(0, 1000).'@example.com';
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], $email);
         $this->httpClient->loginUser($adminUser);
 
         $expectedCategory = new Category();
@@ -101,7 +103,6 @@ class CategoryControllerTest extends WebTestCase
         // then
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertSelectorTextContains('html h1', $expectedCategory->getTitle());
-        // ... more assertions...
     }
 
     /**
@@ -113,11 +114,11 @@ class CategoryControllerTest extends WebTestCase
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    private function createUser(array $roles): User
+    private function createUser(array $roles, $email): User
     {
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
-        $user->setEmail('user_cat@example.com');
+        $user->setEmail($email);
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(
