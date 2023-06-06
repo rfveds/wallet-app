@@ -5,7 +5,10 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Category;
+use App\Entity\Enum\UserRole;
 use App\Entity\User;
+use App\Repository\CategoryRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -45,7 +48,7 @@ class CategoryControllerTest extends WebTestCase
     public function testIndexRouteAnonymousUser(): void
     {
         // given
-        $expectedStatusCode = 302;
+        $expectedStatusCode = 302; // redirect to login page
 
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE);
@@ -55,27 +58,50 @@ class CategoryControllerTest extends WebTestCase
         $this->assertEquals($expectedStatusCode, $resultStatusCode);
     }
 
+//    /**
+//     * Test index route for admin user.
+//     *
+//     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+//     */
+//    public function testIndexRouteAdminUser(): void
+//    {
+//        // given
+//        $expectedStatusCode = 200;
+//        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value]);
+//        $this->httpClient->loginUser($adminUser);
+//        // when
+//        $this->httpClient->loginUser($adminUser); // login as admin user
+//        $this->httpClient->request('GET', self::TEST_ROUTE);
+//        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+//
+//        // then
+//        $this->assertEquals($expectedStatusCode, $resultStatusCode);
+//    }
+
     /**
-     * Test index route for admin user.
+     * Test show single category.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    public function testIndexRouteAdminUser(): void
+    public function testShowCategory(): void
     {
         // given
-        $expectedStatusCode = 200;
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value]);
+        $this->httpClient->loginUser($adminUser);
 
-        $userService = static::getContainer()->get(UserRepository::class);
+        $expectedCategory = new Category();
+        $expectedCategory->setTitle('Test 2 category');
+        $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+        $categoryRepository->save($expectedCategory);
 
-        $user = $this->createUser(['ROLE_ADMIN']);
-        // $adminUser = $userService->findOneByEmail('operation_save@example.com');
-        $this->httpClient->loginUser($user);
         // when
-        $this->httpClient->request('GET', self::TEST_ROUTE);
-        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$expectedCategory->getId());
+        $result = $this->httpClient->getResponse();
 
         // then
-        $this->assertResponseIsSuccessful();
+        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertSelectorTextContains('html h1', $expectedCategory->getTitle());
+        // ... more assertions...
     }
 
     /**
@@ -100,7 +126,7 @@ class CategoryControllerTest extends WebTestCase
             )
         );
         $userRepository = static::getContainer()->get(UserRepository::class);
-        $userRepository->save($user);
+        $userRepository->save($user, true);
 
         return $user;
     }

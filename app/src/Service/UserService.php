@@ -68,7 +68,7 @@ class UserService implements UserServiceInterface
      */
     public function save(User $user): void
     {
-        $this->userRepository->save($user);
+        $this->userRepository->save($user, true);
     }// end save()
 
     /**
