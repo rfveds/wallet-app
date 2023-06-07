@@ -90,9 +90,24 @@ class CategoryRepository extends ServiceEntityRepository
     public function findOneById(int $id): ?Category
     {
         return $this->createQueryBuilder('category')->andWhere('category.id = :id')->setParameter('id', $id)->getQuery()->getOneOrNullResult();
-    }
+    }// end findOneById()
 
-// end findOneById()
+    // end findOneById()
+
+    /**
+     * Find one by title.
+     *
+     * @param string $title Title
+     *
+     * @return Category|null Category entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneByTitle(string $title): ?Category
+    {
+        return $this->createQueryBuilder('category')->andWhere('category.title = :title')->setParameter('title', $title)->getQuery()->getOneOrNullResult();
+    }// end findOneByTitle()
+
     /**
      * Get or create new query builder.
      *

@@ -86,6 +86,20 @@ class CategoryService implements CategoryServiceInterface
     }
 
     /**
+     * Find by title.
+     *
+     * @param string $title Category title
+     *
+     * @return Category|null Category entity
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneByTitle(string $title): ?Category
+    {
+        return $this->categoryRepository->findOneByTitle($title);
+    }
+
+    /**
      * Save entity.
      *
      * @param Category $category Category entity
@@ -122,4 +136,6 @@ class CategoryService implements CategoryServiceInterface
             return false;
         }
     }
+
+
 }

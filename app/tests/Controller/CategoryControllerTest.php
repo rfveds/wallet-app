@@ -7,9 +7,13 @@ namespace App\Tests\Controller;
 
 use App\Entity\Category;
 use App\Entity\Enum\UserRole;
+use App\Entity\Operation;
 use App\Entity\User;
+use App\Entity\Wallet;
 use App\Repository\CategoryRepository;
+use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
+use App\Repository\WalletRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
@@ -67,8 +71,7 @@ class CategoryControllerTest extends WebTestCase
     public function testIndexRouteAdminUser(): void
     {
         // given
-        $email = 'user_'.random_int(0, 1000).'@example.com';
-        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], $email);
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_admin@example.com');
         $this->httpClient->loginUser($adminUser);
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE.'/');
@@ -87,8 +90,7 @@ class CategoryControllerTest extends WebTestCase
     public function testShowCategory(): void
     {
         // given
-        $email = 'user_'.random_int(0, 1000).'@example.com';
-        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], $email);
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_show_category@example.com');
         $this->httpClient->loginUser($adminUser);
 
         $expectedCategory = new Category();
@@ -103,6 +105,136 @@ class CategoryControllerTest extends WebTestCase
         // then
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertSelectorTextContains('html h1', $expectedCategory->getTitle());
+    }
+
+    /**
+     * @throws OptimisticLockException
+     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws ContainerExceptionInterface
+     */
+    public function testCreateCategory(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value],
+            'test_category_create@example.com');
+        $this->httpClient->loginUser($user);
+        $categoryCategoryTitle = 'createdCategory';
+        $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
+        // when
+        $this->httpClient->submitForm(
+            'action.save',
+            ['category' => ['title' => $categoryCategoryTitle]]
+        );
+
+        // then
+        $savedCategory = $categoryRepository->findOneByTitle($categoryCategoryTitle);
+        $this->assertEquals($categoryCategoryTitle,
+            $savedCategory->getTitle()
+        );
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
+     * Test edit category.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditCategory(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value],
+            'test_category_edit@example.com');
+        $this->httpClient->loginUser($user);
+
+        $categoryRepository =
+            static::getContainer()->get(CategoryRepository::class);
+        $testCategory = new Category();
+        $testCategory->setTitle('editedCategory');
+        $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $categoryRepository->save($testCategory);
+        $testCategoryId = $testCategory->getId();
+        $expectedNewCategoryTitle = 'TestCategoryEdit';
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.
+            $testCategoryId.'/edit');
+
+        // when
+        $this->httpClient->submitForm(
+            'action.edit',
+            ['category' => ['title' => $expectedNewCategoryTitle]]
+        );
+
+        // then
+        $savedCategory = $categoryRepository->findOneById($testCategoryId);
+        $this->assertEquals($expectedNewCategoryTitle,
+            $savedCategory->getTitle());
+    }
+
+    /**
+     * Test delete category.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testDeleteCategory(): void
+    {
+        // given
+        $user = null;
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_category_delete@example.com');
+        $this->httpClient->loginUser($user);
+
+        $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+        $testCategory = new Category();
+        $testCategory->setTitle('TestCategoryCreated');
+        $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $categoryRepository->save($testCategory);
+        $testCategoryId = $testCategory->getId();
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testCategoryId.'/delete');
+
+        // when
+        $this->httpClient->submitForm(
+            'action.delete'
+        );
+
+        // then
+        $this->assertNull($categoryRepository->findOneByTitle('TestCategoryCreated'));
+    }
+
+    /**
+     * Test if category cant be deleted.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCantDeleteCategory(): void
+    {
+        // given
+        $user = null;
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_category_can_delete@example.com');
+        $this->httpClient->loginUser($user);
+
+        $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+        $testCategory = new Category();
+        $testCategory->setTitle('TestCategoryCreated2');
+        $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $categoryRepository->save($testCategory);
+        $testCategoryId = $testCategory->getId();
+
+        $operation = $this->createOperation($user, $testCategory);
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testCategoryId.'/delete');
+
+        // then
+        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertNotNull($categoryRepository->findOneByTitle('TestCategoryCreated2'));
     }
 
     /**
@@ -130,5 +262,48 @@ class CategoryControllerTest extends WebTestCase
         $userRepository->save($user, true);
 
         return $user;
+    }
+
+    /**
+     * Create operation.
+     *
+     * @param User     $user         User entity
+     * @param Category $testCategory Category entity
+     *
+     * @throws ContainerExceptionInterface
+     */
+    private function createOperation(User $user, Category $testCategory): Operation
+    {
+        $operation = new Operation();
+        $operation->setTitle('TestOperation');
+        $operation->setAmount('11');
+        $operation->setCategory($testCategory);
+        $operation->setWallet($this->createWallet($user));
+        $operation->setAuthor($user);
+
+        $operationRepository = self::getContainer()->get(OperationRepository::class);
+        $operationRepository->save($operation);
+
+        return $operation;
+    }
+
+    /**
+     * Create Wallet.
+     *
+     * @param User $user User entity
+     *
+     * @throws ContainerExceptionInterface
+     */
+    protected function createWallet(User $user): Wallet
+    {
+        $wallet = new Wallet();
+        $wallet->setTitle('TestWallet');
+        $wallet->setType('cash');
+        $wallet->setBalance('1000');
+        $wallet->setUser($user);
+        $walletRepository = self::getContainer()->get(WalletRepository::class);
+        $walletRepository->save($wallet);
+
+        return $wallet;
     }
 }

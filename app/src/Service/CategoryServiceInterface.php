@@ -23,6 +23,24 @@ interface CategoryServiceInterface
     public function createPaginatedList(int $page): PaginationInterface;
 
     /**
+     * Find entity by ID.
+     *
+     * @param int $id Entity ID
+     *
+     * @return Category|null Category entity
+     */
+    public function findOneById(int $id): ?Category;
+
+    /**
+     * Find entity by title.
+     *
+     * @param string $title Entity title
+     *
+     * @return Category|null Category entity
+     */
+    public function findOneByTitle(string $title): ?Category;
+
+    /**
      * Save entity.
      *
      * @param Category $category Category entity
@@ -44,4 +62,4 @@ interface CategoryServiceInterface
      * @return bool Result
      */
     public function canBeDeleted(Category $category): bool;
-}
+}// end interface
