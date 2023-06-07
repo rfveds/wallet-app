@@ -151,7 +151,7 @@ class TagControllerTest extends WebTestCase
         $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
         $tagRepository->save($testTag);
         $testTagId = $testTag->getId();
-        $expectedNewTagTitle = 'Test tag edit updated';
+        $expectedNewTagTitle = 'Test tag edited';
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testTagId.'/edit');
 

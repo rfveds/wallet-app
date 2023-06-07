@@ -8,10 +8,12 @@ namespace App\Tests\Controller;
 use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Entity\Operation;
+use App\Entity\Tag;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
+use App\Repository\TagRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -115,44 +117,90 @@ class OperationControllerTest extends WebTestCase
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertSelectorTextContains('html h1', $expectedOperation->getTitle());
     }
-//
-//    /**
-//     * Test create operation.
-//     *
-//     * @throws OptimisticLockException|ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
-//     */
-//    public function testCreateOperation(): void
-//    {
-//        // given
-//        $user = $this->createUser(
-//            [UserRole::ROLE_USER->value],
-//            'test_operation_create@example.com'
-//        );
-//        $this->httpClient->loginUser($user);
-//        $operationTitle = 'createdOperation';
-//        $operationRepository = static::getContainer()->get(CategoryRepository::class);
-//        $this->httpClient->request(
-//            'GET',
-//            self::TEST_ROUTE.'/create'
-//        );
-//
-//        // when
-//        $this->httpClient->submitForm(
-//            'action.save',
-//            ['operation' => [
-//                    'title' => $operationTitle,
-//                    'amount' => 100,
-//                ],
-//            ]
-//        );
-//
-//        // then
-//        $savedOperation = $operationRepository->findOneByTitle($operationTitle);
-//        $this->assertEquals($operationTitle, $savedOperation->getTitle());
-//
-//        $result = $this->httpClient->getResponse();
-//        $this->assertEquals(302, $result->getStatusCode());
-//    }
+
+    /**
+     * Test edit operation.
+     *
+     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws ContainerExceptionInterface
+     * @throws OptimisticLockException
+     */
+    public function testEditOperation(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value],
+            'operation_edit_user1@example.com');
+        $this->httpClient->loginUser($user);
+
+        $operationRepository =
+            static::getContainer()->get(OperationRepository::class);
+        $testOperation = new Operation();
+        $testOperation->setTitle('TestOperation');
+        $testOperation->setAmount(100);
+        $testOperation->setCategory($this->createCategory('testCategoryEditOperation'));
+        $testOperation->setWallet($this->createWallet($user));
+        $testOperation->setAuthor($user);
+        $testOperation->addTag($this->createTag('testTagEditOperation'));
+        $testOperation->addTag($this->createTag('testTagEditOperation2'));
+        $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
+        $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operationRepository->save($testOperation);
+        $testOperationId = $testOperation->getId();
+        $expectedNewOperationName = 'TestOperationEdit';
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.
+            $testOperationId.'/edit');
+
+        // when
+        $this->httpClient->submitForm(
+            'action.edit',
+            ['operation' => ['title' => $expectedNewOperationName]]
+        );
+
+        // then
+        $savedOperation = $operationRepository->findOneById($testOperationId);
+        $this->assertEquals($expectedNewOperationName,
+            $savedOperation->getTitle());
+    }
+
+    /**
+     * Test delete operation.
+     *
+     * @throws NotFoundExceptionInterface
+     * @throws ORMException
+     * @throws ContainerExceptionInterface
+     * @throws OptimisticLockException
+     */
+    public function testDeleteOperation(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_delete_operation_user@example.com');
+        $this->httpClient->loginUser($user);
+
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $testOperation = new Operation();
+        $testOperation->setTitle('TestOperationDelete');
+        $testOperation->setAmount(100);
+        $testOperation->setCategory($this->createCategory('testCategoryDeleteOperation'));
+        $testOperation->setWallet($this->createWallet($user));
+        $testOperation->setAuthor($user);
+        $testOperation->addTag($this->createTag('testTagDeleteOperation'));
+        $testOperation->addTag($this->createTag('testTagDeleteOperation2'));
+        $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
+        $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operationRepository->save($testOperation);
+        $testOperationId = $testOperation->getId();
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testOperationId.'/delete');
+
+        // when
+        $this->httpClient->submitForm('action.delete');
+
+        // then
+        $savedOperation = $operationRepository->findOneById($testOperationId);
+        $this->assertNull($savedOperation);
+    }
 
     /**
      * Create user.
@@ -214,5 +262,20 @@ class OperationControllerTest extends WebTestCase
         $categoryRepository->save($category);
 
         return $category;
+    }
+
+    /**
+     * Create tag.
+     *
+     * @throws ContainerExceptionInterface
+     */
+    private function createTag(string $string): Tag
+    {
+        $tag = new Tag();
+        $tag->setTitle($string);
+        $tagRepository = self::getContainer()->get(TagRepository::class);
+        $tagRepository->save($tag);
+
+        return $tag;
     }
 }

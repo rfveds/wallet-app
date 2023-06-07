@@ -189,7 +189,6 @@ class CategoryControllerTest extends WebTestCase
     public function testDeleteCategory(): void
     {
         // given
-        $user = null;
         $user = $this->createUser([UserRole::ROLE_USER->value], 'test_category_delete@example.com');
         $this->httpClient->loginUser($user);
 
