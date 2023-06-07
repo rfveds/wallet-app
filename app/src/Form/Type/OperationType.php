@@ -7,6 +7,7 @@ namespace App\Form\Type;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\User;
 use App\Entity\Wallet;
 use App\Form\DataTransformer\TagsDataTransformer;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -62,7 +63,7 @@ class OperationType extends AbstractType
             TextType::class,
             [
                 'label' => 'label.amount',
-                'required' => true,
+                'required' => false,
                 'attr' => ['max_length' => 64],
             ]
         );
@@ -75,7 +76,7 @@ class OperationType extends AbstractType
                     return $category->getTitle();
                 },
                 'label' => 'label.category',
-                'required' => true,
+                'required' => false,
                 'placeholder' => 'label.none',
             ]
         );
@@ -88,7 +89,7 @@ class OperationType extends AbstractType
                     return $wallet->getTitle();
                 },
                 'label' => 'label.wallet',
-                'required' => true,
+                'required' => false,
                 'placeholder' => 'label.none',
             ]
         );

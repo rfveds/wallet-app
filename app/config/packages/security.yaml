@@ -49,6 +49,7 @@ security:
         - { path: ^/wallet, roles: ROLE_USER}
         - { path: ^/tag, roles: ROLE_USER}
         - { path: ^/logout, roles: ROLE_USER}
+        - { path: ^/user, roles: ROLE_ADMIN}
 
 
 when@test:

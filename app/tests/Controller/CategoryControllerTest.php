@@ -65,27 +65,26 @@ class CategoryControllerTest extends WebTestCase
     /**
      * Test index route for admin user.
      *
-     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-     * @throws \Exception
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException|\Exception
      */
     public function testIndexRouteAdminUser(): void
     {
         // given
-        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_admin@example.com');
+        $expectedStatusCode = 200;
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_category__admin@example.com');
         $this->httpClient->loginUser($adminUser);
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE.'/');
         $result = $this->httpClient->getResponse();
 
         // then
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
     /**
      * Test show single category.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-     * @throws \Exception
      */
     public function testShowCategory(): void
     {
@@ -108,32 +107,38 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
-     * @throws OptimisticLockException
-     * @throws NotFoundExceptionInterface
-     * @throws ORMException
-     * @throws ContainerExceptionInterface
+     * Test create category.
+     *
+     * @throws OptimisticLockException|ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
      */
     public function testCreateCategory(): void
     {
         // given
-        $user = $this->createUser([UserRole::ROLE_USER->value],
-            'test_category_create@example.com');
+        $user = $this->createUser(
+            [UserRole::ROLE_USER->value],
+            'test_category_create@example.com'
+        );
         $this->httpClient->loginUser($user);
-        $categoryCategoryTitle = 'createdCategory';
+        $categoryTitle = 'createdCategory';
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
 
-        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
         // when
         $this->httpClient->submitForm(
             'action.save',
-            ['category' => ['title' => $categoryCategoryTitle]]
+            [
+                'category' => [
+                        'title' => $categoryTitle,
+                    ],
+            ]
         );
 
         // then
-        $savedCategory = $categoryRepository->findOneByTitle($categoryCategoryTitle);
-        $this->assertEquals($categoryCategoryTitle,
-            $savedCategory->getTitle()
-        );
+        $savedCategory = $categoryRepository->findOneByTitle($categoryTitle);
+        $this->assertEquals($categoryTitle, $savedCategory->getTitle());
 
         $result = $this->httpClient->getResponse();
         $this->assertEquals(302, $result->getStatusCode());

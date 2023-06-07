@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.operation_details'|trans({'%id%': operation.id|default('')}) }}</h1>
+    <h1>{{ operation.title }}</h1>
     {% if operation is defined and operation|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label.id'|trans }}</dt>

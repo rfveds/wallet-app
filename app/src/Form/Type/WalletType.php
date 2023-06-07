@@ -94,6 +94,6 @@ class WalletType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'category';
+        return 'wallet';
     }
 }

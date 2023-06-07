@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.wallet_details'|trans({'%id%': wallet.id|default('')}) }}</h1>
+    <h1>{{ wallet.title }}</h1>
     {% if wallet is defined and wallet|length %}
         <dl class="dl-horizontal">
             <dt>{{ 'label.id'|trans }}</dt>

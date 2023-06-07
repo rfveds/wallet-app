@@ -182,7 +182,7 @@ class TagController extends AbstractController
         '/{id}/delete',
         name: 'tag_delete',
         requirements: ['id' => '[1-9]\d*'],
-        methods: 'DELETE',
+        methods: 'GET|DELETE',
     )]
     public function delete(Request $request, Tag $tag): Response
     {
