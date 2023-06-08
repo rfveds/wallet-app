@@ -60,7 +60,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->addFlash('success', 'message_registered_successfully');
+            $this->addFlash('success', 'message.registered_successfully');
 
             return $userAuthenticator->authenticateUser(
                 $user,

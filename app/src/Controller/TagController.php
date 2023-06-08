@@ -204,7 +204,7 @@ class TagController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('message_deleted_successfully')
+                $this->translator->trans('message.deleted_successfully')
             );
 
             return $this->redirectToRoute('tag_index');

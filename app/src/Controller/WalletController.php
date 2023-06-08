@@ -120,7 +120,7 @@ class WalletController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('message_created_successfully')
+                $this->translator->trans('message.created_successfully')
             );
 
             return $this->redirectToRoute('wallet_index');
@@ -167,7 +167,7 @@ class WalletController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('message_updated_successfully')
+                $this->translator->trans('message.updated_successfully')
             );
 
             return $this->redirectToRoute('wallet_index');
