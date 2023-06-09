@@ -103,7 +103,6 @@ class TagControllerTest extends WebTestCase
         // then
         $this->assertEquals(200, $result->getStatusCode());
         $this->assertSelectorTextContains('dd', $expectedTag->getId());
-        // ... more assertions...
     }
 
     /**

@@ -19,6 +19,7 @@ class TagTypeTest extends TypeTestCase
      */
     public function testSubmitValidData(): void
     {
+        // given
         $formData =
             [
                 'title' => 'test',
@@ -30,11 +31,11 @@ class TagTypeTest extends TypeTestCase
         $expected = new Tag();
         $expected->setTitle($formData['title']);
 
+        // when
         $form->submit($formData);
 
+        // then
         $this->assertTrue($form->isSynchronized());
-
         $this->assertEquals($expected, $model);
     }
-
 }

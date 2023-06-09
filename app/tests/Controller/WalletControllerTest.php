@@ -68,18 +68,16 @@ class WalletControllerTest extends WebTestCase
     public function testIndexRouteAdminUser(): void
     {
         // given
+        $expectedStatusCode = 200;
         $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_wallet_admin@example.com');
         $this->httpClient->loginUser($adminUser);
 
         // when
-        $this->httpClient->request(
-            'GET',
-            self::TEST_ROUTE.'/'
-        );
+        $this->httpClient->request('GET', self::TEST_ROUTE);
         $result = $this->httpClient->getResponse();
 
         // then
-        $this->assertEquals(200, $result->getStatusCode());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
     /**
@@ -91,9 +89,7 @@ class WalletControllerTest extends WebTestCase
     public function testShowWallet(): void
     {
         // given
-        $adminUser = $this->createUser(
-            [UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value],
-            'test_show_wallet@example.com');
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_show_wallet@example.com');
         $this->httpClient->loginUser($adminUser);
 
         $expectedWallet = new Wallet();
@@ -122,10 +118,7 @@ class WalletControllerTest extends WebTestCase
     public function testCreateWallet(): void
     {
         // given
-        $user = $this->createUser(
-            [UserRole::ROLE_USER->value],
-            'test_wallet_create@example.com'
-        );
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_wallet_create@example.com');
         $this->httpClient->loginUser($user);
         $walletTitle = 'createdWallet';
         $walletRepository = static::getContainer()->get(WalletRepository::class);
@@ -153,6 +146,32 @@ class WalletControllerTest extends WebTestCase
     }
 
     /**
+     * Test edit category with unauthorized user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditWalletUnauthorizedUser(): void
+    {
+        // given
+        $expectedHttpStatusCode = 302;
+
+        $wallet = new Wallet();
+        $wallet->setTitle('TestEditAnAuthCategory');
+        $wallet->setBalance(0);
+        $wallet->setType('cash');
+        $wallet->setUser($this->createUser([UserRole::ROLE_USER->value], 'test_un_auth_user@example.com'));
+        $categoryRepository = static::getContainer()->get(WalletRepository::class);
+        $categoryRepository->save($wallet);
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$wallet->getId().'/edit');
+        $actual = $this->httpClient->getResponse();
+
+        // then
+        $this->assertEquals($expectedHttpStatusCode, $actual->getStatusCode());
+    }
+
+    /**
      * Test edit wallet.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
@@ -160,9 +179,7 @@ class WalletControllerTest extends WebTestCase
     public function testEditWallet(): void
     {
         // given
-        $user = $this->createUser(
-            [UserRole::ROLE_USER->value],
-            'test_wallet_edit@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_wallet_edit@example.com');
         $this->httpClient->loginUser($user);
 
         $walletRepository = static::getContainer()->get(WalletRepository::class);
@@ -177,7 +194,8 @@ class WalletControllerTest extends WebTestCase
 
         $this->httpClient->request(
             'GET',
-            self::TEST_ROUTE.'/'.$testWalletId.'/edit');
+            self::TEST_ROUTE.'/'.$testWalletId.'/edit'
+        );
 
         // when
         $this->httpClient->submitForm(
@@ -187,8 +205,7 @@ class WalletControllerTest extends WebTestCase
 
         // then
         $savedWallet = $walletRepository->findOneById($testWalletId);
-        $this->assertEquals($expectedNewWalletTitle,
-            $savedWallet->getTitle());
+        $this->assertEquals($expectedNewWalletTitle, $savedWallet->getTitle());
     }
 
     /**
@@ -199,7 +216,6 @@ class WalletControllerTest extends WebTestCase
     public function testDeleteWallet(): void
     {
         // given
-        $user = null;
         $user = $this->createUser([UserRole::ROLE_USER->value], 'test_wallet_delete@example.com');
         $this->httpClient->loginUser($user);
 

@@ -72,18 +72,16 @@ class OperationControllerTest extends WebTestCase
     public function testIndexRouteAdminUser(): void
     {
         // given
+        $expectedStatusCode = 200;
         $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_operation_admin@example.com');
         $this->httpClient->loginUser($adminUser);
 
         // when
-        $this->httpClient->request(
-            'GET',
-            self::TEST_ROUTE.'/'
-        );
+        $this->httpClient->request('GET', self::TEST_ROUTE);
         $result = $this->httpClient->getResponse();
 
         // then
-        $this->assertEquals(301, $result->getStatusCode());
+        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
     }
 
     /**
@@ -105,7 +103,6 @@ class OperationControllerTest extends WebTestCase
         $expectedOperation->setCategory($this->createCategory('testCategoryShowOperation'));
         $expectedOperation->setWallet($this->createWallet($adminUser));
         $expectedOperation->setAuthor($adminUser);
-
         $operationRepository = static::getContainer()->get(OperationRepository::class);
         $operationRepository->save($expectedOperation);
 
@@ -119,6 +116,42 @@ class OperationControllerTest extends WebTestCase
     }
 
     /**
+     * Test create operation.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateOperation(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_operation_create@example.com');
+        $this->httpClient->loginUser($user);
+        $operationTitle = 'Test 1 create operation';
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
+        $testWallet = $this->createWallet($user);
+
+        // when
+        $this->httpClient->submitForm(
+            'action.save',
+            [
+                'operation' => [
+                    'title' => $operationTitle,
+                    'amount' => 100,
+                    'category' => 1,
+                    'tags' => 'abc, def, ghi',
+                ],
+            ]
+        );
+
+        // then
+        $savedOperation = $operationRepository->findOneBy(['title' => $operationTitle]);
+        $this->assertEquals($operationTitle, $savedOperation->getTitle());
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
      * Test edit operation.
      *
      * @throws NotFoundExceptionInterface
@@ -129,17 +162,16 @@ class OperationControllerTest extends WebTestCase
     public function testEditOperation(): void
     {
         // given
-        $user = $this->createUser([UserRole::ROLE_USER->value],
-            'operation_edit_user1@example.com');
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'operation_edit_user@example.com');
         $this->httpClient->loginUser($user);
 
-        $operationRepository =
-            static::getContainer()->get(OperationRepository::class);
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
         $testOperation = new Operation();
-        $testOperation->setTitle('TestOperation');
+        $testOperation->setTitle('TestEditOperation');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryEditOperation'));
-        $testOperation->setWallet($this->createWallet($user));
+        $testOperationWallet = $this->createWallet($user);
+        $testOperation->setWallet($testOperationWallet);
         $testOperation->setAuthor($user);
         $testOperation->addTag($this->createTag('testTagEditOperation'));
         $testOperation->addTag($this->createTag('testTagEditOperation2'));
@@ -147,30 +179,69 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
         $operationRepository->save($testOperation);
         $testOperationId = $testOperation->getId();
-        $expectedNewOperationName = 'TestOperationEdit';
+        $expectedNewOperationTitle = 'TestOperationEdited';
 
-        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.
-            $testOperationId.'/edit');
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testOperationId.'/edit');
 
         // when
         $this->httpClient->submitForm(
             'action.edit',
-            ['operation' => ['title' => $expectedNewOperationName]]
+            ['operation' => [
+                'title' => $expectedNewOperationTitle,
+                'amount' => 200,
+                'category' => 2,
+                'wallet' => $testOperationWallet->getId(),
+                'tags' => 'abc, def',
+                ],
+            ]
         );
 
         // then
         $savedOperation = $operationRepository->findOneById($testOperationId);
-        $this->assertEquals($expectedNewOperationName,
-            $savedOperation->getTitle());
+        $this->assertEquals($expectedNewOperationTitle, $savedOperation->getTitle());
+
+        $this->assertNotNull($savedOperation->getUpdatedAt());
+        $this->assertNotNull($savedOperation->getCreatedAt());
+    }
+
+    /**
+     * Test remove tag from operation.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testRemoveTagFromOperation(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_rm_tag_operation@example.com');
+        $this->httpClient->loginUser($user);
+
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $testOperation = new Operation();
+        $testOperation->setTitle('TestRemoveTagOperation');
+        $testOperation->setAmount(100);
+        $testOperation->setCategory($this->createCategory('testCategoryRemoveTagOperation'));
+        $testOperation->setWallet($this->createWallet($user));
+        $testOperation->setAuthor($user);
+        $testTag = $this->createTag('testTagRemoveOperation');
+        $testOperation->addTag($testTag);
+        $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
+        $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operationRepository->save($testOperation);
+        $testOperationId = $testOperation->getId();
+
+        // when
+        $testOperation->removeTag($testTag);
+        $operationRepository->save($testOperation);
+        $testOperationTags = $testOperation->getTags();
+
+        // then
+        $this->assertEmpty($testOperationTags);
     }
 
     /**
      * Test delete operation.
      *
-     * @throws NotFoundExceptionInterface
-     * @throws ORMException
-     * @throws ContainerExceptionInterface
-     * @throws OptimisticLockException
+     * @throws NotFoundExceptionInterface|ORMException|ContainerExceptionInterface|OptimisticLockException
      */
     public function testDeleteOperation(): void
     {
@@ -185,8 +256,6 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setCategory($this->createCategory('testCategoryDeleteOperation'));
         $testOperation->setWallet($this->createWallet($user));
         $testOperation->setAuthor($user);
-        $testOperation->addTag($this->createTag('testTagDeleteOperation'));
-        $testOperation->addTag($this->createTag('testTagDeleteOperation2'));
         $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
         $operationRepository->save($testOperation);

@@ -37,4 +37,11 @@ interface WalletServiceInterface
      * @param Wallet $wallet Wallet entity
      */
     public function delete(Wallet $wallet);
+
+    /**
+     * Find by user.
+     *
+     * @return array<string, mixed> Result
+     */
+    public function findByUser(User $user);
 }

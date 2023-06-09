@@ -10,11 +10,13 @@ use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Form\DataTransformer\TagsDataTransformer;
+use App\Repository\WalletRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class OperationType.
@@ -27,14 +29,30 @@ class OperationType extends AbstractType
     private TagsDataTransformer $tagsDataTransformer;
 
     /**
+     * Security.
+     *
+     * @var Security Security helper
+     */
+    private Security $security;
+
+    /**
+     * Wallet repository.
+     *
+     * @var WalletRepository Wallet repository
+     */
+    private WalletRepository $walletRepository;
+
+    /**
      * Constructor.
      *
      * @param TagsDataTransformer $tagsDataTransformer Tags data transformer
      */
-    public function __construct(TagsDataTransformer $tagsDataTransformer)
+    public function __construct(TagsDataTransformer $tagsDataTransformer, Security $security, WalletRepository $walletRepository)
     {
         $this->tagsDataTransformer = $tagsDataTransformer;
-    }
+        $this->security = $security;
+        $this->walletRepository = $walletRepository;
+    }// end __construct()
 
     /**
      * Builds the form.
@@ -85,14 +103,18 @@ class OperationType extends AbstractType
             EntityType::class,
             [
                 'class' => Wallet::class,
+                'query_builder' => function (WalletRepository $walletRepository) {
+                    return $walletRepository->queryByAuthor($this->security->getUser());
+                },
                 'choice_label' => function ($wallet) {
                     return $wallet->getTitle();
                 },
-                'label' => 'label.wallet',
-                'required' => false,
-                'placeholder' => 'label.none',
+                'label' => 'label_wallet',
+                'placeholder' => 'label_none',
+                'required' => true,
             ]
         );
+
         $builder->add(
             'tags',
             TextType::class,
@@ -106,7 +128,7 @@ class OperationType extends AbstractType
         $builder->get('tags')->addModelTransformer(
             $this->tagsDataTransformer
         );
-    }
+    }// end buildForm()
 
     /**
      * Configures the options for this type.
@@ -116,7 +138,7 @@ class OperationType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['data_class' => Operation::class]);
-    }
+    }// end configureOptions()
 
     /**
      * Returns the prefix of the template block name for this type.
@@ -129,5 +151,5 @@ class OperationType extends AbstractType
     public function getBlockPrefix(): string
     {
         return 'operation';
-    }
-}
+    }// end getBlockPrefix()
+}// end class

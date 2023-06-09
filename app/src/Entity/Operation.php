@@ -81,7 +81,7 @@ class Operation
      */
     #[Assert\Type(type: 'App\Entity\Category')]
     #[ORM\ManyToOne(targetEntity: Category::class)]
-    #[ORM\JoinColumn(nullable: false)]
+//    #[ORM\JoinColumn(nullable: false)]
     private ?Category $category = null;
 
     /**
@@ -91,7 +91,7 @@ class Operation
      */
     #[Assert\Type(type: 'App\Entity\Wallet')]
     #[ORM\ManyToOne(targetEntity: Wallet::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    // #[ORM\JoinColumn(nullable: false)]
     private ?Wallet $wallet = null;
 
     /**

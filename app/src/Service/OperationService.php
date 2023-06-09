@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Operation;
 use App\Entity\User;
+use App\Entity\Wallet;
 use App\Repository\OperationRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -123,4 +124,21 @@ class OperationService implements OperationServiceInterface
 
         return $resultFilters;
     }// end prepareFilters()
+
+    /**
+     * Find by wallet.
+     *
+     * @param Wallet $wallet Wallet entity
+     *
+     * @return array Result
+     */
+    public function findByWallet(Wallet $wallet): array
+    {
+        return $this->operationRepository->queryByWallet($wallet)->getQuery()->getResult();
+    }// end findByWallet()
+
+    public function findByUser(User $user)
+    {
+        return $this->operationRepository->queryByAuthor($user)->getQuery()->getResult();
+    }
 }// end class

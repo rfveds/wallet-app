@@ -37,6 +37,8 @@ class WalletServiceTest extends KernelTestCase
 
     /**
      * Set up test.
+     *
+     * @throws ContainerExceptionInterface
      */
     public function setUp(): void
     {

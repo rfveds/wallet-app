@@ -5,9 +5,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Form\Type\WalletType;
+use App\Service\OperationService;
+use App\Service\OperationServiceInterface;
 use App\Service\WalletServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,6 +32,11 @@ class WalletController extends AbstractController
     private WalletServiceInterface $walletService;
 
     /**
+     * Operation service.
+     */
+    private OperationServiceInterface $operationService;
+
+    /**
      * Translator.
      */
     private TranslatorInterface $translator;
@@ -36,12 +44,14 @@ class WalletController extends AbstractController
     /**
      * WalletController constructor.
      *
-     * @param WalletServiceInterface $walletService Wallet service interface
-     * @param TranslatorInterface    $translator    Translator interface
+     * @param WalletServiceInterface $walletService    Wallet service interface
+     * @param OperationService       $operationService Operation service
+     * @param TranslatorInterface    $translator       Translator interface
      */
-    public function __construct(WalletServiceInterface $walletService, TranslatorInterface $translator)
+    public function __construct(WalletServiceInterface $walletService, OperationService $operationService, TranslatorInterface $translator)
     {
         $this->walletService = $walletService;
+        $this->operationService = $operationService;
         $this->translator = $translator;
     }
 
@@ -53,7 +63,6 @@ class WalletController extends AbstractController
      * @return Response HTTP response
      */
     #[Route(
-        '/',
         name: 'wallet_index',
         methods: 'GET',
     )]
@@ -213,6 +222,10 @@ class WalletController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $operations = $this->operationService->findByWallet($wallet);
+            foreach ($operations as $operation) {
+                $this->operationService->delete($operation);
+            }
             $this->walletService->delete($wallet);
 
             $this->addFlash(

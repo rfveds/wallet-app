@@ -6,7 +6,6 @@
 namespace App\Tests\Service;
 
 use App\Entity\Category;
-use App\Entity\Enum\UserRole;
 use App\Entity\Operation;
 use App\Entity\Tag;
 use App\Entity\User;
@@ -141,6 +140,29 @@ class CategoryServiceTest extends KernelTestCase
 
         // when
         $resultCategory = $this->categoryService->findOneById($expectedCategoryId);
+
+        // then
+        $this->assertEquals($expectedCategory, $resultCategory);
+    }
+
+    /**
+     * Test find by title.
+     *
+     * @throws NonUniqueResultException
+     */
+    public function testFindByTitle(): void
+    {
+        // given
+        $expectedCategory = new Category();
+        $expectedCategory->setTitle('Test Find By Title Category');
+        $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
+        $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $this->entityManager->persist($expectedCategory);
+        $this->entityManager->flush();
+        $expectedCategoryTitle = $expectedCategory->getTitle();
+
+        // when
+        $resultCategory = $this->categoryService->findOneByTitle($expectedCategoryTitle);
 
         // then
         $this->assertEquals($expectedCategory, $resultCategory);

@@ -20,6 +20,8 @@
         </div>
 
         <nav>
+
+
             <a href="{{ path('homepage') }}">
                 {{ 'title.homepage'|trans }}
             </a>
@@ -35,18 +37,31 @@
             <a href="{{ path('category_index') }}">
                 {{ 'title.category_list'|trans }}
             </a>
+
+
+
+{#            {%  if is_granted('ROLE_ADMIN') %}#}
+{#            <a href="{{ path('user_index') }}">#}
+{#                {{ 'title.user_list'|trans }}#}
+{#            </a>#}
+{#            {% endif %}#}
+
+            {% if app.user %}
+
+            <a href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'my_profile'|trans }}">
+                {{ app.user.email }}
+            </a>
+
+            {% endif %}
+
+            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                <a href="{{ url('app_logout') }}">{{ 'action.logout'|trans }}</a>
+            {% else %}
+                <a href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
+            {% endif %}
         </nav>
 
-        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-            <div>{{ app.user.email }}</div>
-            <div>
-                <a href="{{ url('app_logout') }}">{{ 'action.logout'|trans }}</a>
-            </div>
-        {% else %}
-            <div>
-                <a href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
-            </div>
-        {% endif %}
+
         {% block body %}{% endblock %}
     </body>
 </html>

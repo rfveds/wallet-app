@@ -7,6 +7,7 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -76,7 +77,7 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Query tasks by author.
+     * Query operation by author.
      *
      * @param UserInterface         $user    User entity
      * @param array<string, object> $filters Filters
@@ -94,7 +95,25 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Count tasks by category.
+     * Query operation by wallet.
+     *
+     * @param Wallet                $wallet  Wallet entity
+     * @param array<string, object> $filters Filters
+     *
+     * @return QueryBuilder Query builder
+     */
+    public function queryByWallet(Wallet $wallet, array $filters = []): QueryBuilder
+    {
+        $queryBuilder = $this->queryAll($filters);
+
+        $queryBuilder->andWhere('operation.wallet = :wallet')
+            ->setParameter('wallet', $wallet);
+
+        return $queryBuilder;
+    }
+
+    /**
+     * Count operation by category.
      *
      * @param Category $category Category
      *

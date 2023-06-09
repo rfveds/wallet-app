@@ -6,8 +6,12 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Enum\UserRole;
+use App\Entity\Operation;
 use App\Entity\User;
+use App\Entity\Wallet;
+use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
+use App\Repository\WalletRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
@@ -49,6 +53,25 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
+     * Test index action as logged as user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testIndexActionAsLoggedInUser(): void
+    {
+        // given
+        // access denied
+        $expectedStatusCode = 403;
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'user_index_user@example.com');
+        $this->httpClient->loginUser($user);
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/');
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
+        // then
+        $this->assertEquals($expectedStatusCode, $resultStatusCode);
+    }
+
+    /**
      * Test index action as logged in admin.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
@@ -67,7 +90,7 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
-    * Test show action.
+     * Test show action.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
@@ -83,6 +106,31 @@ class UserControllerTest extends WebTestCase
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
         // then
         $this->assertEquals($expectedStatusCode, $resultStatusCode);
+    }
+
+    /**
+     * Test delete user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testDeleteUser(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user@example.com');
+        $this->httpClient->loginUser($adminUser);
+
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $testUser = $this->createUser([UserRole::ROLE_USER->value], 'user_to_delete@example.com');
+        $testUserId = $testUser->getId();
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testUserId.'/delete');
+
+        // then
+        $this->httpClient->submitForm('action.delete');
+
+        // then
+        $savedUser = $userRepository->findOneBy(['id' => $testUserId]);
+        $this->assertNull($savedUser);
     }
 
     /**
@@ -110,5 +158,52 @@ class UserControllerTest extends WebTestCase
         $userRepository->save($user, true);
 
         return $user;
+    }
+
+    /**
+     * Create wallet.
+     *
+     * @param string $title Wallet name
+     * @param User   $user  User entity
+     *
+     * @return Wallet Wallet entity
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    private function createWallet(string $title, User $user): Wallet
+    {
+        $wallet = new Wallet();
+        $wallet->setTitle($title);
+        $wallet->setBalance(0);
+        $wallet->setUser($user);
+        $wallet->setType('cash');
+        $walletRepository = static::getContainer()->get(WalletRepository::class);
+        $walletRepository->save($wallet, true);
+
+        return $wallet;
+    }
+
+    /**
+     * Create operation.
+     *
+     * @param string $title  Operation name
+     * @param User   $user   User entity
+     * @param Wallet $wallet Wallet entity
+     *
+     * @return Operation Operation entity
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    private function creteOperation(string $title, User $user, Wallet $wallet): Operation
+    {
+        $operation = new Operation();
+        $operation->setTitle($title);
+        $operation->setAmount(0);
+        $operation->setAuthor($user);
+        $operation->setWallet($wallet);
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $operationRepository->save($operation, true);
+
+        return $operation;
     }
 }

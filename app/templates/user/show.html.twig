@@ -24,15 +24,15 @@
             <a href="{{ url('user_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
             </a>
-        </p>
+{#        </p>#}
 {#        <div class="btn btn-light">#}
 {#            <a href="{{ url('user_edit', {id: user.id}) }}" title="{{ 'action.edit'|trans }}">#}
 {#                {{ 'action.edit'|trans }}</a>#}
 {#        </div>#}
-{#        <div class="btn btn-light">#}
-{#            <a href="{{ url('user_delete', {id: user.id}) }}" title="{{ 'action.delete'|trans }}">#}
-{#                {{ 'action.delete'|trans }}</a>#}
-{#        </div>#}
+        <div class="btn btn-light">
+            <a href="{{ url('user_delete', {id: user.id}) }}" title="{{ 'action.delete'|trans }}">
+                {{ 'action.delete'|trans }}</a>
+        </div>
     {% else %}
         <p>
             {{ 'message.record_not_found'|trans }}

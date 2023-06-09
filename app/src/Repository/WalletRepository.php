@@ -5,6 +5,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -72,6 +73,21 @@ class WalletRepository extends ServiceEntityRepository
     }
 
     /**
+     * Query wallets by author.
+     *
+     * @param User $user Author entity
+     *
+     * @return QueryBuilder Query builder
+     */
+    public function findByUser(User $user): QueryBuilder
+    {
+        return $this->createQueryBuilder('wallet')
+            ->select('partial wallet.{id, title, user, balance, type}')
+            ->andWhere('wallet.user = :user')
+            ->setParameter('user', $user);
+    }
+
+    /**
      * Save record.
      *
      * @param Wallet $wallet Wallet entity
@@ -108,11 +124,11 @@ class WalletRepository extends ServiceEntityRepository
     /**
      * Query wallets by author.
      *
-     * @param \App\Entity\User $author Author entity
+     * @param User $author Author entity
      *
      * @return QueryBuilder Query builder
      */
-    public function queryByAuthor(\App\Entity\User $author)
+    public function queryByAuthor(User $author): QueryBuilder
     {
         $queryBuilder = $this->queryAll();
         $queryBuilder->andWhere('wallet.user = :author')

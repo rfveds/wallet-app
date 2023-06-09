@@ -87,16 +87,13 @@ class OperationVoter extends Voter
         }
 
         // ... (check conditions and return true to grant permission) ...
-        switch ($attribute) {
-            case self::EDIT:
-                return $this->canEdit($subject, $user);
-            case self::VIEW:
-                return $this->canView($subject, $user);
-            case self::DELETE:
-                return $this->canDelete($subject, $user);
-        }
+        return match ($attribute) {
+            self::EDIT => $this->canEdit($subject, $user),
+            self::VIEW => $this->canView($subject, $user),
+            self::DELETE => $this->canDelete($subject, $user),
+            default => false,
+        };
 
-        return false;
     }// end voteOnAttribute()
 
     /**

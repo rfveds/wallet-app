@@ -1,20 +1,20 @@
 <?php
 /**
- * Wallet Voter.
+ * User Voter.
  */
 
 namespace App\Security\Voter;
 
-use App\Entity\Wallet;
+use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class WalletVoter.
+ * Class UserVoter.
  */
-class WalletVoter extends Voter
+class UserVoter extends Voter
 {
     /**
      * Edit permission.
@@ -38,6 +38,11 @@ class WalletVoter extends Voter
     public const DELETE = 'DELETE';
 
     /**
+     * List permission.
+     */
+    public const LIST = 'LIST';
+
+    /**
      * Security helper.
      *
      * @var Security Security helper
@@ -45,7 +50,7 @@ class WalletVoter extends Voter
     private Security $security;
 
     /**
-     * WalletVoter constructor.
+     * UserVoter constructor.
      *
      * @param Security $security Security helper
      */
@@ -64,12 +69,12 @@ class WalletVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
-            && $subject instanceof Wallet;
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::LIST])
+            && $subject instanceof User;
     }// end supports()
 
     /**
-     * Perform a single access check wallet on a given attribute, subject and token.
+     * Perform a single access check operation on a given attribute, subject and token.
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
      * @param string         $attribute Permission name
@@ -91,46 +96,55 @@ class WalletVoter extends Voter
             self::EDIT => $this->canEdit($subject, $user),
             self::VIEW => $this->canView($subject, $user),
             self::DELETE => $this->canDelete($subject, $user),
+            self::LIST => $this->canList($subject, $user),
             default => false,
         };
     }// end voteOnAttribute()
 
     /**
-     * Check if user can edit wallet.
+     * Can user edit user.
      *
-     * @param Wallet        $wallet Wallet entity
-     * @param UserInterface $user   User entity
-     *
-     * @return bool Vote result
+     * @param UserInterface $subject User entity
+     * @param UserInterface $user    User entity
      */
-    private function canEdit(Wallet $wallet, UserInterface $user): bool
+    private function canEdit(UserInterface $subject, UserInterface $user): bool
     {
-        return $wallet->getUser() === $user;
+        return $this->security->isGranted('ROLE_ADMIN')
+            || $subject->getId() === $user->getId();
     }// end canEdit()
 
     /**
-     * Check if user can view wallet.
+     * Can user view user.
      *
-     * @param Wallet        $wallet Wallet entity
-     * @param UserInterface $user   User entity
-     *
-     * @return bool Vote result
+     * @param UserInterface $subject User entity
+     * @param UserInterface $user    User entity
      */
-    private function canView(Wallet $wallet, UserInterface $user): bool
+    private function canView(UserInterface $subject, UserInterface $user): bool
     {
-        return $wallet->getUser() === $user;
+        return $this->security->isGranted('ROLE_ADMIN')
+            || $subject->getId() === $user->getId();
     }// end canView()
 
     /**
-     * Check if user can delete wallet.
+     * Can user delete user.
      *
-     * @param Wallet        $wallet Wallet entity
-     * @param UserInterface $user   User entity
-     *
-     * @return bool Vote result
+     * @param UserInterface $subject User entity
+     * @param UserInterface $user    User entity
      */
-    private function canDelete(Wallet $wallet, UserInterface $user): bool
+    private function canDelete(UserInterface $subject, UserInterface $user): bool
     {
-        return $wallet->getUser() === $user;
+        return $this->security->isGranted('ROLE_ADMIN')
+            || $subject->getId() === $user->getId();
     }// end canDelete()
+
+    /**
+     * Can user list users.
+     *
+     * @param UserInterface $subject User entity
+     * @param UserInterface $user    User entity
+     */
+    private function canList(UserInterface $subject, UserInterface $user): bool
+    {
+        return $this->security->isGranted('ROLE_ADMIN');
+    }// end canList()
 }// end class

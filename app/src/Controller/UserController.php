@@ -6,8 +6,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\OperationServiceInterface;
 use App\Service\UserServiceInterface;
+use App\Service\WalletServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,16 +22,29 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/user')]
 class UserController extends AbstractController
 {
+    /**
+     * User service.
+     */
     private UserServiceInterface $userService;
 
     /**
-     * UserController constructor.
-     *
-     * @param UserServiceInterface $userService
+     * Operation service.
      */
-    public function __construct(UserServiceInterface $userService)
+    private OperationServiceInterface $operationService;
+
+    /**
+     * Wallet service.
+     */
+    private WalletServiceInterface $walletService;
+
+    /**
+     * UserController constructor.
+     */
+    public function __construct(UserServiceInterface $userService, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
     {
         $this->userService = $userService;
+        $this->operationService = $operationService;
+        $this->walletService = $walletService;
     }
 
     /**
@@ -37,6 +54,7 @@ class UserController extends AbstractController
         '/',
         name: 'user_index',
         methods: 'GET')]
+    #[isGranted('ROLE_ADMIN')]
     public function index(Request $request): Response
     {
         $pagination = $this->userService->createPaginationList(
@@ -64,6 +82,61 @@ class UserController extends AbstractController
         return $this->render(
             'user/show.html.twig',
             ['user' => $user,
+            ]
+        );
+    }
+
+    /**
+     * Delete action.
+     *
+     * @param Request $request HTTP request
+     * @param User    $user    User entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/delete',
+        name: 'user_delete',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|DELETE',
+    )]
+    public function delete(Request $request, User $user): Response
+    {
+        $form = $this->createForm(
+            FormType::class,
+            $user,
+            [
+                'method' => 'DELETE',
+                'action' => $this->generateUrl(
+                    'user_delete',
+                    ['id' => $user->getId()]
+                ),
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $operations = $this->operationService->findByUser($user);
+            foreach ($operations as $operation) {
+                $this->operationService->delete($operation);
+            }
+            $wallets = $this->walletService->findByUser($user);
+            foreach ($wallets as $wallet) {
+                $this->walletService->delete($wallet);
+            }
+
+            $this->userService->delete($user);
+            $this->addFlash('success', 'message.deleted_successfully');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'user/delete.html.twig',
+            [
+                'form' => $form->createView(),
+                'user' => $user,
             ]
         );
     }

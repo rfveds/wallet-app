@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Operation;
 use App\Entity\User;
+use App\Entity\Wallet;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
@@ -37,4 +38,19 @@ interface OperationServiceInterface
      * @param Operation $operation Operation entity
      */
     public function delete(Operation $operation);
+
+    /**
+     * Find by wallet.
+     *
+     * @param Wallet $wallet Wallet entity
+     *
+     */
+    public function findByWallet(Wallet $wallet);
+
+    /**
+     * Find by user.
+     **
+     * @return array<string, mixed> Result
+     */
+    public function findByUser(User $user);
 }

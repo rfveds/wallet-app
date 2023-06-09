@@ -73,4 +73,14 @@ class WalletService implements WalletServiceInterface
     {
         $this->walletRepository->delete($wallet);
     }
+
+    /**
+     * Find by user.
+     *
+     * @return array<string, mixed> Result
+     */
+    public function findByUser(User $user)
+    {
+        return $this->walletRepository->findByUser($user)->getQuery()->getResult();
+    }
 }
