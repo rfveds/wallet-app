@@ -76,10 +76,10 @@ class CategoryControllerTest extends WebTestCase
 
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE);
-        $result = $this->httpClient->getResponse();
+        $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         // then
-        $this->assertEquals($expectedStatusCode, $result->getStatusCode());
+        $this->assertEquals($expectedStatusCode, $resultStatusCode);
     }
 
     /**

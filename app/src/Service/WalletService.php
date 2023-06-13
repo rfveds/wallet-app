@@ -8,6 +8,7 @@ namespace App\Service;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Repository\WalletRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -36,7 +37,7 @@ class WalletService implements WalletServiceInterface
     {
         $this->walletRepository = $walletRepository;
         $this->paginator = $paginator;
-    }
+    }// end __construct()
 
     /**
      * Get paginated list.
@@ -52,7 +53,7 @@ class WalletService implements WalletServiceInterface
             $page,
             WalletRepository::PAGINATOR_ITEMS_PER_PAGE
         );
-    }
+    }// end createPaginatedList()
 
     /**
      * Save entity.
@@ -62,7 +63,7 @@ class WalletService implements WalletServiceInterface
     public function save(Wallet $wallet): void
     {
         $this->walletRepository->save($wallet);
-    }
+    }// end save()
 
     /**
      * Delete entity.
@@ -72,15 +73,29 @@ class WalletService implements WalletServiceInterface
     public function delete(Wallet $wallet): void
     {
         $this->walletRepository->delete($wallet);
-    }
+    }// end delete()
 
     /**
      * Find by user.
      *
      * @return array<string, mixed> Result
      */
-    public function findByUser(User $user)
+    public function findByUser(User $user): array
     {
         return $this->walletRepository->findByUser($user)->getQuery()->getResult();
-    }
-}
+    }// end findByUser()
+
+    /**
+     * Find one by id.
+     *
+     * @param int $id Id
+     *
+     * @return Wallet|null Result
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Wallet
+    {
+        return $this->walletRepository->findOneById($id);
+    }// end findOneById()
+}// end class

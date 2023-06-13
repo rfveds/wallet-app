@@ -134,6 +134,60 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
+     * Test delete user with wallet.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testDeleteUserWithWallet(): void
+    {
+        // given
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $walletRepository = static::getContainer()->get(WalletRepository::class);
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user_wallet@example.com');
+        $this->httpClient->loginUser($adminUser);
+        $testWallet = $this->createWallet('test_wallet', $adminUser);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
+
+        // when
+        $this->httpClient->submitForm('action.delete');
+
+        // then
+        $savedWallet = $walletRepository->findOneBy(['id' => $testWallet->getId()]);
+        $savedUser = $userRepository->findOneBy(['id' => $adminUser->getId()]);
+        $this->assertNull($savedWallet);
+        $this->assertNull($savedUser);
+    }
+
+//        /**
+//         * Test delete user with operation.
+//         *
+//         * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+//         */
+//        public function testDeleteUserWithOperation(): void
+//        {
+//            // given
+//            $userRepository = static::getContainer()->get(UserRepository::class);
+//            $operationRepository = static::getContainer()->get(OperationRepository::class);
+//            $walletRepository = static::getContainer()->get(WalletRepository::class);
+//            $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user_operation@example.com');
+//            $this->httpClient->loginUser($adminUser);
+//            $testWallet = $this->createWallet('test_wallet', $adminUser);
+//            $testOperation = $this->createOperation('test_operation', $adminUser, $testWallet);
+//
+//            $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
+//
+//            // when
+//            $this->httpClient->submitForm('action.delete');
+//
+//            // then
+//            $savedOperation = $operationRepository->findOneBy(['id' => $testOperation->getId()]);
+//            $savedUser = $userRepository->findOneBy(['id' => $adminUser->getId()]);
+//            $this->assertNull($savedOperation);
+//            $this->assertNull($savedUser);
+//        }
+
+    /**
      * Create user.
      *
      * @param array $roles User roles
@@ -194,7 +248,7 @@ class UserControllerTest extends WebTestCase
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    private function creteOperation(string $title, User $user, Wallet $wallet): Operation
+    private function createOperation(string $title, User $user, Wallet $wallet): Operation
     {
         $operation = new Operation();
         $operation->setTitle($title);

@@ -66,12 +66,12 @@ class TagControllerTest extends WebTestCase
     public function testIndexRouteAdminUser(): void
     {
         // given
-        $expectedStatusCode = 301;
+        $expectedStatusCode = 200;
         $adminUser = $this->createUser([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value], 'tag_user_index@example.com');
         $this->httpClient->loginUser($adminUser);
 
         // when
-        $this->httpClient->request('GET', self::TEST_ROUTE);
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/');
         $resultStatusCode = $this->httpClient->getResponse()->getStatusCode();
 
         // then

@@ -8,14 +8,15 @@ namespace App\Controller;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Form\Type\OperationType;
-use App\Repository\WalletRepository;
 use App\Service\OperationServiceInterface;
+use App\Service\WalletServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -30,19 +31,33 @@ class OperationController extends AbstractController
     private OperationServiceInterface $operationService;
 
     /**
+     * Wallet service.
+     */
+    private WalletServiceInterface $walletService;
+
+    /**
      * Translator.
      */
     private TranslatorInterface $translator;
 
     /**
+     * Security.
+     */
+    private Security $security;
+
+    /**
      * OperationController constructor.
      *
      * @param OperationServiceInterface $operationService Operation service interface
+     * @param Security                  $security         Security
+     * @param WalletServiceInterface    $walletService    Wallet service interface
      * @param TranslatorInterface       $translator       Translator interface
      */
-    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator, WalletRepository $walletRepository)
+    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator, Security $security, WalletServiceInterface $walletService)
     {
         $this->operationService = $operationService;
+        $this->security = $security;
+        $this->walletService = $walletService;
         $this->translator = $translator;
     }// end __construct()
 
@@ -114,7 +129,6 @@ class OperationController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
-     *
      */
     #[Route(
         '/create',
@@ -137,6 +151,7 @@ class OperationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
             $this->operationService->save($operation);
 
             $this->addFlash(

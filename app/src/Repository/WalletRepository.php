@@ -41,7 +41,7 @@ class WalletRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Wallet::class);
-    }
+    }// end __construct()
 
     /**
      * Query all records.
@@ -50,12 +50,10 @@ class WalletRepository extends ServiceEntityRepository
      */
     public function queryAll(): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()
-            ->select(
-                'partial wallet.{id, title, user, balance}'
-            )
-            ->orderBy('wallet.title', 'DESC');
-    }
+        return $this->getOrCreateQueryBuilder()->select(
+            'partial wallet.{id, title, user, balance}'
+        )->orderBy('wallet.title', 'DESC');
+    }// end queryAll()
 
     /**
      * Find by id.
@@ -64,13 +62,8 @@ class WalletRepository extends ServiceEntityRepository
      */
     public function findById(int $id): ?Wallet
     {
-        return $this->createQueryBuilder('wallet')
-            ->select('partial wallet.{id, title, user, balance, type}')
-            ->andWhere('wallet.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
+        return $this->createQueryBuilder('wallet')->select('partial wallet.{id, title, user, balance, type}')->andWhere('wallet.id = :id')->setParameter('id', $id)->getQuery()->getOneOrNullResult();
+    }// end findById()
 
     /**
      * Query wallets by author.
@@ -81,11 +74,8 @@ class WalletRepository extends ServiceEntityRepository
      */
     public function findByUser(User $user): QueryBuilder
     {
-        return $this->createQueryBuilder('wallet')
-            ->select('partial wallet.{id, title, user, balance, type}')
-            ->andWhere('wallet.user = :user')
-            ->setParameter('user', $user);
-    }
+        return $this->createQueryBuilder('wallet')->select('partial wallet.{id, title, user, balance, type}')->andWhere('wallet.user = :user')->setParameter('user', $user);
+    }// end findByUser()
 
     /**
      * Save record.
@@ -96,7 +86,7 @@ class WalletRepository extends ServiceEntityRepository
     {
         $this->_em->persist($wallet);
         $this->_em->flush();
-    }
+    }// end save()
 
     /**
      * Delete record.
@@ -107,7 +97,7 @@ class WalletRepository extends ServiceEntityRepository
     {
         $this->_em->remove($wallet);
         $this->_em->flush();
-    }
+    }// end delete()
 
     /**
      * Get or create new query builder.
@@ -119,7 +109,7 @@ class WalletRepository extends ServiceEntityRepository
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('wallet');
-    }
+    }// end getOrCreateQueryBuilder()
 
     /**
      * Query wallets by author.
@@ -131,9 +121,22 @@ class WalletRepository extends ServiceEntityRepository
     public function queryByAuthor(User $author): QueryBuilder
     {
         $queryBuilder = $this->queryAll();
-        $queryBuilder->andWhere('wallet.user = :author')
-            ->setParameter('author', $author);
+        $queryBuilder->andWhere('wallet.user = :author')->setParameter('author', $author);
 
         return $queryBuilder;
-    }
-}
+    }// end queryByAuthor()
+
+    /**
+     * Find one by id.
+     *
+     * @param int $id Id
+     *
+     * @return Wallet|null Result
+     *
+     * @throws NonUniqueResultException
+     */
+    public function findOneById(int $id): ?Wallet
+    {
+        return $this->queryAll()->andWhere('wallet.id = :id')->setParameter('id', $id)->getQuery()->getOneOrNullResult();
+    }// end findOneById()
+}// end class
