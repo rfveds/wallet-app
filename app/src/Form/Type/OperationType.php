@@ -81,7 +81,7 @@ class OperationType extends AbstractType
             TextType::class,
             [
                 'label' => 'label.amount',
-                'required' => false,
+                'required' => true,
                 'attr' => ['max_length' => 64],
             ]
         );
@@ -94,7 +94,7 @@ class OperationType extends AbstractType
                     return $category->getTitle();
                 },
                 'label' => 'label.category',
-                'required' => false,
+                'required' => true,
                 'placeholder' => 'label.none',
             ]
         );

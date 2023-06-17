@@ -115,14 +115,52 @@ class OperationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('html h1', $expectedOperation->getTitle());
     }
 
+    /**
+     * Test create operation.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateOperation(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_create_operation@example.com');
+        $this->httpClient->loginUser($user);
+        $operationTitle = 'createdOperation';
+        $category = $this->createCategory('testCategoryCreateOperation');
+        $wallet = $this->createWallet('wallet_create_operation', $user);
+        $tag = $this->createTag('testTagCreateOperation');
+        $tag2 = $this->createTag('testTagCreateOperation2');
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'action.save',
+            ['operation' => [
+                'title' => $operationTitle,
+                'amount' => '100',
+                'category' => $category->getId(),
+                'wallet' => $wallet->getId(),
+                'tags' => 'testTagCreateOperation, testTagCreateOperation2',
+                ],
+            ]
+        );
+
+        // then
+        $savedOperation = $operationRepository->findOneBy(['title' => $operationTitle]);
+        $this->assertEquals($operationTitle, $savedOperation->getTitle());
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
 
     /**
      * Test edit operation.
      *
-     * @throws NotFoundExceptionInterface
-     * @throws ORMException
-     * @throws ContainerExceptionInterface
-     * @throws OptimisticLockException
+     * @throws NotFoundExceptionInterface|ContainerExceptionInterface|ORMException|OptimisticLockException
      */
     public function testEditOperation(): void
     {
