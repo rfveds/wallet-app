@@ -35,12 +35,12 @@ interface UserServiceInterface
      *
      * @param User $user User entity
      */
-    public function canBeDeleted(User $user): bool;
+    public function delete(User $user): void;
 
     /**
-     * Delete entity.
+     * Edit password.
      *
-     * @param User $user User entity
+     * @return void
      */
-    public function delete(User $user): void;
-}// end class
+    public function upgradePassword(User $user, string $password): void;
+}// end interface

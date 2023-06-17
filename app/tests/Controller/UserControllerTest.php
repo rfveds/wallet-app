@@ -14,12 +14,14 @@ use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
+use App\Service\UserService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use TypeError;
 
 /**
  * Class UserControllerTest.
@@ -160,6 +162,35 @@ class UserControllerTest extends WebTestCase
         $this->assertNull($savedWallet);
         $this->assertNull($savedUser);
     }
+
+    /**
+     * Test edit password.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditPassword(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_edit_password@example.com');
+        $this->httpClient->loginUser($user);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$user->getId().'/edit-password');
+
+        // when
+        $this->httpClient->submitForm('action.edit',
+            [
+                'user_password' => [
+                    'password' => [
+                        'first' => 'new_password',
+                        'second' => 'new_password',
+                    ],
+                ],
+            ]);
+
+        // then
+        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+    }
+
 
         /**
          * Test delete user with operation.

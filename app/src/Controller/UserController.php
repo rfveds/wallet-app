@@ -6,6 +6,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Type\UserPasswordType;
 use App\Service\OperationServiceInterface;
 use App\Service\UserServiceInterface;
 use App\Service\WalletServiceInterface;
@@ -28,23 +29,11 @@ class UserController extends AbstractController
     private UserServiceInterface $userService;
 
     /**
-     * Operation service.
-     */
-    private OperationServiceInterface $operationService;
-
-    /**
-     * Wallet service.
-     */
-    private WalletServiceInterface $walletService;
-
-    /**
      * UserController constructor.
      */
-    public function __construct(UserServiceInterface $userService, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
+    public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
-        $this->operationService = $operationService;
-        $this->walletService = $walletService;
     }
 
     /**
@@ -117,14 +106,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $operations = $this->operationService->findByUser($user);
-            foreach ($operations as $operation) {
-                $this->operationService->delete($operation);
-            }
-            $wallets = $this->walletService->findByUser($user);
-            foreach ($wallets as $wallet) {
-                $this->walletService->delete($wallet);
-            }
 
             $this->userService->delete($user);
             $this->addFlash('success', 'message.deleted_successfully');
@@ -140,4 +121,48 @@ class UserController extends AbstractController
             ]
         );
     }
+
+    /**
+     * Edit password action.
+     */
+    #[Route(
+        '/{id}/edit-password',
+        name: 'user_edit_password',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|PUT',
+    )]
+    public function editPassword(Request $request, User $user): Response
+    {
+        $form = $this->createForm(
+            UserPasswordType::class,
+            $user,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'user_edit_password',
+                    ['id' => $user->getId()],
+                ),
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $this->userService->upgradePassword($user, $form->get('password')->getData());
+
+            $this->addFlash('success', 'message.updated_successfully');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'user/edit_password.html.twig',
+            [
+                'form' => $form->createView(),
+                'user' => $user,
+            ]
+        );
+    }
+
 }

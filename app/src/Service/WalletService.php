@@ -84,18 +84,4 @@ class WalletService implements WalletServiceInterface
     {
         return $this->walletRepository->findByUser($user)->getQuery()->getResult();
     }// end findByUser()
-
-    /**
-     * Find one by id.
-     *
-     * @param int $id Id
-     *
-     * @return Wallet|null Result
-     *
-     * @throws NonUniqueResultException
-     */
-    public function findOneById(int $id): ?Wallet
-    {
-        return $this->walletRepository->findOneById($id);
-    }// end findOneById()
 }// end class

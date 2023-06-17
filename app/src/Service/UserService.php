@@ -6,9 +6,7 @@
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
-use App\Repository\WalletRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -24,35 +22,36 @@ class UserService implements UserServiceInterface
     private UserRepository $userRepository;
 
     /**
-     * Wallet repository.
-     */
-    private WalletRepository $walletRepository;
-
-    /**
     Paginator.
      */
     private PaginatorInterface $paginator;
 
     /**
-     * Operation repository.
+     * Operation service.
      */
-    private OperationRepository $operationRepository;
+    private OperationServiceInterface $operationService;
+
+    /**
+     * Wallet service.
+     */
+    private WalletServiceInterface $walletService;
 
     /**
      * UserService constructor.
      *
-     * @param UserRepository              $userRepository      User repository
-     * @param PaginatorInterface          $paginator           Paginator
-     * @param OperationRepository         $operationRepository Operation repository
-     * @param UserPasswordHasherInterface $passwordHasher      Password hasher
+     * @param UserRepository              $userRepository   User repository
+     * @param OperationServiceInterface   $operationService Operation service
+     * @param WalletServiceInterface      $walletService    Wallet service
+     * @param PaginatorInterface          $paginator        Paginator
+     * @param UserPasswordHasherInterface $passwordHasher   Password hasher
      */
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher,  PaginatorInterface $paginator, OperationRepository $operationRepository, WalletRepository $walletRepository)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
     {
         $this->userRepository = $userRepository;
         $this->paginator = $paginator;
-        $this->operationRepository = $operationRepository;
-        $this->walletRepository = $walletRepository;
         $this->passwordHasher = $passwordHasher;
+        $this->operationService = $operationService;
+        $this->walletService = $walletService;
     }// end __construct()
 
     /**
@@ -92,38 +91,34 @@ class UserService implements UserServiceInterface
     }// end save()
 
     /**
-     * Can be deleted.
-     *
-     * @param User $user User entity
-     *
-     * @return bool Result
-     */
-    public function canBeDeleted(User $user): bool
-    {
-        $result = $this->operationRepository->count(['author' => $user]);
-
-        return !($result > 0);
-    }// end canBeDeleted()
-
-    /**
      * Delete entity.
      *
      * @param User $user User entity
      */
     public function delete(User $user): void
     {
-        // delete every wallet owned by user
-        $wallets = $this->walletRepository->findBy(['user' => $user]);
-        foreach ($wallets as $wallet) {
-            $this->walletRepository->delete($wallet);
-        }
-
-        // delete every operation made by user
-        $operations = $this->operationRepository->findBy(['author' => $user]);
+        $operations = $this->operationService->findByUser($user);
         foreach ($operations as $operation) {
-            $this->operationRepository->delete($operation);
+            $this->operationService->delete($operation);
+        }
+        $wallets = $this->walletService->findByUser($user);
+        foreach ($wallets as $wallet) {
+            $this->walletService->delete($wallet);
         }
 
         $this->userRepository->remove($user, true);
     }// end delete()
+
+    /**
+     * Edit password.
+     *
+     * @param User $user
+     * @param string $password
+     *
+     * @return void
+     */
+    public function upgradePassword(User $user, string $password): void
+    {
+        $this->userRepository->upgradePassword($user, $password);
+    }
 }// end class

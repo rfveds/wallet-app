@@ -86,24 +86,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', \get_class($user)));
+            throw new \TypeError(sprintf('Instances of "%s" are not supported.', \get_class($user)));
         }
 
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
-    }
-
-    /**
-     * Find one by email.
-     *
-     * @param string $email Email
-     *
-     * @return User|null User entity
-     */
-    public function findOneByEmail(string $email): ?User
-    {
-        return $this->findOneBy(['email' => $email]);
     }
 
     /**
