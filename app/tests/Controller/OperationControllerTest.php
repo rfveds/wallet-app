@@ -144,7 +144,7 @@ class OperationControllerTest extends WebTestCase
                 'amount' => '100',
                 'category' => $category->getId(),
                 'wallet' => $wallet->getId(),
-                'tags' => 'testTagCreateOperation, testTagCreateOperation2',
+                'tags' => $tag->getTitle().', '.$tag2->getTitle(),
                 ],
             ]
         );

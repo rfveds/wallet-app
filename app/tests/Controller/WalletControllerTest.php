@@ -5,10 +5,12 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
+use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
@@ -218,14 +220,24 @@ class WalletControllerTest extends WebTestCase
         // given
         $user = $this->createUser([UserRole::ROLE_USER->value], 'test_wallet_delete@example.com');
         $this->httpClient->loginUser($user);
-
         $walletRepository = static::getContainer()->get(WalletRepository::class);
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
         $testWallet = new Wallet();
         $testWallet->setTitle('TestWalletCreated');
         $testWallet->setBalance(0);
         $testWallet->setUser($user);
         $testWallet->setType('cash');
+
+        $operation = new Operation();
+        $operation->setTitle('TestOperationDeleteWallet');
+        $operation->setAmount(100);
+        $operation->setCategory($this->createCategory('TestCategoryDeleteWallet'));
+        $operation->setWallet($testWallet);
+        $operation->setAuthor($user);
+
         $walletRepository->save($testWallet);
+        $operationRepository->save($operation);
+
         $testWalletId = $testWallet->getId();
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testWalletId.'/delete');
@@ -266,28 +278,6 @@ class WalletControllerTest extends WebTestCase
         return $user;
     }
 
-    /**
-     * Create operation.
-     *
-     * @param User   $user       User entity
-     * @param Wallet $testWallet Wallet entity
-     *
-     * @throws ContainerExceptionInterface
-     */
-    private function createOperation(User $user, Wallet $testWallet): Operation
-    {
-        $operation = new Operation();
-        $operation->setTitle('TestOperation');
-        $operation->setAmount('11');
-        $operation->setWallet($testWallet);
-        $operation->setWallet($this->createWallet($user));
-        $operation->setAuthor($user);
-
-        $operationRepository = self::getContainer()->get(OperationRepository::class);
-        $operationRepository->save($operation);
-
-        return $operation;
-    }
 
     /**
      * Create Wallet.
@@ -304,8 +294,23 @@ class WalletControllerTest extends WebTestCase
         $wallet->setBalance('1000');
         $wallet->setUser($user);
         $walletRepository = self::getContainer()->get(WalletRepository::class);
-        $walletRepository->save($wallet);
+        $walletRepository->save($wallet, true);
 
         return $wallet;
+    }
+
+    /**
+     * Create category.
+     *
+     * @throws ContainerExceptionInterface
+     */
+    private function createCategory($title): Category
+    {
+        $category = new Category();
+        $category->setTitle($title);
+        $categoryRepository = self::getContainer()->get(CategoryRepository::class);
+        $categoryRepository->save($category);
+
+        return $category;
     }
 }
