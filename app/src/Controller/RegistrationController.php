@@ -8,11 +8,10 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\Type\RegistrationType;
 use App\Security\LoginFormAuthenticator;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
@@ -22,13 +21,26 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 class RegistrationController extends AbstractController
 {
     /**
+     * User service.
+     */
+    private UserService $userService;
+
+    /**
+     * RegistrationController constructor.
+     *
+     * @param UserService $userService User service
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }// end __construct()
+
+    /**
      * Register action.
      *
-     * @param Request                     $request           HTTP request
-     * @param UserPasswordHasherInterface $passwordHasher    Password hasher
-     * @param UserAuthenticatorInterface  $userAuthenticator Authenticator
-     * @param LoginFormAuthenticator      $authenticator     Login form authenticator
-     * @param EntityManagerInterface      $entityManager     Entity manager
+     * @param Request                    $request           HTTP request
+     * @param UserAuthenticatorInterface $userAuthenticator Authenticator
+     * @param LoginFormAuthenticator     $authenticator     Login form authenticator
      *
      * @return Response HTTP response
      */
@@ -37,7 +49,7 @@ class RegistrationController extends AbstractController
         name: 'register',
         methods: ['GET', 'POST'],
     )]
-    public function register(Request $request, UserPasswordHasherInterface $passwordHasher, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator): Response
     {
         $user = new User();
         $form = $this->createForm(
@@ -47,18 +59,7 @@ class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordHasher->hashPassword(
-                    $user,
-                    $form->get('password')->getData(),
-                )
-            );
-
-            $user->setRoles(['ROLE_USER']);
-
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $this->userService->save($user, $form->get('password')->getData());
 
             $this->addFlash('success', 'message.registered_successfully');
 

@@ -116,6 +116,36 @@ class OperationControllerTest extends WebTestCase
     }
 
     /**
+     * Test show single operation for unauthorized user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testShowOperationForUnauthorizedUser(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_operation_unauth@example.com');
+        $this->httpClient->loginUser($user);
+
+        $operationUser = $this->createUser([UserRole::ROLE_USER->value], 'operation_owner@example.com');
+        $operation = new Operation();
+        $operation->setTitle('unauthorized operation');
+        $operation->setAmount(100);
+        $operation->setWallet($this->createWallet('wallet_show_operation_auth', $operationUser));
+        $operation->setCategory($this->createCategory('category_show_operation_auth'));
+        $operation->setAuthor($operationUser);
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $operationRepository->save($operation);
+        $operationId = $operationRepository->findOneBy(['title' => 'unauthorized operation']);
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$operationId->getId());
+
+        // then
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(403, $result->getStatusCode());
+    }
+
+    /**
      * Test create operation.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException

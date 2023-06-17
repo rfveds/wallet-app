@@ -5,10 +5,12 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
+use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
@@ -159,33 +161,36 @@ class UserControllerTest extends WebTestCase
         $this->assertNull($savedUser);
     }
 
-//        /**
-//         * Test delete user with operation.
-//         *
-//         * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-//         */
-//        public function testDeleteUserWithOperation(): void
-//        {
-//            // given
-//            $userRepository = static::getContainer()->get(UserRepository::class);
-//            $operationRepository = static::getContainer()->get(OperationRepository::class);
-//            $walletRepository = static::getContainer()->get(WalletRepository::class);
-//            $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user_operation@example.com');
-//            $this->httpClient->loginUser($adminUser);
-//            $testWallet = $this->createWallet('test_wallet', $adminUser);
-//            $testOperation = $this->createOperation('test_operation', $adminUser, $testWallet);
-//
-//            $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
-//
-//            // when
-//            $this->httpClient->submitForm('action.delete');
-//
-//            // then
-//            $savedOperation = $operationRepository->findOneBy(['id' => $testOperation->getId()]);
-//            $savedUser = $userRepository->findOneBy(['id' => $adminUser->getId()]);
-//            $this->assertNull($savedOperation);
-//            $this->assertNull($savedUser);
-//        }
+        /**
+         * Test delete user with operation.
+         *
+         * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+         */
+        public function testDeleteUserWithOperation(): void
+        {
+            // given
+            $userRepository = static::getContainer()->get(UserRepository::class);
+            $operationRepository = static::getContainer()->get(OperationRepository::class);
+            $walletRepository = static::getContainer()->get(WalletRepository::class);
+
+            $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user_operation@example.com');
+            $this->httpClient->loginUser($adminUser);
+
+            $testCategory = $this->createCategory('test_category');
+            $testWallet = $this->createWallet('test_wallet', $adminUser);
+            $testOperation = $this->createOperation('test_operation', $adminUser, $testWallet, $testCategory);
+
+            $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
+
+            // when
+            $this->httpClient->submitForm('action.delete');
+
+            // then
+            $savedOperation = $operationRepository->findOneBy(['id' => $testOperation->getId()]);
+            $savedUser = $userRepository->findOneBy(['id' => $adminUser->getId()]);
+            $this->assertNull($savedOperation);
+            $this->assertNull($savedUser);
+        }
 
     /**
      * Create user.
@@ -240,24 +245,41 @@ class UserControllerTest extends WebTestCase
     /**
      * Create operation.
      *
-     * @param string $title  Operation name
-     * @param User   $user   User entity
-     * @param Wallet $wallet Wallet entity
+     * @param string   $title    Operation name
+     * @param User     $user     User entity
+     * @param Wallet   $wallet   Wallet entity
+     * @param Category $category Category entity
      *
      * @return Operation Operation entity
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    private function createOperation(string $title, User $user, Wallet $wallet): Operation
+    private function createOperation(string $title, User $user, Wallet $wallet, Category $category): Operation
     {
         $operation = new Operation();
         $operation->setTitle($title);
         $operation->setAmount(0);
         $operation->setAuthor($user);
+        $operation->setCategory($category);
         $operation->setWallet($wallet);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
         $operationRepository->save($operation, true);
 
         return $operation;
+    }
+
+    /**
+     * Create category.
+     *
+     * @throws ContainerExceptionInterface
+     */
+    private function createCategory($title): Category
+    {
+        $category = new Category();
+        $category->setTitle($title);
+        $categoryRepository = self::getContainer()->get(CategoryRepository::class);
+        $categoryRepository->save($category);
+
+        return $category;
     }
 }

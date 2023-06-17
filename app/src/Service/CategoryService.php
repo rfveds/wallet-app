@@ -53,7 +53,7 @@ class CategoryService implements CategoryServiceInterface
         $this->categoryRepository = $categoryRepository;
         $this->operationRepository = $operationRepository;
         $this->paginator = $paginator;
-    }
+    }// end __construct()
 
     /**
      * Get paginated list.
@@ -69,7 +69,7 @@ class CategoryService implements CategoryServiceInterface
             $page,
             CategoryRepository::PAGINATOR_ITEMS_PER_PAGE
         );
-    }
+    }// end createPaginatedList()
 
     /**
      * Find by id.
@@ -83,7 +83,7 @@ class CategoryService implements CategoryServiceInterface
     public function findOneById(int $id): ?Category
     {
         return $this->categoryRepository->findOneById($id);
-    }
+    }// end findOneById()
 
     /**
      * Find by title.
@@ -97,7 +97,7 @@ class CategoryService implements CategoryServiceInterface
     public function findOneByTitle(string $title): ?Category
     {
         return $this->categoryRepository->findOneByTitle($title);
-    }
+    }// end findOneByTitle()
 
     /**
      * Save entity.
@@ -107,7 +107,7 @@ class CategoryService implements CategoryServiceInterface
     public function save(Category $category): void
     {
         $this->categoryRepository->save($category);
-    }
+    }// end save()
 
     /**
      * Delete entity.
@@ -117,7 +117,7 @@ class CategoryService implements CategoryServiceInterface
     public function delete(Category $category): void
     {
         $this->categoryRepository->delete($category);
-    }
+    }// end delete()
 
     /**
      * Can Category be deleted?
@@ -125,17 +125,14 @@ class CategoryService implements CategoryServiceInterface
      * @param Category $category Category entity
      *
      * @return bool Result
+     *
+     * @throws NonUniqueResultException
+     * @throws NoResultException
      */
     public function canBeDeleted(Category $category): bool
     {
-        try {
-            $result = $this->operationRepository->countByCategory($category);
+        $result = $this->operationRepository->countByCategory($category);
 
-            return !($result > 0);
-        } catch (NoResultException|NonUniqueResultException) {
-            return false;
-        }
-    }
-
-
-}
+        return !($result > 0);
+    }// end canBeDeleted()
+}// end class

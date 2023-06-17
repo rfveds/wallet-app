@@ -5,6 +5,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Controller\SecurityController;
 use App\Entity\Enum\UserRole;
 use App\Entity\User;
 use App\Repository\UserRepository;
@@ -122,6 +123,17 @@ class SecurityControllerTest extends WebTestCase
 
         // then
         $this->assertCount(0, $divElement);
+    }
+
+    /**
+     * Test logout throws logic exception.
+     */
+    public function testLogoutThrowsLogicException(): void
+    {
+        $controller = new SecurityController();
+
+        $this->expectException(\LogicException::class);
+        $controller->logout();
     }
 
     /**

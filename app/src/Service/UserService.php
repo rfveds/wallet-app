@@ -11,6 +11,7 @@ use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
  * Class UserService.
@@ -40,17 +41,18 @@ class UserService implements UserServiceInterface
     /**
      * UserService constructor.
      *
-     * @param UserRepository      $userRepository      User repository
-     * @param PaginatorInterface  $paginator           Paginator
-     * @param OperationRepository $operationRepository Operation repository
+     * @param UserRepository              $userRepository      User repository
+     * @param PaginatorInterface          $paginator           Paginator
+     * @param OperationRepository         $operationRepository Operation repository
+     * @param UserPasswordHasherInterface $passwordHasher      Password hasher
      */
-    public function __construct(UserRepository $userRepository, PaginatorInterface $paginator, OperationRepository $operationRepository, WalletRepository $walletRepository)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher,  PaginatorInterface $paginator, OperationRepository $operationRepository, WalletRepository $walletRepository)
     {
         $this->userRepository = $userRepository;
         $this->paginator = $paginator;
         $this->operationRepository = $operationRepository;
         $this->walletRepository = $walletRepository;
-
+        $this->passwordHasher = $passwordHasher;
     }// end __construct()
 
     /**
@@ -74,8 +76,18 @@ class UserService implements UserServiceInterface
      *
      * @param User $user User entity
      */
-    public function save(User $user): void
+    public function save(User $user, string $password): void
     {
+        // encode the plain password
+        $user->setPassword(
+            $this->passwordHasher->hashPassword(
+                $user,
+                $password
+            )
+        );
+
+        $user->setRoles(['ROLE_USER']);
+
         $this->userRepository->save($user, true);
     }// end save()
 
@@ -111,7 +123,6 @@ class UserService implements UserServiceInterface
         foreach ($operations as $operation) {
             $this->operationRepository->delete($operation);
         }
-
 
         $this->userRepository->remove($user, true);
     }// end delete()

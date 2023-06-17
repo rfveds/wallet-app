@@ -108,15 +108,6 @@ class OperationController extends AbstractController
     )]
     public function show(Operation $operation): Response
     {
-        if ($operation->getAuthor() !== $this->getUser()) {
-            $this->addFlash(
-                'warning',
-                $this->translator->trans('message.record_not_found')
-            );
-
-            return $this->redirectToRoute('task_index');
-        }
-
         return $this->render(
             'operation/show.html.twig',
             ['operation' => $operation]
@@ -182,17 +173,12 @@ class OperationController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT'
     )]
+    #[IsGranted(
+        'EDIT',
+        subject: 'operation'
+    )]
     public function edit(Request $request, Operation $operation): Response
     {
-        if ($operation->getAuthor() !== $this->getUser()) {
-            $this->addFlash(
-                'warning',
-                $this->translator->trans('message.record_not_found')
-            );
-
-            return $this->redirectToRoute('task_index');
-        }
-
         $form = $this->createForm(
             OperationType::class,
             $operation,
@@ -240,17 +226,12 @@ class OperationController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|DELETE'
     )]
+    #[IsGranted(
+        'DELETE',
+        subject: 'operation'
+    )]
     public function delete(Request $request, Operation $operation): Response
     {
-        if ($operation->getAuthor() !== $this->getUser()) {
-            $this->addFlash(
-                'warning',
-                $this->translator->trans('message.record_not_found')
-            );
-
-            return $this->redirectToRoute('task_index');
-        }
-
         $form = $this->createForm(
             FormType::class,
             $operation,

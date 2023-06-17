@@ -148,9 +148,11 @@ class TagControllerTest extends WebTestCase
         $testTag->setTitle($tagTitle);
         $testTag->setCreatedAt(new \DateTimeImmutable('now'));
         $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
+        $testTag->setSlug('test-tag-edit');
         $tagRepository->save($testTag);
         $testTagId = $testTag->getId();
         $expectedNewTagTitle = 'Test tag edited';
+        $expectedNewTagTitleSlug = 'test-tag-edited';
 
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testTagId.'/edit');
 
@@ -162,6 +164,7 @@ class TagControllerTest extends WebTestCase
         // then
         $savedTag = $tagRepository->findOneBy(['title' => $expectedNewTagTitle]);
         $this->assertEquals($expectedNewTagTitle, $savedTag->getTitle());
+        $this->assertEquals($expectedNewTagTitleSlug, $savedTag->getSlug());
     }
 
     /**

@@ -25,9 +25,10 @@ interface UserServiceInterface
     /**
      * Save entity.
      *
-     * @param User $user User entity
+     * @param User   $user     User entity
+     * @param string $password Password
      */
-    public function save(User $user): void;
+    public function save(User $user, string $password): void;
 
     /**
      * Delete entity.

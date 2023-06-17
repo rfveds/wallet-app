@@ -180,12 +180,14 @@ class CategoryControllerTest extends WebTestCase
 
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $testCategory = new Category();
-        $testCategory->setTitle('editedCategory');
+        $testCategory->setTitle('edited Category');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setSlug('edited-category');
         $categoryRepository->save($testCategory);
         $testCategoryId = $testCategory->getId();
-        $expectedNewCategoryTitle = 'TestCategoryEdit';
+        $expectedNewCategoryTitle = 'Test Category Edit';
+        $expectedNewCategoryTitleSlug = 'test-category-edit';
 
         $this->httpClient->request(
             'GET', self::TEST_ROUTE.'/'.
@@ -201,6 +203,7 @@ class CategoryControllerTest extends WebTestCase
         // then
         $savedCategory = $categoryRepository->findOneById($testCategoryId);
         $this->assertEquals($expectedNewCategoryTitle, $savedCategory->getTitle());
+        $this->assertEquals($expectedNewCategoryTitleSlug, $savedCategory->getSlug());
     }
 
     /**

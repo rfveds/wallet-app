@@ -82,16 +82,6 @@ class Tag
     }
 
     /**
-     * Getter for createdAt.
-     *
-     * @return \DateTimeImmutable|null Created at
-     */
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    /**
      * Setter for createdAt.
      *
      * @param \DateTimeImmutable $createdAt Created at
@@ -99,16 +89,6 @@ class Tag
     public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-    }
-
-    /**
-     * Getter for updatedAt.
-     *
-     * @return \DateTimeImmutable|null Updated at
-     */
-    public function getUpdatedAt(): ?\DateTimeImmutable
-    {
-        return $this->updatedAt;
     }
 
     /**
