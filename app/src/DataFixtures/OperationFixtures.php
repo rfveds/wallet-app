@@ -56,7 +56,7 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             }
 
             /** @var User $author */
-            $author = $this->getRandomReference('users');
+            $author = $wallet->getUser();
             $operation->setAuthor($author);
 
             return $operation;

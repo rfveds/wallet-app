@@ -30,7 +30,11 @@
             <tbody>
             {% for operation in pagination.items %}
                 <tr>
-                    <td>{{ operation.id }}</td>
+                    <td>
+                        <a href="{{ url('operation_index', {'filters.operation_id' : operation.id}) }}" title="{{ operation.id }}">
+                            {{ operation.id }}
+                        </a>
+                    </td>
                     <td>{{ operation.createdAt|format_date('long') }}</td>
                     <td>{{ operation.updatedAt|date('Y/m/d') }}</td>
                     <td>{{ operation.title }}</td>

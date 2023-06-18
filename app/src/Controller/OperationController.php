@@ -75,6 +75,7 @@ class OperationController extends AbstractController
     public function index(Request $request): Response
     {
         $filters = $this->getFilters($request);
+       // var_dump($filters);
         /** @var User $user */
         $user = $this->getUser();
         $pagination = $this->operationService->createPaginatedList(
@@ -120,6 +121,8 @@ class OperationController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
+     *
+     * @throws \Exception
      */
     #[Route(
         '/create',
@@ -128,7 +131,9 @@ class OperationController extends AbstractController
     )]
     public function create(Request $request): Response
     {
-        /** @var User $user */
+        /*
+            @var User $user
+        */
         $user = $this->getUser();
         $operation = new Operation();
         $operation->setAuthor($user);
@@ -142,16 +147,26 @@ class OperationController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $wallet = $form->get('wallet')->getData();
+            $amount = $form->get('amount')->getData();
+            $balance = $wallet->getBalance();
+            if (($balance + $amount) < $balance) {
+                $this->addFlash(
+                    'warning',
+                    'message.insufficient_funds'
+                );
+            } else {
+                $wallet->setBalance($balance + $amount);
+                $this->operationService->save($operation);
 
-            $this->operationService->save($operation);
-
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.created_successfully')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.created_successfully')
+                );
+            }
 
             return $this->redirectToRoute('operation_index');
-        }
+        }// end if
 
         return $this->render(
             'operation/create.html.twig',
@@ -280,6 +295,9 @@ class OperationController extends AbstractController
         $filters = [];
         $filters['category_id'] = $request->query->getInt('filters_category_id');
         $filters['tag_id'] = $request->query->getInt('filters_tag_id');
+        $filters['operation_id'] = $request->query->getInt('filters_operation_id');
+
+        var_dump($filters);
 
         return $filters;
     }// end getFilters()

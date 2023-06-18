@@ -7,6 +7,7 @@ namespace App\Repository;
 
 use App\Entity\Category;
 use App\Entity\Operation;
+use App\Entity\Tag;
 use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -73,6 +74,7 @@ class OperationRepository extends ServiceEntityRepository
             ->join('operation.author', 'author')
             ->orderBy('operation.updatedAt', 'DESC');
 
+        //var_dump($filters);
         return $this->applyFiltersToList($queryBuilder, $filters);
     }
 
@@ -177,6 +179,8 @@ class OperationRepository extends ServiceEntityRepository
      */
     private function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
     {
+       // var_dump($filters);
+
         if (isset($filters['category']) && $filters['category'] instanceof Category) {
             $queryBuilder->andWhere('category = :category')
                 ->setParameter('category', $filters['category']);
@@ -185,6 +189,11 @@ class OperationRepository extends ServiceEntityRepository
         if (isset($filters['tag']) && $filters['tag'] instanceof Tag) {
             $queryBuilder->andWhere('tags IN (:tag)')
                 ->setParameter('tag', $filters['tag']);
+        }
+
+        if (isset($filters['operation']) && $filters['operation'] instanceof Operation) {
+            $queryBuilder->andWhere('operation = :operation')
+                ->setParameter('operation', $filters['operation']);
         }
 
         return $queryBuilder;

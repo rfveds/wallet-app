@@ -52,6 +52,15 @@
                 {{ app.user.email }}
             </a>
 
+                <form action="{{ path('operation_index') }}" >
+                    <input name="filters.operation_id"
+                           type="text"
+                           placeholder="Search" aria-label="Search">
+                    <button
+                            type="submit">{{ 'action.search'|trans }}
+                    </button>
+                </form>
+
             {% endif %}
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}

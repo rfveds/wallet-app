@@ -43,14 +43,24 @@ interface OperationServiceInterface
      * Find by wallet.
      *
      * @param Wallet $wallet Wallet entity
-     *
      */
     public function findByWallet(Wallet $wallet);
 
     /**
      * Find by user.
-     **
+     *
+     * @param User $user User entity
+     *
      * @return array<string, mixed> Result
      */
-    public function findByUser(User $user);
+    public function findByUser(User $user): array;
+
+    /**
+     * Find by title.
+     *
+     * @param string $operation_title Operation title
+     *
+     * @return Operation|null Operation entity
+     */
+    public function findByOneByTitle(string $operation_title): ?Operation;
 }

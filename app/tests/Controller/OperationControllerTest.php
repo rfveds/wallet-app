@@ -18,6 +18,7 @@ use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -101,7 +102,7 @@ class OperationControllerTest extends WebTestCase
         $expectedOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setUpdatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setCategory($this->createCategory('testCategoryShowOperation'));
-        $expectedOperation->setWallet($this->createWallet('wallet_show_operation', $adminUser));
+        $expectedOperation->setWallet($this->createWallet('wallet_show_operation', $adminUser, '0'));
         $expectedOperation->setAuthor($adminUser);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
         $operationRepository->save($expectedOperation);
@@ -130,7 +131,7 @@ class OperationControllerTest extends WebTestCase
         $operation = new Operation();
         $operation->setTitle('unauthorized operation');
         $operation->setAmount(100);
-        $operation->setWallet($this->createWallet('wallet_show_operation_auth', $operationUser));
+        $operation->setWallet($this->createWallet('wallet_show_operation_auth', $operationUser, '0'));
         $operation->setCategory($this->createCategory('category_show_operation_auth'));
         $operation->setAuthor($operationUser);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
@@ -157,7 +158,7 @@ class OperationControllerTest extends WebTestCase
         $this->httpClient->loginUser($user);
         $operationTitle = 'createdOperation';
         $category = $this->createCategory('testCategoryCreateOperation');
-        $wallet = $this->createWallet('wallet_create_operation', $user);
+        $wallet = $this->createWallet('wallet_create_operation', $user, '0');
         $tag = $this->createTag('testTagCreateOperation');
         $tag2 = $this->createTag('testTagCreateOperation2');
         $operationRepository = static::getContainer()->get(OperationRepository::class);
@@ -188,6 +189,43 @@ class OperationControllerTest extends WebTestCase
     }
 
     /**
+     * Test create operation that would exceed wallet balance.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateOperationExceedWalletBalance(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_operation_balance@example.com');
+        $this->httpClient->loginUser($user);
+        $category = $this->createCategory('testCategoryCreateOperationBalance');
+        $wallet = $this->createWallet('wallet_create_operation_balance', $user, '0');
+        $operationTitle = 'test operation balance';
+        $operationAmount = '-100';
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'action.save',
+            ['operation' => [
+                'title' => $operationTitle,
+                'amount' => $operationAmount,
+                'category' => $category->getId(),
+                'wallet' => $wallet->getId(),
+                'tags' => 'testTagCreateOperationBalance',
+                ],
+            ]
+        );
+
+        // then
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
      * Test edit operation.
      *
      * @throws NotFoundExceptionInterface|ContainerExceptionInterface|ORMException|OptimisticLockException
@@ -203,7 +241,7 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setTitle('TestEditOperation');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryEditOperation'));
-        $testOperationWallet = $this->createWallet('wallet_edit_operation', $user);
+        $testOperationWallet = $this->createWallet('wallet_edit_operation', $user, '0');
         $testOperation->setWallet($testOperationWallet);
         $testOperation->setAuthor($user);
         $testOperation->addTag($this->createTag('testTagEditOperation'));
@@ -253,7 +291,7 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setTitle('TestRemoveTagOperation');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryRemoveTagOperation'));
-        $testOperation->setWallet($this->createWallet('wallet_remove_tag', $user));
+        $testOperation->setWallet($this->createWallet('wallet_remove_tag', $user, '0'));
         $testOperation->setAuthor($user);
         $testTag = $this->createTag('testTagRemoveOperation');
         $testOperation->addTag($testTag);
@@ -287,7 +325,7 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setTitle('TestOperationDelete');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryDeleteOperation'));
-        $testOperation->setWallet($this->createWallet('wallet_delete_operation', $user));
+        $testOperation->setWallet($this->createWallet('wallet_delete_operation', $user, '0'));
         $testOperation->setAuthor($user);
         $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -341,11 +379,11 @@ class OperationControllerTest extends WebTestCase
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    private function createWallet(string $title, User $user): Wallet
+    private function createWallet(string $title, User $user, string $balance): Wallet
     {
         $wallet = new Wallet();
         $wallet->setTitle($title);
-        $wallet->setBalance(0);
+        $wallet->setBalance($balance);
         $wallet->setUser($user);
         $wallet->setType('cash');
         $walletRepository = static::getContainer()->get(WalletRepository::class);

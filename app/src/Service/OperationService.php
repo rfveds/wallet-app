@@ -67,6 +67,7 @@ class OperationService implements OperationServiceInterface
      */
     public function createPaginatedList(int $page, User $author, array $filters = []): PaginationInterface
     {
+        //var_dump($filters);
         $filters = $this->prepareFilters($filters);
 
         return $this->paginator->paginate(
@@ -94,37 +95,9 @@ class OperationService implements OperationServiceInterface
     public function delete(Operation $operation): void
     {
         $this->operationRepository->delete($operation);
-    }// end delete()
+    }
 
-    /**
-     * Prepare filters for the tasks list.
-     *
-     * @param array<string, int> $filters Raw filters from request
-     *
-     * @return array<string, object> Result array of filters
-     *
-     * @throws NonUniqueResultException
-     */
-    private function prepareFilters(array $filters): array
-    {
-        $resultFilters = [];
-        if (!empty($filters['category_id'])) {
-            $category = $this->categoryService->findOneById($filters['category_id']);
-            if (null !== $category) {
-                $resultFilters['category'] = $category;
-            }
-        }
-
-        if (!empty($filters['tag_id'])) {
-            $tag = $this->tagService->findOneById($filters['tag_id']);
-            if (null !== $tag) {
-                $resultFilters['tag'] = $tag;
-            }
-        }
-
-        return $resultFilters;
-    }// end prepareFilters()
-
+// end delete()
     /**
      * Find by wallet.
      *
@@ -137,8 +110,82 @@ class OperationService implements OperationServiceInterface
         return $this->operationRepository->queryByWallet($wallet)->getQuery()->getResult();
     }// end findByWallet()
 
-    public function findByUser(User $user)
+    /**
+     * Find by user.
+     *
+     * @param User $user User entity
+     *
+     * @return array Result
+     */
+    public function findByUser(User $user): array
     {
         return $this->operationRepository->queryByAuthor($user)->getQuery()->getResult();
     }
+
+    /**
+     * Find by title.
+     *
+     * @param string $operation_title Operation title
+     *
+     * @return Operation|null Operation entity
+     */
+    public function findByOneByTitle(string $operation_title): ?Operation
+    {
+        return $this->operationRepository->findOneBy(['title' => $operation_title]);
+    }
+
+    /**
+     * Find by id.
+     *
+     * @param int $id Operation id
+     *
+     * @return Operation|null Operation entity
+     */
+    public function findOneById(int $id): ?Operation
+    {
+        return $this->operationRepository->findOneBy(['id' => $id]);
+    }
+
+    /**
+     * Prepare filters for the operation list.
+     *
+     * @param array<string, int> $filters Raw filters from request
+     *
+     * @return array<string, object> Result array of filters
+     *
+     * @throws NonUniqueResultException
+     */
+    private function prepareFilters(array $filters): array
+    {
+        //var_dump($filters);
+
+        $resultFilters = [];
+
+        if (!empty($filters['category_id'])) {
+            $category = $this->categoryService->findOneById($filters['category_id']);
+            if (null !== $category) {
+                $resultFilters['category'] = $category;
+            }
+        }
+
+        if (!empty($filters['tag_id'])) {
+          //  var_dump($filters['tag_id']);
+            $tag = $this->tagService->findOneById($filters['tag_id']);
+            if (null !== $tag) {
+                $resultFilters['tag'] = $tag;
+            }
+        }
+
+        if (!empty($filters['operation_id'])) {
+           // var_dump($filters['operation_id']);
+            $operation = $this->findOneById($filters['operation_id']);
+            if (null !== $operation) {
+                $resultFilters['operation'] = $operation;
+            }
+        }
+
+
+
+        return $resultFilters;
+    }// end prepareFilters()
 }// end class
