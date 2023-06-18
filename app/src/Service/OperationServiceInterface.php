@@ -62,5 +62,5 @@ interface OperationServiceInterface
      *
      * @return Operation|null Operation entity
      */
-    public function findByOneByTitle(string $operation_title): ?Operation;
+    public function findOneByTitle(string $operation_title): ?Operation;
 }

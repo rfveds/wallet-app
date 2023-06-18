@@ -75,7 +75,6 @@ class OperationController extends AbstractController
     public function index(Request $request): Response
     {
         $filters = $this->getFilters($request);
-       // var_dump($filters);
         /** @var User $user */
         $user = $this->getUser();
         $pagination = $this->operationService->createPaginatedList(
@@ -295,9 +294,7 @@ class OperationController extends AbstractController
         $filters = [];
         $filters['category_id'] = $request->query->getInt('filters_category_id');
         $filters['tag_id'] = $request->query->getInt('filters_tag_id');
-        $filters['operation_id'] = $request->query->getInt('filters_operation_id');
-
-        var_dump($filters);
+        $filters['operation_title'] = $request->query->getAlnum('filters_operation_title');
 
         return $filters;
     }// end getFilters()

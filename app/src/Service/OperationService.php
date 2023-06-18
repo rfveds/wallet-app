@@ -67,7 +67,7 @@ class OperationService implements OperationServiceInterface
      */
     public function createPaginatedList(int $page, User $author, array $filters = []): PaginationInterface
     {
-        //var_dump($filters);
+        // var_dump($filters);
         $filters = $this->prepareFilters($filters);
 
         return $this->paginator->paginate(
@@ -129,7 +129,7 @@ class OperationService implements OperationServiceInterface
      *
      * @return Operation|null Operation entity
      */
-    public function findByOneByTitle(string $operation_title): ?Operation
+    public function findOneByTitle(string $operation_title): ?Operation
     {
         return $this->operationRepository->findOneBy(['title' => $operation_title]);
     }
@@ -157,7 +157,7 @@ class OperationService implements OperationServiceInterface
      */
     private function prepareFilters(array $filters): array
     {
-        //var_dump($filters);
+        // var_dump($filters);
 
         $resultFilters = [];
 
@@ -169,7 +169,7 @@ class OperationService implements OperationServiceInterface
         }
 
         if (!empty($filters['tag_id'])) {
-          //  var_dump($filters['tag_id']);
+            //  var_dump($filters['tag_id']);
             $tag = $this->tagService->findOneById($filters['tag_id']);
             if (null !== $tag) {
                 $resultFilters['tag'] = $tag;
@@ -177,14 +177,20 @@ class OperationService implements OperationServiceInterface
         }
 
         if (!empty($filters['operation_id'])) {
-           // var_dump($filters['operation_id']);
+            // var_dump($filters['operation_id']);
             $operation = $this->findOneById($filters['operation_id']);
             if (null !== $operation) {
                 $resultFilters['operation'] = $operation;
             }
         }
 
-
+        if (!empty($filters['operation_title'])) {
+            // var_dump($filters['operation_id']);
+            $operation = $this->findOneByTitle($filters['operation_title']);
+            if (null !== $operation) {
+                $resultFilters['operation'] = $operation;
+            }
+        }
 
         return $resultFilters;
     }// end prepareFilters()
