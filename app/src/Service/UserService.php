@@ -73,7 +73,10 @@ class UserService implements UserServiceInterface
     /**
      * Save entity.
      *
-     * @param User $user User entity
+     * @param User   $user     User entity
+     * @param string $password Password
+     *
+     * @return void
      */
     public function save(User $user, string $password): void
     {
@@ -112,13 +115,21 @@ class UserService implements UserServiceInterface
     /**
      * Edit password.
      *
-     * @param User $user
-     * @param string $password
-     *
-     * @return void
+     * @param User   $user     User entity
+     * @param string $password Password
      */
     public function upgradePassword(User $user, string $password): void
     {
         $this->userRepository->upgradePassword($user, $password);
     }
+
+    /**
+     * Edit data.
+     *
+     * @param User $user User entity
+     */
+    public function editData(User $user): void
+    {
+        $this->userRepository->save($user, true);
+    }// end editData()
 }// end class

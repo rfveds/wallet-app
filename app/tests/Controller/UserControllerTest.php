@@ -14,14 +14,12 @@ use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
-use App\Service\UserService;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use TypeError;
 
 /**
  * Class UserControllerTest.
@@ -191,6 +189,43 @@ class UserControllerTest extends WebTestCase
         $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
     }
 
+    /**
+     * Test edit user data.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditUserData(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'user_edit_data@example.com');
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $userId = $user->getId();
+        $this->httpClient->loginUser($user);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$user->getId().'/edit');
+        $editedEmail = 'user_edited_data@example.com';
+        $editedFirstName = 'edited_first_name';
+        $editedLastName = 'edited_last_name';
+
+        // when
+        $this->httpClient->submitForm('action.edit',
+            [
+                'user_data' => [
+                    'email' => $editedEmail,
+                    'firstName' => $editedFirstName,
+                    'lastName' => $editedLastName,
+                ],
+            ]);
+
+
+
+        // then
+        $editedUser = $userRepository->findOneBy(['id' => $userId]);
+        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertEquals($editedEmail, $editedUser->getEmail());
+        $this->assertEquals($editedFirstName, $editedUser->getFirstName());
+        $this->assertEquals($editedLastName, $editedUser->getLastName());
+    }
 
         /**
          * Test delete user with operation.
@@ -237,6 +272,8 @@ class UserControllerTest extends WebTestCase
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
         $user->setEmail($email);
+        $user->setFirstName('Test');
+        $user->setLastName('User');
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(

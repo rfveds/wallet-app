@@ -156,7 +156,7 @@ class OperationServiceTest extends KernelTestCase
         }
 
         // when
-        $result = $this->operationService->createPaginatedList($page, $author);
+        $result = $this->operationService->createPaginatedList($page, $author, $filters = []);
 
         // then
         $this->assertEquals($expectedResultSize, $result->count());
@@ -227,6 +227,8 @@ class OperationServiceTest extends KernelTestCase
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
         $user->setEmail($email);
+        $user->setFirstName('Test');
+        $user->setLastName('User');
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(

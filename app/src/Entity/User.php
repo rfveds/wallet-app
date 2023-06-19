@@ -45,6 +45,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $email = null;
 
     /**
+     * First name.
+     *
+     * @var string|null $firstName First name
+     */
+    #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\NotBlank]
+    private ?string $firstName = null;
+
+    /**
+     * Last name.
+     *
+     * @var string|null $lastName Last name
+     */
+    #[ORM\Column(type: 'string', length: 64)]
+    #[Assert\NotBlank]
+    private ?string $lastName = null;
+
+    /**
      * Roles.
      *
      * @var array<int, string> $roles Roles
@@ -166,6 +184,46 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }// end setPassword()
 
     /**
+     * Getter for first name.
+     *
+     * @return string|null First name
+     */
+    public function getFirstName(): ?string
+    {
+        return $this->firstName;
+    }// end getFirstName()
+
+    /**
+     * Setter for first name.
+     *
+     * @param string $firstName First name
+     */
+    public function setFirstName(string $firstName): void
+    {
+        $this->firstName = $firstName;
+    }// end setFirstName()
+
+    /**
+     * Getter for last name.
+     *
+     * @return string|null Last name
+     */
+    public function getLastName(): ?string
+    {
+        return $this->lastName;
+    }// end getLastName()
+
+    /**
+     * Setter for last name.
+     *
+     * @param string $lastName Last name
+     */
+    public function setLastName(string $lastName): void
+    {
+        $this->lastName = $lastName;
+    }// end setLastName()
+
+    /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
      *
@@ -188,5 +246,4 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }// end eraseCredentials()
-
 }// end class

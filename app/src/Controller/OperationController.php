@@ -295,6 +295,10 @@ class OperationController extends AbstractController
         $filters['category_id'] = $request->query->getInt('filters_category_id');
         $filters['tag_id'] = $request->query->getInt('filters_tag_id');
         $filters['operation_title'] = $request->query->getAlnum('filters_operation_title');
+        $filters['operation_date_from'] = $request->query->getAlnum('filters_operation_date_from');
+        $filters['operation_date_to'] = $request->query->getAlnum('filters_operation_date_to');
+
+        // var_dump($filters);
 
         return $filters;
     }// end getFilters()

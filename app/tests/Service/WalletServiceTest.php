@@ -157,6 +157,8 @@ class WalletServiceTest extends KernelTestCase
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
         $user->setEmail($email);
+        $user->setFirstName('Test');
+        $user->setLastName('User');
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(

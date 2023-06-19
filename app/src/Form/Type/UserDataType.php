@@ -1,6 +1,6 @@
 <?php
 /**
- * Registration Type.
+ * UserData Type.
  */
 
 namespace App\Form\Type;
@@ -8,7 +8,6 @@ namespace App\Form\Type;
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -16,7 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * Class RegistrationType.
  */
-class RegistrationType extends AbstractType
+class UserDataType extends AbstractType
 {
     /**
      * Build form.
@@ -33,16 +32,6 @@ class RegistrationType extends AbstractType
                 'label' => 'label.email',
                 'required' => true,
                 'attr' => ['max_length' => 64],
-            ]
-        );
-
-        $builder->add(
-            'password',
-            PasswordType::class,
-            [
-                'label' => 'label.password',
-                'required' => true,
-                'attr' => ['max_length' => 255],
             ]
         );
 

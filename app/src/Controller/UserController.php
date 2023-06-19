@@ -6,10 +6,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\Type\UserDataType;
 use App\Form\Type\UserPasswordType;
-use App\Service\OperationServiceInterface;
 use App\Service\UserServiceInterface;
-use App\Service\WalletServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -34,7 +33,7 @@ class UserController extends AbstractController
     public function __construct(UserServiceInterface $userService)
     {
         $this->userService = $userService;
-    }
+    }// end __construct()
 
     /**
      * Index action.
@@ -42,7 +41,8 @@ class UserController extends AbstractController
     #[Route(
         '/',
         name: 'user_index',
-        methods: 'GET')]
+        methods: 'GET'
+    )]
     #[isGranted('ROLE_ADMIN')]
     public function index(Request $request): Response
     {
@@ -51,7 +51,7 @@ class UserController extends AbstractController
         );
 
         return $this->render('user/index.html.twig', ['pagination' => $pagination]);
-    }
+    }// end index()
 
     /**
      * Show action.
@@ -70,10 +70,9 @@ class UserController extends AbstractController
     {
         return $this->render(
             'user/show.html.twig',
-            ['user' => $user,
-            ]
+            ['user' => $user]
         );
-    }
+    }// end show()
 
     /**
      * Delete action.
@@ -106,7 +105,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->userService->delete($user);
             $this->addFlash('success', 'message.deleted_successfully');
 
@@ -120,7 +118,7 @@ class UserController extends AbstractController
                 'user' => $user,
             ]
         );
-    }
+    }// end delete()
 
     /**
      * Edit password action.
@@ -148,7 +146,6 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->userService->upgradePassword($user, $form->get('password')->getData());
 
             $this->addFlash('success', 'message.updated_successfully');
@@ -163,6 +160,51 @@ class UserController extends AbstractController
                 'user' => $user,
             ]
         );
-    }
+    }// end editPassword()
 
-}
+    /**
+     * Edit action.
+     *
+     * @param Request $request HTTP request
+     * @param User    $user    User entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/edit',
+        name: 'user_edit',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|PUT',
+    )]
+    public function edit(Request $request, User $user): Response
+    {
+        $form = $this->createForm(
+            UserDataType::class,
+            $user,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'user_edit',
+                    ['id' => $user->getId()],
+                ),
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userService->editData($user);
+            $this->addFlash('success', 'message.updated_successfully');
+
+            return $this->redirectToRoute('homepage');
+        }
+
+        return $this->render(
+            'user/edit.html.twig',
+            [
+                'form' => $form->createView(),
+                'user' => $user,
+            ]
+        );
+    }// end edit()
+}// end class

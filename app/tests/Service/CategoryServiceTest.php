@@ -197,42 +197,6 @@ class CategoryServiceTest extends KernelTestCase
     }
 
     /**
-     * Create Wallet.
-     *
-     * @throws OptimisticLockException|\Doctrine\ORM\Exception\ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
-     * @throws ORMException
-     */
-    private function createWallet($author, $walletTitle): Wallet
-    {
-        $wallet = new Wallet();
-        $wallet->setTitle($walletTitle);
-        $wallet->setType('cash');
-        $wallet->setBalance('999');
-        $wallet->setUser($author);
-        $walletRepository = self::getContainer()->get(WalletRepository::class);
-        $walletRepository->save($wallet);
-
-        return $wallet;
-    }
-
-    /**
-     * Create Tag.
-     *
-     * @throws OptimisticLockException|\Doctrine\ORM\Exception\ORMException|NotFoundExceptionInterface|ContainerExceptionInterface
-     */
-    private function createTag($tagTitle): Tag
-    {
-        $tag = new Tag();
-        $tag->setTitle($tagTitle);
-        $tag->setCreatedAt(new \DateTimeImmutable('now'));
-        $tag->setUpdatedAt(new \DateTimeImmutable('now'));
-        $tagRepository = self::getContainer()->get(TagRepository::class);
-        $tagRepository->save($tag);
-
-        return $tag;
-    }
-
-    /**
      * Create user.
      *
      * @param array $roles User roles
@@ -246,6 +210,8 @@ class CategoryServiceTest extends KernelTestCase
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
         $user->setEmail($email);
+        $user->setFirstName('Test');
+        $user->setLastName('User');
         $user->setRoles($roles);
         $user->setPassword(
             $passwordHasher->hashPassword(

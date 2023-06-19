@@ -74,7 +74,7 @@ class OperationRepository extends ServiceEntityRepository
             ->join('operation.author', 'author')
             ->orderBy('operation.updatedAt', 'DESC');
 
-        //var_dump($filters);
+        // var_dump($filters);
         return $this->applyFiltersToList($queryBuilder, $filters);
     }
 
@@ -113,6 +113,37 @@ class OperationRepository extends ServiceEntityRepository
 
         return $queryBuilder;
     }
+
+//    /**
+//     * Find by date.
+//     *
+//     * @param string $operation_date_from Operation date from
+//     * @param string $operation_date_to   Operation date to
+//     *
+//     * @return mixed
+//     */
+//    public function queryByDate(array $filters = []): QueryBuilder
+//    {
+//        $queryBuilder = $this->getOrCreateQueryBuilder()
+//              ->select(
+//                  'partial operation.{id, amount, title, createdAt, updatedAt}',
+//                  'partial category.{id, title}',
+//                  'partial wallet.{id, title}',
+//                  'partial tags.{id, title}',
+//                  'partial author.{id, email}'
+//              )
+//              ->join('operation.wallet', 'wallet')
+//              ->join('operation.category', 'category')
+//              ->leftJoin('operation.tags', 'tags')
+//              ->join('operation.author', 'author')
+//              ->orderBy('operation.updatedAt', 'DESC');
+//
+//        $queryBuilder->andWhere('operation.createdAt BETWEEN :operation_date_from AND :operation_date_to')
+//            ->setParameter('operation_date_from', $operation_date_from)
+//            ->setParameter('operation_date_to', $operation_date_to);
+//
+//        return $queryBuilder;
+//    }
 
     /**
      * Count operation by category.
@@ -179,7 +210,7 @@ class OperationRepository extends ServiceEntityRepository
      */
     private function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
     {
-       // var_dump($filters);
+        // var_dump($filters);
 
         if (isset($filters['category']) && $filters['category'] instanceof Category) {
             $queryBuilder->andWhere('category = :category')

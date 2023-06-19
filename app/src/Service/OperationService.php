@@ -67,7 +67,6 @@ class OperationService implements OperationServiceInterface
      */
     public function createPaginatedList(int $page, User $author, array $filters = []): PaginationInterface
     {
-        // var_dump($filters);
         $filters = $this->prepareFilters($filters);
 
         return $this->paginator->paginate(
@@ -147,6 +146,19 @@ class OperationService implements OperationServiceInterface
     }
 
     /**
+     * Find by date.
+     *
+     * @param string $operation_date_from Operation date from
+     * @param string $operation_date_to   Operation date to
+     *
+     * @return Operation|null Result
+     */
+    public function findOneByDate(string $operation_date_from, string $operation_date_to): ?array
+    {
+        return $this->operationRepository->queryByDate($operation_date_from, $operation_date_to)->getQuery()->getResult();
+    }
+
+    /**
      * Prepare filters for the operation list.
      *
      * @param array<string, int> $filters Raw filters from request
@@ -191,6 +203,22 @@ class OperationService implements OperationServiceInterface
                 $resultFilters['operation'] = $operation;
             }
         }
+
+//        if (!empty($filters['operation_date_from'] && !empty($filters['operation_date_to']))) {
+//            $dateTimeFrom = \DateTime::createFromFormat('Ymd', $filters['operation_date_from']);
+//            $formattedDateFrom = $dateTimeFrom->format('Y-m-d H:i:s');
+//
+//            $dateTimeTo = \DateTime::createFromFormat('Ymd', $filters['operation_date_to']);
+//            $formattedDateTo = $dateTimeTo->format('Y-m-d H:i:s');
+//
+//            $filters['operation_date_from'] = $formattedDateFrom;
+//            $filters['operation_date_to'] = $formattedDateTo;
+//
+//            $operation = $this->findOneByDate($filters['operation_date_from'], $filters['operation_date_to']);
+//            if (null !== $operation) {
+//                $resultFilters['operation'] = $operation;
+//            }
+//        }
 
         return $resultFilters;
     }// end prepareFilters()

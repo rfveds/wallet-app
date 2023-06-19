@@ -61,6 +61,18 @@
                     </button>
                 </form>
 
+                <form action="{{ path('operation_index') }}" >
+                    <input name="filters.operation_date_from"
+                           type="date"
+                           aria-label="Search">
+                    <input name="filters.operation_date_to"
+                           type="date"
+                           aria-label="Search">
+                    <button
+                            type="submit">{{ 'action.search'|trans }}
+                    </button>
+                </form>
+
             {% endif %}
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
