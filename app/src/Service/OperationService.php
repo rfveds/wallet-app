@@ -70,6 +70,8 @@ class OperationService implements OperationServiceInterface
     {
         $filters = $this->prepareFilters($filters);
 
+        var_dump($filters);
+
         return $this->paginator->paginate(
             $this->operationRepository->queryByAuthor($author, $filters),
             $page,
@@ -202,6 +204,14 @@ class OperationService implements OperationServiceInterface
             if (null !== $operation) {
                 $resultFilters['operation'] = $operation;
             }
+        }
+
+        if (!empty($filters['operation_date_from'])) {
+            $resultFilters['operation_date_from'] = $filters['operation_date_from'];
+        }
+
+        if (!empty($filters['operation_date_to'])) {
+            $resultFilters['operation_date_to'] = $filters['operation_date_to'];
         }
 
         return $resultFilters;

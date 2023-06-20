@@ -60,6 +60,8 @@ class OperationRepository extends ServiceEntityRepository
      */
     public function queryAll(array $filters): QueryBuilder
     {
+        var_dump($filters);
+
         $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial operation.{id, amount, title, createdAt, updatedAt}',
@@ -74,7 +76,6 @@ class OperationRepository extends ServiceEntityRepository
             ->join('operation.author', 'author')
             ->orderBy('operation.updatedAt', 'DESC');
 
-        // var_dump($filters);
         return $this->applyFiltersToList($queryBuilder, $filters);
     }
 
@@ -151,6 +152,17 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find one operation by date from and date to.
+     */
+    public function findByDate(string $operation_date_from): QueryBuilder
+    {
+        return $this->createQueryBuilder('operation')
+            ->select('operation')
+            ->andWhere('operation.createdAt >= :operation_date_from')
+            ->setParameter('operation_date_from', $operation_date_from);
+    }
+
+    /**
      * Save entity.
      *
      * @param Operation $operation Operation entity
@@ -197,18 +209,33 @@ class OperationRepository extends ServiceEntityRepository
         // var_dump($filters);
 
         if (isset($filters['category']) && $filters['category'] instanceof Category) {
-            $queryBuilder->andWhere('category = :category')
+            $queryBuilder
+                ->andWhere('category = :category')
                 ->setParameter('category', $filters['category']);
         }
 
         if (isset($filters['tag']) && $filters['tag'] instanceof Tag) {
-            $queryBuilder->andWhere('tags IN (:tag)')
+            $queryBuilder
+                ->andWhere('tags IN (:tag)')
                 ->setParameter('tag', $filters['tag']);
         }
 
         if (isset($filters['operation']) && $filters['operation'] instanceof Operation) {
-            $queryBuilder->andWhere('operation = :operation')
+            $queryBuilder
+                ->andWhere('operation = :operation')
                 ->setParameter('operation', $filters['operation']);
+        }
+
+        if (isset($filters['operation_date_from'])) {
+            $queryBuilder
+                ->andWhere('operation.createdAt >= :operation_date_from')
+                ->setParameter('operation_date_from', $filters['operation_date_from']);
+        }
+
+        if (isset($filters['operation_date_to'])) {
+            $queryBuilder
+                ->andWhere('operation.createdAt <= :operation_date_to')
+                ->setParameter('operation_date_to', $filters['operation_date_to']);
         }
 
         return $queryBuilder;

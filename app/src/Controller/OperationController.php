@@ -9,14 +9,12 @@ use App\Entity\Operation;
 use App\Entity\User;
 use App\Form\Type\OperationType;
 use App\Service\OperationServiceInterface;
-use App\Service\WalletServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -30,12 +28,10 @@ class OperationController extends AbstractController
      */
     private OperationServiceInterface $operationService;
 
-
     /**
      * Translator.
      */
     private TranslatorInterface $translator;
-
 
     /**
      * OperationController constructor.
@@ -63,6 +59,7 @@ class OperationController extends AbstractController
     public function index(Request $request): Response
     {
         $filters = $this->getFilters($request);
+        //var_dump($filters);
         /** @var User $user */
         $user = $this->getUser();
         $pagination = $this->operationService->createPaginatedList(
@@ -285,8 +282,6 @@ class OperationController extends AbstractController
         $filters['operation_title'] = $request->query->getAlnum('filters_operation_title');
         $filters['operation_date_from'] = $request->query->getAlnum('filters_operation_date_from');
         $filters['operation_date_to'] = $request->query->getAlnum('filters_operation_date_to');
-
-        // var_dump($filters);
 
         return $filters;
     }// end getFilters()
