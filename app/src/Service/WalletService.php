@@ -8,7 +8,6 @@ namespace App\Service;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Repository\WalletRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -42,7 +41,8 @@ class WalletService implements WalletServiceInterface
     /**
      * Get paginated list.
      *
-     * @param int $page Page number
+     * @param int  $page   Page number
+     * @param User $author Author
      *
      * @return PaginationInterface Paginated list
      */
@@ -77,6 +77,8 @@ class WalletService implements WalletServiceInterface
 
     /**
      * Find by user.
+     *
+     * @param User $user User entity
      *
      * @return array<string, mixed> Result
      */

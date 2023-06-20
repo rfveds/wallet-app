@@ -95,6 +95,7 @@ class CategoryControllerTest extends WebTestCase
 
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test 2 category');
+        $expectedCategory->setAuthor($adminUser);
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($expectedCategory);
 
@@ -150,12 +151,16 @@ class CategoryControllerTest extends WebTestCase
     public function testEditCategoryUnauthorizedUser(): void
     {
         // given
-        $expectedHttpStatusCode = 302;
+        $expectedHttpStatusCode = 403;
 
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'user_create_category@example.com');
+        $unauthorizedUser = $this->createUser([UserRole::ROLE_USER->value], 'unauthorized_category@example.com');
+        $this->httpClient->loginUser($unauthorizedUser);
         $category = new Category();
         $category->setTitle('TestEditAnAuthCategory');
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $category->setUpdatedAt(new \DateTimeImmutable('now'));
+        $category->setAuthor($user);
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($category);
 
@@ -184,6 +189,7 @@ class CategoryControllerTest extends WebTestCase
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $testCategory->setSlug('edited-category');
+        $testCategory->setAuthor($user);
         $categoryRepository->save($testCategory);
         $testCategoryId = $testCategory->getId();
         $expectedNewCategoryTitle = 'Test Category Edit';
@@ -222,6 +228,7 @@ class CategoryControllerTest extends WebTestCase
         $testCategory->setTitle('TestCategoryCreated');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setAuthor($user);
         $categoryRepository->save($testCategory);
         $testCategoryId = $testCategory->getId();
 
@@ -252,6 +259,7 @@ class CategoryControllerTest extends WebTestCase
         $testCategory->setTitle('TestCategoryCreated2');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
+        $testCategory->setAuthor($user);
         $categoryRepository->save($testCategory);
         $testCategoryId = $testCategory->getId();
 
@@ -308,7 +316,7 @@ class CategoryControllerTest extends WebTestCase
         $operation->setTitle('TestOperation');
         $operation->setAmount(1000);
         $operation->setCategory($testCategory);
-        $operation->setWallet($this->createWallet($user));
+        $operation->setWallet($this->createWallet($user, 'TestWallet'));
         $operation->setAuthor($user);
 
         $operationRepository = self::getContainer()->get(OperationRepository::class);
@@ -324,10 +332,10 @@ class CategoryControllerTest extends WebTestCase
      *
      * @throws ContainerExceptionInterface
      */
-    protected function createWallet(User $user): Wallet
+    protected function createWallet(User $user, string $title): Wallet
     {
         $wallet = new Wallet();
-        $wallet->setTitle('TestWallet');
+        $wallet->setTitle($title);
         $wallet->setType('cash');
         $wallet->setBalance('1000');
         $wallet->setUser($user);

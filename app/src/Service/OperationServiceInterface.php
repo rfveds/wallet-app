@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
@@ -58,9 +59,18 @@ interface OperationServiceInterface
     /**
      * Find by title.
      *
-     * @param string $operation_title Operation title
+     * @param string $operationTitle
      *
      * @return Operation|null Operation entity
      */
-    public function findOneByTitle(string $operation_title): ?Operation;
+    public function findOneByTitle(string $operationTitle): ?Operation;
+
+    /**
+     * Find by category.
+     *
+     * @param Category $category Category
+     *
+     * @return array<string, mixed> Result
+     */
+    public function findByCategory(Category $category): array;
 }

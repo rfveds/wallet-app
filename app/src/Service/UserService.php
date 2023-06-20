@@ -37,21 +37,28 @@ class UserService implements UserServiceInterface
     private WalletServiceInterface $walletService;
 
     /**
+     * Category service.
+     */
+    private CategoryServiceInterface $categoryService;
+
+    /**
      * UserService constructor.
      *
      * @param UserRepository              $userRepository   User repository
+     * @param UserPasswordHasherInterface $passwordHasher   Password hasher
+     * @param PaginatorInterface          $paginator        Paginator
+     * @param CategoryServiceInterface    $categoryService  Category service
      * @param OperationServiceInterface   $operationService Operation service
      * @param WalletServiceInterface      $walletService    Wallet service
-     * @param PaginatorInterface          $paginator        Paginator
-     * @param UserPasswordHasherInterface $passwordHasher   Password hasher
      */
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, CategoryServiceInterface $categoryService, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
     {
         $this->userRepository = $userRepository;
         $this->paginator = $paginator;
         $this->passwordHasher = $passwordHasher;
         $this->operationService = $operationService;
         $this->walletService = $walletService;
+        $this->categoryService = $categoryService;
     }// end __construct()
 
     /**
@@ -75,8 +82,6 @@ class UserService implements UserServiceInterface
      *
      * @param User   $user     User entity
      * @param string $password Password
-     *
-     * @return void
      */
     public function save(User $user, string $password): void
     {
@@ -104,9 +109,15 @@ class UserService implements UserServiceInterface
         foreach ($operations as $operation) {
             $this->operationService->delete($operation);
         }
+
         $wallets = $this->walletService->findByUser($user);
         foreach ($wallets as $wallet) {
             $this->walletService->delete($wallet);
+        }
+
+        $categories = $this->categoryService->findByUser($user);
+        foreach ($categories as $category) {
+            $this->categoryService->delete($category);
         }
 
         $this->userRepository->remove($user, true);

@@ -81,7 +81,7 @@
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="17" href="#17">17</a></td><td class="col-11 codeLine"><span class="default">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment">/**</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="18" href="#18">18</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Create&nbsp;paginated&nbsp;list.</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="19" href="#19">19</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></td></tr>
-    <tr class=" d-flex"><td  class="col-1 text-right"><a id="20" href="#20">20</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;int&nbsp;$page&nbsp;Page&nbsp;number</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="20" href="#20">20</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;int&nbsp;&nbsp;$page&nbsp;&nbsp;&nbsp;Page&nbsp;number</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="21" href="#21">21</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;User&nbsp;$author&nbsp;Author</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="22" href="#22">22</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="23" href="#23">23</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;PaginationInterface&lt;string,&nbsp;mixed&gt;&nbsp;Paginated&nbsp;list</span></td></tr>
@@ -105,10 +105,12 @@
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="41" href="#41">41</a></td><td class="col-11 codeLine"><span class="default">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="comment">/**</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="42" href="#42">42</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;Find&nbsp;by&nbsp;user.</span></td></tr>
     <tr class=" d-flex"><td  class="col-1 text-right"><a id="43" href="#43">43</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></td></tr>
-    <tr class=" d-flex"><td  class="col-1 text-right"><a id="44" href="#44">44</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;array&lt;string,&nbsp;mixed&gt;&nbsp;Result</span></td></tr>
-    <tr class=" d-flex"><td  class="col-1 text-right"><a id="45" href="#45">45</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></td></tr>
-    <tr class=" d-flex"><td  class="col-1 text-right"><a id="46" href="#46">46</a></td><td class="col-11 codeLine"><span class="default">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">public</span><span class="default">&nbsp;</span><span class="keyword">function</span><span class="default">&nbsp;</span><span class="default">findByUser</span><span class="keyword">(</span><span class="default">User</span><span class="default">&nbsp;</span><span class="default">$user</span><span class="keyword">)</span><span class="keyword">:</span><span class="default">&nbsp;</span><span class="keyword">array</span><span class="keyword">;</span></td></tr>
-    <tr class=" d-flex"><td  class="col-1 text-right"><a id="47" href="#47">47</a></td><td class="col-11 codeLine"><span class="keyword">}</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="44" href="#44">44</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@param&nbsp;User&nbsp;$user&nbsp;User&nbsp;entity</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="45" href="#45">45</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="46" href="#46">46</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*&nbsp;@return&nbsp;array&lt;string,&nbsp;mixed&gt;&nbsp;Result</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="47" href="#47">47</a></td><td class="col-11 codeLine"><span class="comment">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*/</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="48" href="#48">48</a></td><td class="col-11 codeLine"><span class="default">&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="keyword">public</span><span class="default">&nbsp;</span><span class="keyword">function</span><span class="default">&nbsp;</span><span class="default">findByUser</span><span class="keyword">(</span><span class="default">User</span><span class="default">&nbsp;</span><span class="default">$user</span><span class="keyword">)</span><span class="keyword">:</span><span class="default">&nbsp;</span><span class="keyword">array</span><span class="keyword">;</span></td></tr>
+    <tr class=" d-flex"><td  class="col-1 text-right"><a id="49" href="#49">49</a></td><td class="col-11 codeLine"><span class="keyword">}</span></td></tr>
 
 </tbody>
 </table>
@@ -119,7 +121,7 @@
     <h4>Legend</h4>
     <p><span class="legend covered-by-small-tests">Covered by small (and larger) tests</span><span class="legend covered-by-medium-tests">Covered by medium (and large) tests</span><span class="legend covered-by-large-tests">Covered by large tests (and tests of unknown size)</span><span class="legend not-covered">Not covered</span><span class="legend not-coverable">Not coverable</span></p>
     <p>
-     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 9.2.26</a> using <a href="https://secure.php.net/" target="_top">PHP 8.1.20</a> and <a href="https://phpunit.de/">PHPUnit 9.6.8</a> at Mon Jun 19 10:59:36 UTC 2023.</small>
+     <small>Generated by <a href="https://github.com/sebastianbergmann/php-code-coverage" target="_top">php-code-coverage 9.2.26</a> using <a href="https://secure.php.net/" target="_top">PHP 8.1.20</a> and <a href="https://phpunit.de/">PHPUnit 9.6.8</a> at Tue Jun 20 13:09:04 UTC 2023.</small>
     </p>
     <a title="Back to the top" id="toplink" href="#">
         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="16" viewBox="0 0 12 16"><path fill-rule="evenodd" d="M12 11L6 5l-6 6h12z"/></svg>

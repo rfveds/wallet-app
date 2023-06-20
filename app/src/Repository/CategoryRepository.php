@@ -6,6 +6,7 @@
 namespace App\Repository;
 
 use App\Entity\Category;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -107,6 +108,21 @@ class CategoryRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('category')->andWhere('category.title = :title')->setParameter('title', $title)->getQuery()->getOneOrNullResult();
     }// end findOneByTitle()
+
+    /**
+     * Find by user.
+     *
+     * @param User $user User entity
+     *
+     * @return QueryBuilder Category collection
+     */
+    public function findByUser(User $user): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('category.author = :user')
+            ->setParameter('user', $user)
+            ->orderBy('category.title', 'ASC');
+    }// end findByUser()
 
     /**
      * Get or create new query builder.

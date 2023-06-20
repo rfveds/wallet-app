@@ -91,6 +91,7 @@ class TagControllerTest extends WebTestCase
 
         $expectedTag = new Tag();
         $expectedTag->setTitle('Test tag');
+        $expectedTag->setAuthor($adminUser);
         $expectedTag->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedTag->setUpdatedAt(new \DateTimeImmutable('now'));
         $tagRepository = static::getContainer()->get(TagRepository::class);
@@ -146,6 +147,7 @@ class TagControllerTest extends WebTestCase
         $tagTitle = 'Test tag edit';
         $testTag = new Tag();
         $testTag->setTitle($tagTitle);
+        $testTag->setAuthor($adminUser);
         $testTag->setCreatedAt(new \DateTimeImmutable('now'));
         $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
         $testTag->setSlug('test-tag-edit');
@@ -181,6 +183,7 @@ class TagControllerTest extends WebTestCase
         $tagTitle = 'Test tag delete';
         $testTag = new Tag();
         $testTag->setTitle($tagTitle);
+        $testTag->setAuthor($adminUser);
         $testTag->setCreatedAt(new \DateTimeImmutable('now'));
         $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
         $tagRepository->save($testTag);

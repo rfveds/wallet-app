@@ -86,7 +86,6 @@ class WalletControllerTest extends WebTestCase
      * Test show single wallet.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
-     * @throws \Exception
      */
     public function testShowWallet(): void
     {
@@ -112,10 +111,9 @@ class WalletControllerTest extends WebTestCase
     }
 
     /**
-     * @throws OptimisticLockException
-     * @throws NotFoundExceptionInterface
-     * @throws ORMException
-     * @throws ContainerExceptionInterface
+     * Test create wallet.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
     public function testCreateWallet(): void
     {
@@ -231,7 +229,7 @@ class WalletControllerTest extends WebTestCase
         $operation = new Operation();
         $operation->setTitle('TestOperationDeleteWallet');
         $operation->setAmount(100);
-        $operation->setCategory($this->createCategory('TestCategoryDeleteWallet'));
+        $operation->setCategory($this->createCategory('TestCategoryDeleteWallet', $user));
         $operation->setWallet($testWallet);
         $operation->setAuthor($user);
 
@@ -254,13 +252,14 @@ class WalletControllerTest extends WebTestCase
     /**
      * Create user.
      *
-     * @param array $roles User roles
+     * @param array  $roles User roles
+     * @param string $email User email
      *
      * @return User User entity
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
      */
-    private function createUser(array $roles, $email): User
+    private function createUser(array $roles, string $email): User
     {
         $passwordHasher = static::getContainer()->get('security.password_hasher');
         $user = new User();
@@ -280,11 +279,12 @@ class WalletControllerTest extends WebTestCase
         return $user;
     }
 
-
     /**
      * Create Wallet.
      *
      * @param User $user User entity
+     *
+     * @return Wallet Wallet entity
      *
      * @throws ContainerExceptionInterface
      */
@@ -304,12 +304,18 @@ class WalletControllerTest extends WebTestCase
     /**
      * Create category.
      *
+     * @param string $title Category title
+     * @param User   $user  User entity
+     *
+     * @return Category Category entity
+     *
      * @throws ContainerExceptionInterface
      */
-    private function createCategory($title): Category
+    private function createCategory(string $title, User $user): Category
     {
         $category = new Category();
         $category->setTitle($title);
+        $category->setAuthor($user);
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($category);
 

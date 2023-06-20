@@ -7,12 +7,8 @@ namespace App\Tests\Service;
 
 use App\Entity\Category;
 use App\Entity\Operation;
-use App\Entity\Tag;
 use App\Entity\User;
-use App\Entity\Wallet;
-use App\Repository\TagRepository;
 use App\Repository\UserRepository;
-use App\Repository\WalletRepository;
 use App\Service\CategoryService;
 use App\Service\CategoryServiceInterface;
 use App\Service\OperationServiceInterface;
@@ -64,13 +60,14 @@ class CategoryServiceTest extends KernelTestCase
     /**
      * Test save.
      *
-     * @throws ORMException
+     * @throws ORMException|OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface
      */
     public function testSave(): void
     {
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Category');
+        $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'test_save@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setSlug('test-category');
@@ -94,13 +91,14 @@ class CategoryServiceTest extends KernelTestCase
     /**
      * Test delete.
      *
-     * @throws ORMException
+     * @throws ORMException|OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface
      */
     public function testDelete(): void
     {
         // given
         $categoryToDelete = new Category();
         $categoryToDelete->setTitle('Test Delete Category');
+        $categoryToDelete->setAuthor($this->createUser(['ROLE_USER'], 'test_delete_cat@example.com'));
         $categoryToDelete->setCreatedAt(new \DateTimeImmutable('now'));
         $categoryToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
         $this->entityManager->persist($categoryToDelete);
@@ -125,13 +123,14 @@ class CategoryServiceTest extends KernelTestCase
     /**
      * Test find by id.
      *
-     * @throws NonUniqueResultException
+     * @throws NonUniqueResultException|ORMException|OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface
      */
     public function testFindById(): void
     {
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Find By Id Category');
+        $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'find_id_cat@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $this->entityManager->persist($expectedCategory);
@@ -148,13 +147,15 @@ class CategoryServiceTest extends KernelTestCase
     /**
      * Test find by title.
      *
-     * @throws NonUniqueResultException
+     * @throws NonUniqueResultException|ORMException|OptimisticLockException|NotFoundExceptionInterface|ContainerExceptionInterface
+
      */
     public function testFindByTitle(): void
     {
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Find By Title Category');
+        $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'user_find_cat@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $this->entityManager->persist($expectedCategory);
@@ -182,6 +183,7 @@ class CategoryServiceTest extends KernelTestCase
         while ($counter < $dataSetSize) {
             $category = new Category();
             $category->setTitle('Test Category #'.$counter);
+            $category->setAuthor($this->createUser(['ROLE_USER'], 'user_test_create_cat'.$counter.'@example.com'));
             $category->setCreatedAt(new \DateTimeImmutable('now'));
             $category->setUpdatedAt(new \DateTimeImmutable('now'));
             $this->categoryService->save($category);

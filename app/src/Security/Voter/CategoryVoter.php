@@ -1,20 +1,20 @@
 <?php
 /**
- * User Voter.
+ * Category Voter.
  */
 
 namespace App\Security\Voter;
 
-use App\Entity\User;
+use App\Entity\Category;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
- * Class UserVoter.
+ * Class CategoryVoter.
  */
-class UserVoter extends Voter
+class CategoryVoter extends Voter
 {
     /**
      * Edit permission.
@@ -38,11 +38,6 @@ class UserVoter extends Voter
     public const DELETE = 'DELETE';
 
     /**
-     * List permission.
-     */
-    public const LIST = 'LIST';
-
-    /**
      * Security helper.
      *
      * @var Security Security helper
@@ -50,7 +45,7 @@ class UserVoter extends Voter
     private Security $security;
 
     /**
-     * UserVoter constructor.
+     * CategoryVoter constructor.
      *
      * @param Security $security Security helper
      */
@@ -69,12 +64,12 @@ class UserVoter extends Voter
      */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE, self::LIST])
-            && $subject instanceof User;
+        return in_array($attribute, [self::EDIT, self::VIEW, self::DELETE])
+            && $subject instanceof Category;
     }// end supports()
 
     /**
-     * Perform a single access check operation on a given attribute, subject and token.
+     * Perform a single access check category on a given attribute, subject and token.
      * It is safe to assume that $attribute and $subject already passed the "supports()" method check.
      *
      * @param string         $attribute Permission name
@@ -96,63 +91,49 @@ class UserVoter extends Voter
             self::EDIT => $this->canEdit($subject, $user),
             self::VIEW => $this->canView($subject, $user),
             self::DELETE => $this->canDelete($subject, $user),
-            self::LIST => $this->canList($subject, $user),
             default => false,
         };
     }// end voteOnAttribute()
 
     /**
-     * Can user edit user.
+     * Check if user can edit category.
      *
-     * @param UserInterface $subject User entity
-     * @param UserInterface $user    User entity
+     * @param Category      $category Category entity
+     * @param UserInterface $user     User entity
      *
      * @return bool Vote result
      */
-    private function canEdit(UserInterface $subject, UserInterface $user): bool
+    private function canEdit(Category $category, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return $category->getAuthor() === $user || $this->security->isGranted('ROLE_ADMIN');
     }// end canEdit()
 
     /**
-     * Can user view user.
+     * Check if user can view category.
      *
-     * @param UserInterface $subject User entity
-     * @param UserInterface $user    User entity
+     * @param Category      $category Category entity
+     * @param UserInterface $user     User entity
      *
      * @return bool Vote result
      */
-    private function canView(UserInterface $subject, UserInterface $user): bool
+    private function canView(Category $category, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return
+            $category->getAuthor() === $user ||
+            $this->security->isGranted('ROLE_ADMIN') ||
+            $category->getAuthor()->getRoles() === ['ROLE_ADMIN'];
     }// end canView()
 
     /**
-     * Can user delete user.
+     * Check if user can delete category.
      *
-     * @param UserInterface $subject User entity
-     * @param UserInterface $user    User entity
+     * @param Category      $category Category entity
+     * @param UserInterface $user     User entity
      *
      * @return bool Vote result
      */
-    private function canDelete(UserInterface $subject, UserInterface $user): bool
+    private function canDelete(Category $category, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return $category->getAuthor() === $user || $this->security->isGranted('ROLE_ADMIN');
     }// end canDelete()
-
-    /**
-     * Can user list users.
-     *
-     * @param UserInterface $subject User entity
-     * @param UserInterface $user    User entity
-     *
-     * @return bool Vote result
-     */
-    private function canList(UserInterface $subject, UserInterface $user): bool
-    {
-        return $this->security->isGranted('ROLE_ADMIN');
-    }// end canList()
 }// end class

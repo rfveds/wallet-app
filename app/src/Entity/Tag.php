@@ -72,6 +72,15 @@ class Tag
     private ?string $slug = null;
 
     /**
+     * Author.
+     *
+     * @var User|null Author
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author;
+
+    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -140,4 +149,24 @@ class Tag
     {
         $this->slug = $slug;
     }
+
+    /**
+     * Getter for author.
+     *
+     * @return User|null Author
+     */
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }// end getAuthor()
+
+    /**
+     * Setter for author.
+     *
+     * @param User|null $author Author
+     */
+    public function setAuthor(?User $author): void
+    {
+        $this->author = $author;
+    }// end setAuthor()
 }

@@ -73,6 +73,15 @@ class Category
     private ?string $slug = null;
 
     /**
+     * Author.
+     *
+     * @var User|null Author
+     */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author;
+
+    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -80,7 +89,7 @@ class Category
     public function getId(): ?int
     {
         return $this->id;
-    }
+    }// end getId()
 
     /**
      * Getter for createdAt.
@@ -90,7 +99,7 @@ class Category
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
-    }
+    }// end getCreatedAt()
 
     /**
      * Setter for createdAt.
@@ -100,7 +109,7 @@ class Category
     public function setCreatedAt(\DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-    }
+    }// end setCreatedAt()
 
     /**
      * Getter for updatedAt.
@@ -110,7 +119,7 @@ class Category
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updatedAt;
-    }
+    }// end getUpdatedAt()
 
     /**
      * Setter for updatedAt.
@@ -120,7 +129,7 @@ class Category
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
-    }
+    }// end setUpdatedAt()
 
     /**
      * Getter for title.
@@ -130,7 +139,7 @@ class Category
     public function getTitle(): ?string
     {
         return $this->title;
-    }
+    }// end getTitle()
 
     /**
      * Setter for title.
@@ -140,7 +149,7 @@ class Category
     public function setTitle(string $title): void
     {
         $this->title = $title;
-    }
+    }// end setTitle()
 
     /**
      * Getter for slug.
@@ -150,7 +159,7 @@ class Category
     public function getSlug(): ?string
     {
         return $this->slug;
-    }
+    }// end getSlug()
 
     /**
      * Setter for slug.
@@ -160,5 +169,25 @@ class Category
     public function setSlug(string $slug): void
     {
         $this->slug = $slug;
-    }
-}
+    }// end setSlug()
+
+    /**
+     * Getter for author.
+     *
+     * @return User|null Author
+     */
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }// end getAuthor()
+
+    /**
+     * Setter for author.
+     *
+     * @param User|null $author Author
+     */
+    public function setAuthor(?User $author): void
+    {
+        $this->author = $author;
+    }// end setAuthor()
+}// end class

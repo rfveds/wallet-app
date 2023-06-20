@@ -36,22 +36,15 @@ class OperationType extends AbstractType
     private Security $security;
 
     /**
-     * Wallet repository.
-     *
-     * @var WalletRepository Wallet repository
-     */
-    private WalletRepository $walletRepository;
-
-    /**
      * Constructor.
      *
      * @param TagsDataTransformer $tagsDataTransformer Tags data transformer
+     * @param Security            $security            Security helper
      */
-    public function __construct(TagsDataTransformer $tagsDataTransformer, Security $security, WalletRepository $walletRepository)
+    public function __construct(TagsDataTransformer $tagsDataTransformer, Security $security)
     {
         $this->tagsDataTransformer = $tagsDataTransformer;
         $this->security = $security;
-        $this->walletRepository = $walletRepository;
     }// end __construct()
 
     /**

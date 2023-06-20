@@ -30,34 +30,22 @@ class OperationController extends AbstractController
      */
     private OperationServiceInterface $operationService;
 
-    /**
-     * Wallet service.
-     */
-    private WalletServiceInterface $walletService;
 
     /**
      * Translator.
      */
     private TranslatorInterface $translator;
 
-    /**
-     * Security.
-     */
-    private Security $security;
 
     /**
      * OperationController constructor.
      *
-     * @param OperationServiceInterface $operationService Operation service interface
-     * @param Security                  $security         Security
-     * @param WalletServiceInterface    $walletService    Wallet service interface
-     * @param TranslatorInterface       $translator       Translator interface
+     * @param OperationServiceInterface $operationService Operation service
+     * @param TranslatorInterface       $translator       Translator
      */
-    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator, Security $security, WalletServiceInterface $walletService)
+    public function __construct(OperationServiceInterface $operationService, TranslatorInterface $translator)
     {
         $this->operationService = $operationService;
-        $this->security = $security;
-        $this->walletService = $walletService;
         $this->translator = $translator;
     }// end __construct()
 

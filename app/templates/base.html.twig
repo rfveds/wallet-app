@@ -25,6 +25,9 @@
             <a href="{{ path('homepage') }}">
                 {{ 'title.homepage'|trans }}
             </a>
+
+            {% if is_granted('ROLE_USER') %}
+
             <a href="{{ path('operation_index') }}">
                 {{ 'title.operation_list'|trans }}
             </a>
@@ -38,7 +41,7 @@
                 {{ 'title.category_list'|trans }}
             </a>
 
-
+            {% endif %}
 
 {#            {%  if is_granted('ROLE_ADMIN') %}#}
 {#            <a href="{{ path('user_index') }}">#}
@@ -47,6 +50,8 @@
 {#            {% endif %}#}
 
             {% if app.user %}
+
+            {% if is_granted('ROLE_USER') %}
 
             <a href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'my_profile'|trans }}">
                 {{ app.user.email }}
@@ -72,6 +77,8 @@
                             type="submit">{{ 'action.search'|trans }}
                     </button>
                 </form>
+
+            {% endif %}
 
             {% endif %}
 

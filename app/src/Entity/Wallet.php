@@ -142,6 +142,8 @@ class Wallet
 
     /**
      * Getter for user.
+     *
+     * @return User|null User entity
      */
     public function getUser(): ?User
     {
@@ -150,6 +152,10 @@ class Wallet
 
     /**
      * Setter for user.
+     *
+     * @param User|null $user User entity
+     *
+     * @return void
      */
     public function setUser(?User $user): void
     {

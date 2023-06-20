@@ -42,6 +42,8 @@ class OperationServiceTest extends KernelTestCase
 
     /**
      * Set up test.
+     *
+     * @throws ContainerExceptionInterface
      */
     public function setUp(): void
     {
@@ -66,9 +68,9 @@ class OperationServiceTest extends KernelTestCase
         $expectedOperation->setAmount('100.00');
         $expectedOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setUpdatedAt(new \DateTimeImmutable('now'));
-        $expectedOperation->addTag($this->createTag('save'));
+        $expectedOperation->addTag($this->createTag('save', $author));
         $expectedOperation->setWallet($this->createWallet($author, 'save'));
-        $expectedOperation->setCategory($this->createCategory('save'));
+        $expectedOperation->setCategory($this->createCategory('save', $author));
 
         // when
         $this->operationService->save($expectedOperation);
@@ -102,9 +104,9 @@ class OperationServiceTest extends KernelTestCase
         $operationToDelete->setAmount('100.00');
         $operationToDelete->setCreatedAt(new \DateTimeImmutable('now'));
         $operationToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
-        $operationToDelete->addTag($this->createTag('delete'));
+        $operationToDelete->addTag($this->createTag('delete', $author));
         $operationToDelete->setWallet($this->createWallet($author, 'delete'));
-        $operationToDelete->setCategory($this->createCategory('delete'));
+        $operationToDelete->setCategory($this->createCategory('delete', $author));
 
         $this->entityManager->persist($operationToDelete);
         $this->entityManager->flush();
@@ -147,9 +149,9 @@ class OperationServiceTest extends KernelTestCase
             $operation->setAmount('100.00');
             $operation->setCreatedAt(new \DateTimeImmutable('now'));
             $operation->setUpdatedAt(new \DateTimeImmutable('now'));
-            $operation->addTag($this->createTag('delete'.$counter));
+            $operation->addTag($this->createTag('delete'.$counter, $author));
             $operation->setWallet($this->createWallet($author, 'delete'.$counter));
-            $operation->setCategory($this->createCategory('delete'.$counter));
+            $operation->setCategory($this->createCategory('delete'.$counter, $author));
             $this->operationService->save($operation);
 
             ++$counter;
@@ -186,10 +188,11 @@ class OperationServiceTest extends KernelTestCase
     /**
      * Create Category.
      */
-    private function createCategory($categoryTitle): Category
+    private function createCategory($categoryTitle, User $user): Category
     {
         $category = new Category();
         $category->setTitle($categoryTitle);
+        $category->setAuthor($user);
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
@@ -201,10 +204,11 @@ class OperationServiceTest extends KernelTestCase
     /**
      * Create Tag.
      */
-    private function createTag($tagTitle): Tag
+    private function createTag(string $tagTitle, User $user): Tag
     {
         $tag = new Tag();
         $tag->setTitle($tagTitle);
+        $tag->setAuthor($user);
         $tag->setCreatedAt(new \DateTimeImmutable('now'));
         $tag->setUpdatedAt(new \DateTimeImmutable('now'));
         $tagRepository = self::getContainer()->get(TagRepository::class);

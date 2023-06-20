@@ -29,6 +29,8 @@ class UserController extends AbstractController
 
     /**
      * UserController constructor.
+     *
+     * @param UserServiceInterface $userService User service
      */
     public function __construct(UserServiceInterface $userService)
     {
@@ -37,6 +39,10 @@ class UserController extends AbstractController
 
     /**
      * Index action.
+     *
+     * @param Request $request HTTP request
+     *
+     * @return Response HTTP response
      */
     #[Route(
         '/',
@@ -122,6 +128,11 @@ class UserController extends AbstractController
 
     /**
      * Edit password action.
+     *
+     * @param Request $request HTTP request
+     * @param User    $user    User entity
+     *
+     * @return Response HTTP response
      */
     #[Route(
         '/{id}/edit-password',

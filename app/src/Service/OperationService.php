@@ -5,6 +5,7 @@
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
@@ -124,13 +125,13 @@ class OperationService implements OperationServiceInterface
     /**
      * Find by title.
      *
-     * @param string $operation_title Operation title
+     * @param string $operationTitle Operation title
      *
      * @return Operation|null Operation entity
      */
-    public function findOneByTitle(string $operation_title): ?Operation
+    public function findOneByTitle(string $operationTitle): ?Operation
     {
-        return $this->operationRepository->findOneBy(['title' => $operation_title]);
+        return $this->operationRepository->findOneBy(['title' => $operationTitle]);
     }
 
     /**
@@ -146,17 +147,16 @@ class OperationService implements OperationServiceInterface
     }
 
     /**
-     * Find by date.
+     * Find by category.
      *
-     * @param string $operation_date_from Operation date from
-     * @param string $operation_date_to   Operation date to
+     * @param Category $category Category entity
      *
-     * @return Operation|null Result
+     * @return array Result
      */
-    public function findOneByDate(string $operation_date_from, string $operation_date_to): ?array
+    public function findByCategory(Category $category): array
     {
-        return $this->operationRepository->queryByDate($operation_date_from, $operation_date_to)->getQuery()->getResult();
-    }
+        return $this->operationRepository->queryByCategory($category)->getQuery()->getResult();
+    }// end findByCategory()
 
     /**
      * Prepare filters for the operation list.
@@ -203,22 +203,6 @@ class OperationService implements OperationServiceInterface
                 $resultFilters['operation'] = $operation;
             }
         }
-
-//        if (!empty($filters['operation_date_from'] && !empty($filters['operation_date_to']))) {
-//            $dateTimeFrom = \DateTime::createFromFormat('Ymd', $filters['operation_date_from']);
-//            $formattedDateFrom = $dateTimeFrom->format('Y-m-d H:i:s');
-//
-//            $dateTimeTo = \DateTime::createFromFormat('Ymd', $filters['operation_date_to']);
-//            $formattedDateTo = $dateTimeTo->format('Y-m-d H:i:s');
-//
-//            $filters['operation_date_from'] = $formattedDateFrom;
-//            $filters['operation_date_to'] = $formattedDateTo;
-//
-//            $operation = $this->findOneByDate($filters['operation_date_from'], $filters['operation_date_to']);
-//            if (null !== $operation) {
-//                $resultFilters['operation'] = $operation;
-//            }
-//        }
 
         return $resultFilters;
     }// end prepareFilters()

@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Tag;
 use App\Form\Type\TagType;
 use App\Service\TagServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,6 +81,10 @@ class TagController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET',
     )]
+    #[IsGranted(
+        'VIEW',
+        subject: 'tag',
+    )]
     public function show(Tag $tag): Response
     {
         return $this->render(
@@ -103,6 +108,8 @@ class TagController extends AbstractController
     public function create(Request $request): Response
     {
         $tag = new Tag();
+        $user = $this->getUser();
+        $tag->setAuthor($user);
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 
@@ -135,6 +142,10 @@ class TagController extends AbstractController
         name: 'tag_edit',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT',
+    )]
+    #[IsGranted(
+        'EDIT',
+        subject: 'tag',
     )]
     public function edit(Request $request, Tag $tag): Response
     {
@@ -183,6 +194,10 @@ class TagController extends AbstractController
         name: 'tag_delete',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|DELETE',
+    )]
+    #[IsGranted(
+        'DELETE',
+        subject: 'tag',
     )]
     public function delete(Request $request, Tag $tag): Response
     {

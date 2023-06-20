@@ -242,7 +242,7 @@ class UserControllerTest extends WebTestCase
             $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_delete_user_operation@example.com');
             $this->httpClient->loginUser($adminUser);
 
-            $testCategory = $this->createCategory('test_category');
+            $testCategory = $this->createCategory('test_category', $adminUser);
             $testWallet = $this->createWallet('test_wallet', $adminUser);
             $testOperation = $this->createOperation('test_operation', $adminUser, $testWallet, $testCategory);
 
@@ -341,12 +341,13 @@ class UserControllerTest extends WebTestCase
      *
      * @throws ContainerExceptionInterface
      */
-    private function createCategory($title): Category
+    private function createCategory($title, User $user): Category
     {
         $category = new Category();
         $category->setTitle($title);
+        $category->setAuthor($user);
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
-        $categoryRepository->save($category);
+        $categoryRepository->save($category, true);
 
         return $category;
     }

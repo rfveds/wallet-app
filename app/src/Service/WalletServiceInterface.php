@@ -17,7 +17,7 @@ interface WalletServiceInterface
     /**
      * Create paginated list.
      *
-     * @param int $page Page number
+     * @param int  $page   Page number
      * @param User $author Author
      *
      * @return PaginationInterface<string, mixed> Paginated list
@@ -40,6 +40,8 @@ interface WalletServiceInterface
 
     /**
      * Find by user.
+     *
+     * @param User $user User entity
      *
      * @return array<string, mixed> Result
      */

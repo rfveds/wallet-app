@@ -9,6 +9,7 @@ use App\Entity\Tag;
 use App\Service\TagServiceInterface;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Form\DataTransformerInterface;
+use Symfony\Component\Security\Core\Security;
 
 /**
  * Class TagsDataTransformer.
@@ -23,14 +24,23 @@ class TagsDataTransformer implements DataTransformerInterface
     private TagServiceInterface $tagService;
 
     /**
+     * Security.
+     *
+     * @var Security Security helper
+     */
+    private Security $security;
+
+    /**
      * Constructor.
      *
      * @param TagServiceInterface $tagService Tag service
+     * @param Security            $security   Security helper
      */
-    public function __construct(TagServiceInterface $tagService)
+    public function __construct(TagServiceInterface $tagService, Security $security)
     {
         $this->tagService = $tagService;
-    }
+        $this->security = $security;
+    }// end __construct()
 
     /**
      * Transform array of tags to string of tag titles.
@@ -73,6 +83,7 @@ class TagsDataTransformer implements DataTransformerInterface
                 if (null === $tag) {
                     $tag = new Tag();
                     $tag->setTitle($tagTitle);
+                    $tag->setAuthor($this->security->getUser());
 
                     $this->tagService->save($tag);
                 }

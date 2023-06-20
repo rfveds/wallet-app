@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\Type\CategoryType;
 use App\Service\CategoryServiceInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,6 +80,10 @@ class CategoryController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET'
     )]
+    #[IsGranted(
+        'VIEW',
+        subject: 'category',
+    )]
     public function show(Category $category): Response
     {
         return $this->render(
@@ -102,12 +107,13 @@ class CategoryController extends AbstractController
     public function create(Request $request): Response
     {
         $category = new Category();
+        $user = $this->getUser();
+        $category->setAuthor($user);
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->categoryService->save($category);
-
             $this->addFlash(
                 'success',
                 $this->translator->trans('message.created_successfully')
@@ -135,6 +141,10 @@ class CategoryController extends AbstractController
         name: 'category_edit',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|PUT',
+    )]
+    #[IsGranted(
+        'EDIT',
+        subject: 'category',
     )]
     public function edit(Request $request, Category $category): Response
     {
@@ -184,6 +194,10 @@ class CategoryController extends AbstractController
         name: 'category_delete',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|DELETE'
+    )]
+    #[IsGranted(
+        'DELETE',
+        subject: 'category',
     )]
     public function delete(Request $request, Category $category): Response
     {
