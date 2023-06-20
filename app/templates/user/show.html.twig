@@ -24,7 +24,7 @@
             <dd>{{ user.email }}</dd>
 
         </dl>
-        {% if 'ROLE_ADMIN' in user.roles|json_encode() %}
+        {%  if is_granted('ROLE_ADMIN') %}
         <p>
             <a href="{{ url('user_index') }}" title="{{ 'action.back_to_list'|trans }}">
                 {{ 'action.back_to_list'|trans }}
@@ -35,6 +35,16 @@
             <a href="{{ url('user_edit', {id: user.id}) }}" title="{{ 'action.edit'|trans }}">
                 {{ 'action.edit'|trans }}</a>
         </div>
+        <div class="btn btn-light">
+            <a href="{{ url('user_edit_password', {id: user.id}) }}" title="{{ 'action.edit_password'|trans }}">
+                {{ 'action.edit_password'|trans }}</a>
+        </div>
+        {%  if is_granted('ROLE_ADMIN') %}
+            <div class="btn btn-light">
+                <a href="{{ url('user_edit_role', {id: user.id}) }}" title="{{ 'action.edit_role'|trans }}">
+                    {{ 'action.edit_role'|trans }}</a>
+            </div>
+        {% endif %}
         <div class="btn btn-light">
             <a href="{{ url('user_delete', {id: user.id}) }}" title="{{ 'action.delete'|trans }}">
                 {{ 'action.delete'|trans }}</a>

@@ -105,7 +105,9 @@ class TagVoter extends Voter
      */
     private function canEdit(Tag $tag, UserInterface $user): bool
     {
-        return $tag->getAuthor() === $user || $this->security->isGranted('ROLE_ADMIN');
+        return
+            $tag->getAuthor() === $user ||
+            $this->security->isGranted('ROLE_ADMIN');
     }// end canEdit()
 
     /**

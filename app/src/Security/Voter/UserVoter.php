@@ -111,8 +111,9 @@ class UserVoter extends Voter
      */
     private function canEdit(UserInterface $subject, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return
+            $this->security->isGranted('ROLE_ADMIN') ||
+            $subject->getId() === $user->getId();
     }// end canEdit()
 
     /**
@@ -125,8 +126,9 @@ class UserVoter extends Voter
      */
     private function canView(UserInterface $subject, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return
+            $this->security->isGranted('ROLE_ADMIN') ||
+            $subject->getId() === $user->getId();
     }// end canView()
 
     /**
@@ -139,19 +141,17 @@ class UserVoter extends Voter
      */
     private function canDelete(UserInterface $subject, UserInterface $user): bool
     {
-        return $this->security->isGranted('ROLE_ADMIN')
-            || $subject->getId() === $user->getId();
+        return
+            $this->security->isGranted('ROLE_ADMIN') ||
+            $subject->getId() === $user->getId();
     }// end canDelete()
 
     /**
      * Can user list users.
      *
-     * @param UserInterface $subject User entity
-     * @param UserInterface $user    User entity
-     *
      * @return bool Vote result
      */
-    private function canList(UserInterface $subject, UserInterface $user): bool
+    private function canList(): bool
     {
         return $this->security->isGranted('ROLE_ADMIN');
     }// end canList()

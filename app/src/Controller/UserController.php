@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Form\Type\UserDataType;
 use App\Form\Type\UserPasswordType;
+use App\Form\Type\UserRoleType;
 use App\Service\UserServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -172,6 +173,53 @@ class UserController extends AbstractController
             ]
         );
     }// end editPassword()
+
+    /**
+     * Edit role action.
+     *
+     * @param Request $request HTTP request
+     * @param User    $user    User entity
+     *
+     * @return Response HTTP response
+     */
+    #[Route(
+        '/{id}/edit-role',
+        name: 'user_edit_role',
+        requirements: ['id' => '[1-9]\d*'],
+        methods: 'GET|PUT',
+    )]
+    #[isGranted('ROLE_ADMIN')]
+    public function editRole(Request $request, User $user): Response
+    {
+        $form = $this->createForm(
+            UserRoleType::class,
+            $user,
+            [
+                'method' => 'PUT',
+                'action' => $this->generateUrl(
+                    'user_edit_role',
+                    ['id' => $user->getId()],
+                ),
+            ]
+        );
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->userService->editData($user);
+            $this->addFlash('success', 'message.updated_successfully');
+
+            return $this->redirectToRoute('user_index');
+        }
+
+        return $this->render(
+            'user/edit_role.html.twig',
+            [
+                'form' => $form->createView(),
+                'user' => $user,
+            ]
+        );
+    }// end editRole()
 
     /**
      * Edit action.
