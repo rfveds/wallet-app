@@ -51,4 +51,11 @@ interface UserServiceInterface
      * @param User $user User entity
      */
     public function editData(User $user): void;
+
+    /**
+     * Count admins.
+     *
+     * @return int Number of admins
+     */
+    public function countAdmins(): int;
 }// end interface

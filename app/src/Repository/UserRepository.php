@@ -45,7 +45,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
-    }
+    }// end __construct()
 
     /**
      * @param User $entity User entity
@@ -58,7 +58,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
+    }// end save()
 
     /**
      * Remove record.
@@ -73,7 +73,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         if ($flush) {
             $this->getEntityManager()->flush();
         }
-    }
+    }// end remove()
 
     /**
      * Used to upgrade (rehash) the user's password automatically over time.
@@ -92,18 +92,31 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $user->setPassword($newHashedPassword);
 
         $this->save($user, true);
-    }
+    }// end upgradePassword()
 
     /**
-     * Query all.
+     * Query all except for users with role super admin.
      *
      * @return QueryBuilder QueryBuilder
      */
     public function queryAll(): QueryBuilder
     {
         return $this->getOrCreateQueryBuilder()
+            ->andWhere('user.roles NOT LIKE :role')
+            ->setParameter('role', '%"ROLE_SUPER_ADMIN"%')
             ->orderBy('user.id', 'DESC');
-    }
+    }// end queryAll()
+
+    /**
+     * Query by role that is in json format [ROLE_USER, ROLE_ADMIN].
+     */
+    public function queryByRole(string $role): QueryBuilder
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->andWhere('user.roles LIKE :role')
+            ->setParameter('role', '%"'.$role.'"%')
+            ->orderBy('user.id', 'DESC');
+    }// end queryByRole()
 
     /**
      * Get or create query builder.
@@ -115,5 +128,5 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     private function getOrCreateQueryBuilder(QueryBuilder $queryBuilder = null): QueryBuilder
     {
         return $queryBuilder ?? $this->createQueryBuilder('user');
-    }
-}
+    }// end getOrCreateQueryBuilder()
+}// end class

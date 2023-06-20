@@ -34,6 +34,7 @@ class UserRoleType extends AbstractType
                 'required' => true,
                 'choices' => [
                     'label.admin' => UserRole::ROLE_ADMIN->value,
+                    'label.user' => UserRole::ROLE_USER->value,
                 ],
                 'expanded' => true,
                 'multiple' => true,

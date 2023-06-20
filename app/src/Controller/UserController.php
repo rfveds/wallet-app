@@ -206,7 +206,16 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->userService->editData($user);
+            // check how many admins are in database
+            $admins = $this->userService->countAdmins();
+            // if there is only one admin in database, do not allow change role to user
+            if ($admins < 2 && !in_array('ROLE_ADMIN', $form->get('roles')->getData(), true)) {
+                $this->addFlash('danger', 'message.only_one_admin');
+
+                return $this->redirectToRoute('user_index');
+            }
+
+            $this->userService->editRole($user, $form->get('roles')->getData());
             $this->addFlash('success', 'message.updated_successfully');
 
             return $this->redirectToRoute('user_index');

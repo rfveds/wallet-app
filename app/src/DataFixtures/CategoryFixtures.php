@@ -47,7 +47,7 @@ class CategoryFixtures extends AbstractBaseFixtures implements DependentFixtureI
         $admin->setEmail('admin_for_categories@example.com');
         $admin->setFirstName($this->faker->firstName);
         $admin->setLastName($this->faker->lastName);
-        $admin->setRoles([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value]);
+        $admin->setRoles([UserRole::ROLE_SUPER_ADMIN->value]);
         $admin->setPassword(
             $this->passwordHasher->hashPassword(
                 $admin,

@@ -138,7 +138,7 @@ class UserService implements UserServiceInterface
         );
 
         $this->userRepository->upgradePassword($user, $password);
-    }
+    }// end upgradePassword()
 
     /**
      * Edit data.
@@ -149,4 +149,33 @@ class UserService implements UserServiceInterface
     {
         $this->userRepository->save($user, true);
     }// end editData()
+
+    /**
+     * Edit role.
+     */
+    public function editRole(User $user): void
+    {
+        // count admins
+        $admins = $this->userRepository->queryByRole('ROLE_ADMIN')->getQuery()->getResult();
+        $adminsCount = count($admins);
+
+        // if there is only one admin, do not change role
+        if ($adminsCount < 2 && !in_array('ROLE_ADMIN', $user->getRoles(), true)) {
+            return;
+        } else {
+            $this->userRepository->save($user, true);
+        }
+    }// end editRole()
+
+    /**
+     * Count admins.
+     *
+     * @return int Number of admins
+     */
+    public function countAdmins(): int
+    {
+        $admins = $this->userRepository->queryByRole('ROLE_ADMIN')->getQuery()->getResult();
+
+        return count($admins);
+    }// end countAdmins()
 }// end class
