@@ -60,8 +60,6 @@ class OperationRepository extends ServiceEntityRepository
      */
     public function queryAll(array $filters): QueryBuilder
     {
-        var_dump($filters);
-
         $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial operation.{id, amount, title, createdAt, updatedAt}',
@@ -152,17 +150,6 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Find one operation by date from and date to.
-     */
-    public function findByDate(string $operation_date_from): QueryBuilder
-    {
-        return $this->createQueryBuilder('operation')
-            ->select('operation')
-            ->andWhere('operation.createdAt >= :operation_date_from')
-            ->setParameter('operation_date_from', $operation_date_from);
-    }
-
-    /**
      * Save entity.
      *
      * @param Operation $operation Operation entity
@@ -206,8 +193,6 @@ class OperationRepository extends ServiceEntityRepository
      */
     private function applyFiltersToList(QueryBuilder $queryBuilder, array $filters = []): QueryBuilder
     {
-        // var_dump($filters);
-
         if (isset($filters['category']) && $filters['category'] instanceof Category) {
             $queryBuilder
                 ->andWhere('category = :category')

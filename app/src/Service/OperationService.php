@@ -68,9 +68,17 @@ class OperationService implements OperationServiceInterface
      */
     public function createPaginatedList(int $page, User $author, array $filters = []): PaginationInterface
     {
-        $filters = $this->prepareFilters($filters);
+        $filters = $this->prepareFilters($filters, $author);
 
-        var_dump($filters);
+        if (isset($filters['empty'])) {
+            // pagination not found
+            return $this->paginator->paginate(
+                // return empty array
+                [],
+                $page,
+                OperationRepository::PAGINATOR_ITEMS_PER_PAGE
+            );
+        }
 
         return $this->paginator->paginate(
             $this->operationRepository->queryByAuthor($author, $filters),
@@ -97,9 +105,10 @@ class OperationService implements OperationServiceInterface
     public function delete(Operation $operation): void
     {
         $this->operationRepository->delete($operation);
-    }
+    }// end delete()
 
-// end delete()
+    // end delete()
+
     /**
      * Find by wallet.
      *
@@ -122,7 +131,7 @@ class OperationService implements OperationServiceInterface
     public function findByUser(User $user): array
     {
         return $this->operationRepository->queryByAuthor($user)->getQuery()->getResult();
-    }
+    }// end findByUser()
 
     /**
      * Find by title.
@@ -134,7 +143,7 @@ class OperationService implements OperationServiceInterface
     public function findOneByTitle(string $operationTitle): ?Operation
     {
         return $this->operationRepository->findOneBy(['title' => $operationTitle]);
-    }
+    }// end findOneByTitle()
 
     /**
      * Find by id.
@@ -146,7 +155,7 @@ class OperationService implements OperationServiceInterface
     public function findOneById(int $id): ?Operation
     {
         return $this->operationRepository->findOneBy(['id' => $id]);
-    }
+    }// end findOneById()
 
     /**
      * Find by category.
@@ -169,10 +178,8 @@ class OperationService implements OperationServiceInterface
      *
      * @throws NonUniqueResultException
      */
-    private function prepareFilters(array $filters): array
+    private function prepareFilters(array $filters, User $author): array
     {
-        // var_dump($filters);
-
         $resultFilters = [];
 
         if (!empty($filters['category_id'])) {
@@ -183,7 +190,6 @@ class OperationService implements OperationServiceInterface
         }
 
         if (!empty($filters['tag_id'])) {
-            //  var_dump($filters['tag_id']);
             $tag = $this->tagService->findOneById($filters['tag_id']);
             if (null !== $tag) {
                 $resultFilters['tag'] = $tag;
@@ -191,7 +197,6 @@ class OperationService implements OperationServiceInterface
         }
 
         if (!empty($filters['operation_id'])) {
-            // var_dump($filters['operation_id']);
             $operation = $this->findOneById($filters['operation_id']);
             if (null !== $operation) {
                 $resultFilters['operation'] = $operation;
@@ -199,10 +204,11 @@ class OperationService implements OperationServiceInterface
         }
 
         if (!empty($filters['operation_title'])) {
-            // var_dump($filters['operation_id']);
             $operation = $this->findOneByTitle($filters['operation_title']);
-            if (null !== $operation) {
+            if (null !== $operation && $operation->getAuthor() === $author) {
                 $resultFilters['operation'] = $operation;
+            } else {
+                $resultFilters['empty'] = true;
             }
         }
 

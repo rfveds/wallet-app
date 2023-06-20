@@ -57,27 +57,6 @@
                 {{ app.user.email }}
             </a>
 
-                <form action="{{ path('operation_index') }}" >
-                    <input name="filters.operation_title"
-                           type="text"
-                           placeholder="Search" aria-label="Search">
-                    <button
-                            type="submit">{{ 'action.search'|trans }}
-                    </button>
-                </form>
-
-                <form action="{{ path('operation_index') }}" >
-                    <input name="filters.operation_date_from"
-                           type="date"
-                           aria-label="Search">
-                    <input name="filters.operation_date_to"
-                           type="date"
-                           aria-label="Search">
-                    <button
-                            type="submit">{{ 'action.search'|trans }}
-                    </button>
-                </form>
-
             {% endif %}
 
             {% endif %}
