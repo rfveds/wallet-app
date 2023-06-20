@@ -131,6 +131,12 @@ class UserService implements UserServiceInterface
      */
     public function upgradePassword(User $user, string $password): void
     {
+        // encode the plain password
+        $password = $this->passwordHasher->hashPassword(
+            $user,
+            $password
+        );
+
         $this->userRepository->upgradePassword($user, $password);
     }
 
