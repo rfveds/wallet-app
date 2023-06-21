@@ -127,11 +127,26 @@ class ReportController extends AbstractController
             $filters
         );
 
+        $amountData = [];
+        foreach ($pagination as $operation) {
+            $amountData[] = (float) $operation->getAmount();
+        }
+
+        $labelData = [];
+        foreach ($pagination as $operation) {
+            $labelData[] = $operation->getCreatedAt()->format('Y-m-d');
+        }
+
+        $amountDataJSON = json_encode($amountData);
+        $labelDataJSON = json_encode($labelData);
+
         return $this->render(
             'report/show.html.twig',
             [
                 'report' => $report,
                 'pagination' => $pagination,
+                'amountDataJSON' => $amountDataJSON,
+                'labelDataJSON' => $labelDataJSON,
             ],
         );
     }

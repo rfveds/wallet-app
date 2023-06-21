@@ -41,6 +41,10 @@
                 {{ 'title.category_list'|trans }}
             </a>
 
+                <a href="{{ path('report_index') }}">
+                    {{ 'title.report_list'|trans }}
+                </a>
+
             {% endif %}
 
             {%  if is_granted('ROLE_ADMIN') %}

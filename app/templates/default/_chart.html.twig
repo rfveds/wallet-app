@@ -1,0 +1,41 @@
+<div>
+    <canvas id="myChart"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const ctx = document.getElementById('myChart');
+
+    const amountData = JSON.parse('{{ amountDataJSON|raw }}');
+    const labelData = JSON.parse('{{ labelDataJSON|raw }}');
+
+    const data = {
+        labels: labelData,
+        datasets: [
+            {
+                label: 'Dataset',
+                data: amountData,
+                borderColor: 'red',
+                backgroundColor: 'red',
+                pointStyle: 'circle',
+                pointRadius: 10,
+                pointHoverRadius: 15
+            }
+        ]
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                title: {
+                    display: true,
+                    text: (ctx) => 'Point Style: ' + ctx.chart.data.datasets[0].pointStyle,
+                }
+            }
+        }
+    });
+</script>
