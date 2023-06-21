@@ -89,7 +89,8 @@ class OperationRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->queryAll($filters);
 
-        $queryBuilder->andWhere('operation.author = :author')
+        $queryBuilder
+            ->andWhere('operation.author = :author')
             ->setParameter('author', $user);
 
         return $queryBuilder;
@@ -107,7 +108,8 @@ class OperationRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->queryAll($filters);
 
-        $queryBuilder->andWhere('operation.wallet = :wallet')
+        $queryBuilder
+            ->andWhere('operation.wallet = :wallet')
             ->setParameter('wallet', $wallet);
 
         return $queryBuilder;
@@ -209,6 +211,12 @@ class OperationRepository extends ServiceEntityRepository
             $queryBuilder
                 ->andWhere('operation = :operation')
                 ->setParameter('operation', $filters['operation']);
+        }
+
+        if (isset($filters['wallet']) && $filters['wallet'] instanceof Wallet) {
+            $queryBuilder
+                ->andWhere('wallet = :wallet')
+                ->setParameter('wallet', $filters['wallet']);
         }
 
         if (isset($filters['operation_date_from'])) {

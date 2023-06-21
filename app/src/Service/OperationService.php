@@ -40,19 +40,26 @@ class OperationService implements OperationServiceInterface
     private PaginatorInterface $paginator;
 
     /**
+     * Wallet service.
+     */
+    private WalletServiceInterface $walletService;
+
+    /**
      * OperationService constructor.
      *
      * @param OperationRepository      $operationRepository Operation repository
      * @param PaginatorInterface       $paginator           Paginator
      * @param CategoryServiceInterface $categoryService     Category service
      * @param TagServiceInterface      $tagService          Tag service
+     * @param WalletServiceInterface   $walletService       Wallet service
      */
-    public function __construct(OperationRepository $operationRepository, PaginatorInterface $paginator, CategoryServiceInterface $categoryService, TagServiceInterface $tagService)
+    public function __construct(OperationRepository $operationRepository, PaginatorInterface $paginator, WalletServiceInterface $walletService, CategoryServiceInterface $categoryService, TagServiceInterface $tagService)
     {
         $this->operationRepository = $operationRepository;
         $this->paginator = $paginator;
         $this->categoryService = $categoryService;
         $this->tagService = $tagService;
+        $this->walletService = $walletService;
     }// end __construct()
 
     /**
@@ -200,6 +207,13 @@ class OperationService implements OperationServiceInterface
             $operation = $this->findOneById($filters['operation_id']);
             if (null !== $operation) {
                 $resultFilters['operation'] = $operation;
+            }
+        }
+
+        if (!empty($filters['wallet_id'])) {
+            $wallet = $this->walletService->findOneById($filters['wallet_id']);
+            if (null !== $wallet) {
+                $resultFilters['wallet'] = $wallet;
             }
         }
 

@@ -8,6 +8,7 @@ namespace App\Controller;
 use App\Entity\Report;
 use App\Entity\User;
 use App\Form\Type\ReportType;
+use App\Service\OperationServiceInterface;
 use App\Service\ReportServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,6 +30,11 @@ class ReportController extends AbstractController
     private ReportServiceInterface $reportService;
 
     /**
+     * Operation service.
+     */
+    private OperationServiceInterface $operationService;
+
+    /**
      * Translator.
      */
     private TranslatorInterface $translator;
@@ -36,12 +42,14 @@ class ReportController extends AbstractController
     /**
      * ReportController constructor.
      *
-     * @param ReportServiceInterface $reportService Report service interface
-     * @param TranslatorInterface    $translator    Translator interface
+     * @param ReportServiceInterface    $reportService    Report service interface
+     * @param OperationServiceInterface $operationService Operation service interface
+     * @param TranslatorInterface       $translator       Translator interface
      */
-    public function __construct(ReportServiceInterface $reportService, TranslatorInterface $translator)
+    public function __construct(ReportServiceInterface $reportService, OperationServiceInterface $operationService, TranslatorInterface $translator)
     {
         $this->reportService = $reportService;
+        $this->operationService = $operationService;
         $this->translator = $translator;
     }
 
@@ -68,14 +76,17 @@ class ReportController extends AbstractController
 
         return $this->render(
             'report/index.html.twig',
-            ['pagination' => $pagination],
+            [
+                'pagination' => $pagination,
+            ],
         );
     }
 
     /**
      * Show action.
      *
-     * @param Report $report Report entity
+     * @param Report  $report  Report entity
+     * @param Request $request HTTP request
      *
      * @return Response HTTP response
      */
@@ -85,11 +96,43 @@ class ReportController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET',
     )]
-    public function show(Report $report): Response
+    public function show(Request $request, Report $report): Response
     {
+        $filters = [];
+
+        if (null != $report->getCategory()) {
+            $filters['category_id'] = $report->getCategory()->getId();
+        }
+        if (null != $report->getTag()) {
+            $filters['tag_id'] = $report->getTag()->getId();
+        }
+        if (null != $report->getWallet()) {
+            $filters['wallet_id'] = $report->getWallet()->getId();
+        }
+        if (null != $report->getAuthor()) {
+            $filters['author_id'] = $report->getAuthor()->getId();
+        }
+        if (null != $report->getDateFrom()) {
+            $filters['operation_date_from'] = $report->getDateFrom()->format('Y-m-d');
+        }
+        if (null != $report->getDateTo()) {
+            $filters['operation_date_to'] = $report->getDateTo()->format('Y-m-d');
+        }
+
+        /** @var User $user */
+        $user = $this->getUser();
+        $pagination = $this->operationService->createPaginatedList(
+            $request->query->getInt('page', 1),
+            $user,
+            $filters
+        );
+
         return $this->render(
             'report/show.html.twig',
-            ['report' => $report],
+            [
+                'report' => $report,
+                'pagination' => $pagination,
+            ],
         );
     }
 
@@ -212,7 +255,6 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $this->reportService->delete($report);
 
             $this->addFlash(

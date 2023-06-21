@@ -81,7 +81,11 @@
                             &nbsp;
                         {% endif %}
                     </td>
-                    <td>{{ operation.wallet.title }}</td>
+                    <td>
+                        <a href="{{ url('operation_index', {'filters.wallet_id' : operation.wallet.id}) }}" title="{{ operation.wallet.title }}">
+                            {{ operation.wallet.title }}
+                        </a>
+                    </td>
                     <td>{{ operation.author.email }}</td>
                     <td>
                         {% if is_granted('VIEW', operation ) %}

@@ -34,4 +34,7 @@ interface ReportServiceInterface
      * @param Report $report Report entity
      */
     public function delete(Report $report);
+
+
+
 }// end interface

@@ -46,4 +46,13 @@ interface WalletServiceInterface
      * @return array<string, mixed> Result
      */
     public function findByUser(User $user): array;
+
+    /**
+     * Find one by id.
+     *
+     * @param int $wallet_id Wallet id
+     *
+     * @return Wallet|null Wallet entity
+     */
+    public function findOneById(int $wallet_id): ?Wallet;
 }
