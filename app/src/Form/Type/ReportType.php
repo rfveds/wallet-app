@@ -1,33 +1,28 @@
 <?php
 /**
- * Operation Form Type.
+ * Report Form Type.
  */
 
 namespace App\Form\Type;
 
 use App\Entity\Category;
-use App\Entity\Operation;
-use App\Entity\User;
+use App\Entity\Report;
+use App\Entity\Tag;
 use App\Entity\Wallet;
-use App\Form\DataTransformer\TagsDataTransformer;
 use App\Repository\WalletRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Class OperationType.
+ * Class ReportType.
  */
-class OperationType extends AbstractType
+class ReportType extends AbstractType
 {
-    /**
-     * Tags data transformer.
-     */
-    private TagsDataTransformer $tagsDataTransformer;
-
     /**
      * Security.
      *
@@ -38,12 +33,10 @@ class OperationType extends AbstractType
     /**
      * Constructor.
      *
-     * @param TagsDataTransformer $tagsDataTransformer Tags data transformer
-     * @param Security            $security            Security helper
+     * @param Security $security Security helper
      */
-    public function __construct(TagsDataTransformer $tagsDataTransformer, Security $security)
+    public function __construct(Security $security)
     {
-        $this->tagsDataTransformer = $tagsDataTransformer;
         $this->security = $security;
     }// end __construct()
 
@@ -71,16 +64,6 @@ class OperationType extends AbstractType
         );
 
         $builder->add(
-            'amount',
-            TextType::class,
-            [
-                'label' => 'label.amount',
-                'required' => true,
-                'attr' => ['max_length' => 64],
-            ]
-        );
-
-        $builder->add(
             'category',
             EntityType::class,
             [
@@ -89,7 +72,21 @@ class OperationType extends AbstractType
                     return $category->getTitle();
                 },
                 'label' => 'label.category',
-                'required' => true,
+                'required' => false,
+                'placeholder' => 'label.none',
+            ]
+        );
+
+        $builder->add(
+            'tag',
+            EntityType::class,
+            [
+                'class' => Tag::class,
+                'choice_label' => function ($tag) {
+                    return $tag->getTitle();
+                },
+                'label' => 'label.tag',
+                'required' => false,
                 'placeholder' => 'label.none',
             ]
         );
@@ -107,24 +104,28 @@ class OperationType extends AbstractType
                 },
                 'label' => 'label_wallet',
                 'placeholder' => 'label_none',
-                'required' => true,
+                'required' => false,
             ]
         );
 
         $builder->add(
-            'tags',
-            TextType::class,
+            'date_from',
+            DateType::class,
             [
-                'label' => 'label.tags',
+                'label' => 'label.date_from',
                 'required' => false,
-                'attr' => ['max_length' => 128],
             ]
         );
 
-        $builder->get('tags')->addModelTransformer(
-            $this->tagsDataTransformer
+        $builder->add(
+            'date_to',
+            DateType::class,
+            [
+                'label' => 'label.date_to',
+                'required' => false,
+            ]
         );
-    }// end buildForm()
+    }
 
     /**
      * Configures the options for this type.
@@ -133,8 +134,8 @@ class OperationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => Operation::class]);
-    }// end configureOptions()
+        $resolver->setDefaults(['data_class' => Report::class]);
+    }
 
     /**
      * Returns the prefix of the template block name for this type.
@@ -146,6 +147,6 @@ class OperationType extends AbstractType
      */
     public function getBlockPrefix(): string
     {
-        return 'operation';
-    }// end getBlockPrefix()
-}// end class
+        return 'report';
+    }
+}

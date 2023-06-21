@@ -6,7 +6,6 @@
 namespace App\Entity;
 
 use App\Repository\OperationRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -91,7 +90,7 @@ class Operation
      */
     #[Assert\Type(type: 'App\Entity\Wallet')]
     #[ORM\ManyToOne(targetEntity: Wallet::class)]
-    // #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Wallet $wallet = null;
 
     /**

@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'title.report_details'|trans({'%id%': report.id|default('')}) }}
+{% endblock %}
+
+{% block body %}
+    <h1>{{ report.title }}</h1>
+    {% if report is defined and report|length %}
+        <dl class="dl-horizontal">
+            <dt>{{ 'label.id'|trans }}</dt>
+            <dd>{{ report.id }}</dd>
+            <dt>{{ 'label.date_from'|trans }}</dt>
+            <dd>{{ report.dateFrom|date('Y/m/d') }}</dd>
+            <dt>{{ 'label.date_to'|trans }}</dt>
+            <dd>{{ report.dateTo|date('Y/m/d') }}</dd>
+            <dt>{{ 'label.title'|trans }}</dt>
+            <dd>{{  report.title }}</dd>
+            {% if report.wallet %}
+            <dt>{{ 'label.wallet'|trans }}</dt>
+            <dd>{{ report.wallet.title }}</dd>
+            {% endif %}
+            {% if report.tag %}
+                <dt>{{ 'label.tag'|trans }}</dt>
+                <dd>{{ report.tag.title }}</dd>
+            {% endif %}
+            {% if report.category %}
+                <dt>{{ 'label.category'|trans }}</dt>
+                <dd>{{ report.category.title }}</dd>
+            {% endif %}
+        </dl>
+        <p>
+            <a href="{{ url('report_index') }}" title="{{ 'action.back_to_list'|trans }}">
+                {{ 'action.back_to_list'|trans }}
+            </a>
+            {% if is_granted('EDIT', report) %}
+            <a href="{{ url('report_edit', {'id': report.id}) }}" title="{{ 'action.edit'|trans }}">
+                {{ 'action.edit'|trans }}
+            </a>
+            {% endif %}
+            {% if is_granted('DELETE', report) %}
+            <a href="{{ url('report_delete', {'id': report.id}) }}" title="{{ 'action.delete'|trans }}">
+                {{ 'action.delete'|trans }}
+            </a>
+            {% endif %}
+        </p>
+    {% else %}
+        <p>
+            {{ 'message.record_not_found'|trans }}
+        </p>
+    {% endif %}
+{% endblock %}
