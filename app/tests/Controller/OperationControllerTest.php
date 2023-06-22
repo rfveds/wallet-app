@@ -101,7 +101,9 @@ class OperationControllerTest extends WebTestCase
         $expectedOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setUpdatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setCategory($this->createCategory('testCategoryShowOperation', $adminUser));
-        $expectedOperation->setWallet($this->createWallet('wallet_show_operation', $adminUser, '0'));
+        $wallet = $this->createWallet('wallet_show_operation', $adminUser, '100');
+        $expectedOperation->setWallet($wallet);
+        $expectedOperation->setCurrentBalance($wallet->getBalance());
         $expectedOperation->setAuthor($adminUser);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
         $operationRepository->save($expectedOperation);
@@ -130,7 +132,9 @@ class OperationControllerTest extends WebTestCase
         $operation = new Operation();
         $operation->setTitle('unauthorized operation');
         $operation->setAmount(100);
-        $operation->setWallet($this->createWallet('wallet_show_operation_auth', $operationUser, '0'));
+        $wallet = $this->createWallet('wallet_show_operation_auth', $operationUser, '0');
+        $operation->setWallet($wallet);
+        $operation->setCurrentBalance($wallet->getBalance());
         $operation->setCategory($this->createCategory('category_show_operation_auth', $operationUser));
         $operation->setAuthor($operationUser);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
@@ -242,6 +246,7 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setCategory($this->createCategory('testCategoryEditOperation', $user));
         $testOperationWallet = $this->createWallet('wallet_edit_operation', $user, '0');
         $testOperation->setWallet($testOperationWallet);
+        $testOperation->setCurrentBalance($testOperationWallet->getBalance());
         $testOperation->setAuthor($user);
         $testOperation->addTag($this->createTag('testTagEditOperation', $user));
         $testOperation->addTag($this->createTag('testTagEditOperation2', $user));
@@ -290,7 +295,9 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setTitle('TestRemoveTagOperation');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryRemoveTagOperation', $user));
-        $testOperation->setWallet($this->createWallet('wallet_remove_tag', $user, '0'));
+        $testWallet = $this->createWallet('wallet_remove_tag_operation', $user, '0');
+        $testOperation->setWallet($testWallet);
+        $testOperation->setCurrentBalance($testWallet->getBalance());
         $testOperation->setAuthor($user);
         $testTag = $this->createTag('testTagRemoveOperation', $user);
         $testOperation->addTag($testTag);
@@ -324,7 +331,9 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setTitle('TestOperationDelete');
         $testOperation->setAmount(100);
         $testOperation->setCategory($this->createCategory('testCategoryDeleteOperation', $user));
-        $testOperation->setWallet($this->createWallet('wallet_delete_operation', $user, '0'));
+        $testWallet = $this->createWallet('wallet_delete_operation', $user, '0');
+        $testOperation->setWallet($testWallet);
+        $testOperation->setCurrentBalance($testWallet->getBalance());
         $testOperation->setAuthor($user);
         $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));

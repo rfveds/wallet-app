@@ -231,7 +231,9 @@ class WalletControllerTest extends WebTestCase
         $operation->setAmount(100);
         $operation->setCategory($this->createCategory('TestCategoryDeleteWallet', $user));
         $operation->setWallet($testWallet);
+        $operation->setCurrentBalance($testWallet->getBalance());
         $operation->setAuthor($user);
+        $operation->setCurrentBalance($testWallet->getBalance());
 
         $walletRepository->save($testWallet);
         $operationRepository->save($operation);

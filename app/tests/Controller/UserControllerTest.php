@@ -379,6 +379,7 @@ class UserControllerTest extends WebTestCase
         $operation->setAuthor($user);
         $operation->setCategory($category);
         $operation->setWallet($wallet);
+        $operation->setCurrentBalance($wallet->getBalance());
         $operationRepository = static::getContainer()->get(OperationRepository::class);
         $operationRepository->save($operation, true);
 

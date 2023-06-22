@@ -142,6 +142,7 @@ class OperationController extends AbstractController
                 );
             } else {
                 $wallet->setBalance($balance + $amount);
+                $operation->setCurrentBalance($wallet->getBalance());
                 $this->operationService->save($operation);
 
                 $this->addFlash(

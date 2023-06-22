@@ -69,7 +69,9 @@ class OperationServiceTest extends KernelTestCase
         $expectedOperation->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->setUpdatedAt(new \DateTimeImmutable('now'));
         $expectedOperation->addTag($this->createTag('save', $author));
-        $expectedOperation->setWallet($this->createWallet($author, 'save'));
+        $wallet = $this->createWallet($author, 'save');
+        $expectedOperation->setWallet($wallet);
+        $expectedOperation->setCurrentBalance($wallet->getBalance());
         $expectedOperation->setCategory($this->createCategory('save', $author));
 
         // when
@@ -105,7 +107,9 @@ class OperationServiceTest extends KernelTestCase
         $operationToDelete->setCreatedAt(new \DateTimeImmutable('now'));
         $operationToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
         $operationToDelete->addTag($this->createTag('delete', $author));
-        $operationToDelete->setWallet($this->createWallet($author, 'delete'));
+        $wallet = $this->createWallet($author, 'delete');
+        $operationToDelete->setWallet($wallet);
+        $operationToDelete->setCurrentBalance($wallet->getBalance());
         $operationToDelete->setCategory($this->createCategory('delete', $author));
 
         $this->entityManager->persist($operationToDelete);
@@ -150,7 +154,9 @@ class OperationServiceTest extends KernelTestCase
             $operation->setCreatedAt(new \DateTimeImmutable('now'));
             $operation->setUpdatedAt(new \DateTimeImmutable('now'));
             $operation->addTag($this->createTag('delete'.$counter, $author));
-            $operation->setWallet($this->createWallet($author, 'delete'.$counter));
+            $wallet = $this->createWallet($author, 'delete'.$counter);
+            $operation->setWallet($wallet);
+            $operation->setCurrentBalance($wallet->getBalance());
             $operation->setCategory($this->createCategory('delete'.$counter, $author));
             $this->operationService->save($operation);
 

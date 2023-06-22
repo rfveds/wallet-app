@@ -316,8 +316,10 @@ class CategoryControllerTest extends WebTestCase
         $operation->setTitle('TestOperation');
         $operation->setAmount(1000);
         $operation->setCategory($testCategory);
-        $operation->setWallet($this->createWallet($user, 'TestWallet'));
+        $wallet = $this->createWallet($user, 'TestWallet');
+        $operation->setWallet($wallet);
         $operation->setAuthor($user);
+        $operation->setCurrentBalance($wallet->getBalance());
 
         $operationRepository = self::getContainer()->get(OperationRepository::class);
         $operationRepository->save($operation);
