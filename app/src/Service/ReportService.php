@@ -2,11 +2,8 @@
 
 namespace App\Service;
 
-use App\Entity\Category;
 use App\Entity\Report;
-use App\Entity\Tag;
 use App\Entity\User;
-use App\Entity\Wallet;
 use App\Repository\OperationRepository;
 use App\Repository\ReportRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -71,4 +68,79 @@ class ReportService implements ReportServiceInterface
     {
         $this->reportRepository->remove($report, true);
     }// end delete()
+
+    /**
+     * Prepare data in JSON format for report.
+     */
+    public function getReportData(array $list): array
+    {
+        $amountData = [];
+        foreach ($list as $operation) {
+            $amountData[] = (float) $operation->getAmount();
+        }
+
+        $balanceData = [];
+        foreach ($list as $operation) {
+            $balanceData[] = (float) $operation->getWallet()->getBalance();
+        }
+
+        $balanceHistoryData = [];
+        foreach ($list as $operation) {
+            $balanceHistoryData[] = (float) $operation->getCurrentBalance();
+        }
+
+        $labelData = [];
+        foreach ($list as $operation) {
+            $labelData[] = $operation->getCreatedAt()->format('Y-m-d');
+        }
+
+        $amountDataJSON = json_encode($amountData);
+        $labelDataJSON = json_encode($labelData);
+        $balanceDataJSON = json_encode($balanceData);
+        $balanceHistoryDataJSON = json_encode($balanceHistoryData);
+
+        return [
+            'amountDataJSON' => $amountDataJSON,
+            'labelDataJSON' => $labelDataJSON,
+            'balanceDataJSON' => $balanceDataJSON,
+            'balanceHistoryDataJSON' => $balanceHistoryDataJSON,
+        ];
+    }// end getReportData()
+
+    /**
+     * Prepare filters for report.
+     *
+     * @param Report $report Report entity
+     */
+    public function prepareFilters(Report $report): array
+    {
+        $filters = [];
+
+        if (null != $report->getCategory()) {
+            $filters['category_id'] = $report->getCategory()->getId();
+        }
+
+        if (null != $report->getTag()) {
+            $filters['tag_id'] = $report->getTag()->getId();
+        }
+
+        if (null != $report->getWallet()) {
+            $filters['wallet_id'] = $report->getWallet()->getId();
+        }
+
+        if (null != $report->getAuthor()) {
+            $filters['author_id'] = $report->getAuthor()->getId();
+        }
+
+        if (null != $report->getDateFrom()) {
+            // format with datetime
+            $filters['operation_date_from'] = $report->getDateFrom()->format('Y-m-d');
+        }
+
+        if (null != $report->getDateTo()) {
+            $filters['operation_date_to'] = $report->getDateTo()->format('Y-m-d');
+        }
+
+        return $filters;
+    }// end prepareFilters()
 }// end class

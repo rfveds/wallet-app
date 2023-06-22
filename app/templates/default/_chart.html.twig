@@ -9,13 +9,15 @@
 
     const amountData = JSON.parse('{{ amountDataJSON|raw }}');
     const labelData = JSON.parse('{{ labelDataJSON|raw }}');
+    const balanceData = JSON.parse('{{ balanceDataJSON|raw }}');
+    const balanceHistoryData = JSON.parse('{{ balanceHistoryDataJSON|raw }}');
 
     const data = {
         labels: labelData,
         datasets: [
             {
                 label: 'Dataset',
-                data: amountData,
+                data: balanceHistoryData,
                 borderColor: 'red',
                 backgroundColor: 'red',
                 pointStyle: 'circle',

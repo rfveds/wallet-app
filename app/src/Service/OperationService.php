@@ -95,6 +95,24 @@ class OperationService implements OperationServiceInterface
     }// end createPaginatedList()
 
     /**
+     * Create filtered list.
+     *
+     * @param array $filters Filters
+     *
+     * @throws NonUniqueResultException
+     */
+    public function createList(User $user, array $filters = []): array
+    {
+        $filters = $this->prepareFilters($filters, $user);
+
+        if (isset($filters['empty'])) {
+            return [];
+        }
+
+        return $this->operationRepository->queryByAuthor($user, $filters)->getQuery()->getResult();
+    }// end createList()
+
+    /**
      * Save entity.
      *
      * @param Operation $operation Operation entity

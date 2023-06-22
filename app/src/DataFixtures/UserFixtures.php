@@ -41,6 +41,7 @@ class UserFixtures extends AbstractBaseFixtures
             $user->setEmail(sprintf('user%d@example.com', $i));
             $user->setFirstName($this->faker->firstName);
             $user->setLastName($this->faker->lastName);
+            $user->setBlocked(false);
             $user->setRoles([UserRole::ROLE_USER->value]);
             $user->setPassword(
                 $this->passwordHasher->hashPassword(
@@ -57,6 +58,7 @@ class UserFixtures extends AbstractBaseFixtures
             $user->setEmail(sprintf('admin%d@example.com', $i));
             $user->setFirstName($this->faker->firstName);
             $user->setLastName($this->faker->lastName);
+            $user->setBlocked(false);
             $user->setRoles([UserRole::ROLE_USER->value, UserRole::ROLE_ADMIN->value]);
             $user->setPassword(
                 $this->passwordHasher->hashPassword(

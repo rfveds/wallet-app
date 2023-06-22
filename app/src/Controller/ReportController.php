@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Form\Type\ReportType;
 use App\Service\OperationServiceInterface;
 use App\Service\ReportServiceInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
@@ -51,7 +52,7 @@ class ReportController extends AbstractController
         $this->reportService = $reportService;
         $this->operationService = $operationService;
         $this->translator = $translator;
-    }
+    }// end __construct()
 
     /**
      * Index action.
@@ -66,7 +67,9 @@ class ReportController extends AbstractController
     )]
     public function index(Request $request): Response
     {
-        /** @var User $user */
+        /*
+            @var User $user
+        */
         $user = $this->getUser();
 
         $pagination = $this->reportService->createPaginatedList(
@@ -76,11 +79,9 @@ class ReportController extends AbstractController
 
         return $this->render(
             'report/index.html.twig',
-            [
-                'pagination' => $pagination,
-            ],
+            ['pagination' => $pagination],
         );
-    }
+    }// end index()
 
     /**
      * Show action.
@@ -89,6 +90,8 @@ class ReportController extends AbstractController
      * @param Request $request HTTP request
      *
      * @return Response HTTP response
+     *
+     * @throws NonUniqueResultException
      */
     #[Route(
         '/{id}',
@@ -98,58 +101,38 @@ class ReportController extends AbstractController
     )]
     public function show(Request $request, Report $report): Response
     {
-        $filters = [];
+        $filters = $this->reportService->prepareFilters($report);
 
-        if (null != $report->getCategory()) {
-            $filters['category_id'] = $report->getCategory()->getId();
-        }
-        if (null != $report->getTag()) {
-            $filters['tag_id'] = $report->getTag()->getId();
-        }
-        if (null != $report->getWallet()) {
-            $filters['wallet_id'] = $report->getWallet()->getId();
-        }
-        if (null != $report->getAuthor()) {
-            $filters['author_id'] = $report->getAuthor()->getId();
-        }
-        if (null != $report->getDateFrom()) {
-            $filters['operation_date_from'] = $report->getDateFrom()->format('Y-m-d');
-        }
-        if (null != $report->getDateTo()) {
-            $filters['operation_date_to'] = $report->getDateTo()->format('Y-m-d');
-        }
-
-        /** @var User $user */
+        /*
+            @var User $user
+        */
         $user = $this->getUser();
+        $list = $this->operationService->createList(
+            $user,
+            $filters
+        );
+
         $pagination = $this->operationService->createPaginatedList(
             $request->query->getInt('page', 1),
             $user,
             $filters
         );
 
-        $amountData = [];
-        foreach ($pagination as $operation) {
-            $amountData[] = (float) $operation->getAmount();
-        }
-
-        $labelData = [];
-        foreach ($pagination as $operation) {
-            $labelData[] = $operation->getCreatedAt()->format('Y-m-d');
-        }
-
-        $amountDataJSON = json_encode($amountData);
-        $labelDataJSON = json_encode($labelData);
+        $data = $this->reportService->getReportData($list);
 
         return $this->render(
             'report/show.html.twig',
             [
                 'report' => $report,
+                'list' => $list,
                 'pagination' => $pagination,
-                'amountDataJSON' => $amountDataJSON,
-                'labelDataJSON' => $labelDataJSON,
+                'amountDataJSON' => $data['amountDataJSON'],
+                'labelDataJSON' => $data['labelDataJSON'],
+                'balanceDataJSON' => $data['balanceDataJSON'],
+                'balanceHistoryDataJSON' => $data['balanceHistoryDataJSON'],
             ],
         );
-    }
+    }// end show()
 
     /**
      * Create action.
@@ -165,7 +148,9 @@ class ReportController extends AbstractController
     )]
     public function create(Request $request): Response
     {
-        /** @var User $user */
+        /*
+            @var User $user
+        */
         $user = $this->getUser();
         $report = new Report();
         $report->setAuthor($user);
@@ -187,7 +172,7 @@ class ReportController extends AbstractController
             'report/create.html.twig',
             ['form' => $form->createView()],
         );
-    }
+    }// end create()
 
     /**
      * Edit action.
@@ -237,7 +222,7 @@ class ReportController extends AbstractController
                 'form' => $form->createView(),
             ],
         );
-    }
+    }// end edit()
 
     /**
      * Delete action.
@@ -287,5 +272,5 @@ class ReportController extends AbstractController
                 'report' => $report,
             ],
         );
-    }
-}
+    }// end delete()
+}// end class

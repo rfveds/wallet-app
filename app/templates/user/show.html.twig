@@ -22,6 +22,11 @@
             {% endif %}
             <dt>{{ 'label.email'|trans }}</dt>
             <dd>{{ user.email }}</dd>
+            {%  if is_granted('ROLE_ADMIN') %}
+            <dt>{{ 'label.blocked'|trans }}</dt>
+            <dd>{{ user.blocked ? 'title.yes'|trans : 'title.no'|trans }}</dd>
+            {% endif %}
+
 
         </dl>
         {%  if is_granted('ROLE_ADMIN') %}
@@ -42,8 +47,23 @@
         {%  if is_granted('ROLE_ADMIN') %}
             <div class="btn btn-light">
                 <a href="{{ url('user_edit_role', {id: user.id}) }}" title="{{ 'action.edit_role'|trans }}">
-                    {{ 'action.edit_role'|trans }}</a>
+                    {{ 'action.edit_role'|trans }}
+                </a>
             </div>
+
+            {% if app.user.id != user.id %}
+            <div class="btn btn-light">
+                <a href="{{ url('user_block', {id: user.id}) }}" title="{{ 'action.user_block'|trans }}">
+                    {{ 'action.user_block'|trans }}
+                </a>
+            </div>
+            <div class="btn btn-light">
+                <a href="{{ url('user_unblock', {id: user.id}) }}" title="{{ 'action.user_unblock'|trans }}">
+                    {{ 'action.user_unblock'|trans }}
+                </a>
+            </div>
+            {% endif %}
+
         {% endif %}
         <div class="btn btn-light">
             <a href="{{ url('user_delete', {id: user.id}) }}" title="{{ 'action.delete'|trans }}">

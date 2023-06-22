@@ -35,6 +35,9 @@ interface ReportServiceInterface
      */
     public function delete(Report $report);
 
+    public function getReportData(array $list);
+
+    public function prepareFilters(Report $report);
 
 
 }// end interface

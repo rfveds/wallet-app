@@ -48,6 +48,8 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             /** @var Wallet $wallet */
             $wallet = $this->getRandomReference('wallets');
             $operation->setWallet($wallet);
+            $wallet->setBalance($wallet->getBalance() + $operation->getAmount());
+            $operation->setCurrentBalance($wallet->getBalance());
 
             /** @var Tag $tag */
             $tags = $this->getRandomReferences('tags', $this->faker->numberBetween(0, 5));

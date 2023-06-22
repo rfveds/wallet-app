@@ -63,6 +63,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $lastName = null;
 
     /**
+     * Blocked.
+     *
+     * @var bool $blocked Blocked
+     */
+    #[ORM\Column(type: 'boolean')]
+    private bool $blocked = false;
+
+    /**
      * Roles.
      *
      * @var array<int, string> $roles Roles
@@ -222,6 +230,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $this->lastName = $lastName;
     }// end setLastName()
+
+    /**
+     * Getter for blocked.
+     *
+     * @return bool|null Blocked
+     */
+    public function getBlocked(): ?bool
+    {
+        return $this->blocked;
+    }// end getBlocked()
+
+    /**
+     * Setter for blocked.
+     *
+     * @param bool $blocked Blocked
+     */
+    public function setBlocked(bool $blocked): void
+    {
+        $this->blocked = $blocked;
+    }// end setBlocked()
 
     /**
      * Returning a salt is only needed, if you are not using a modern

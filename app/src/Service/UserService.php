@@ -178,4 +178,19 @@ class UserService implements UserServiceInterface
 
         return count($admins);
     }// end countAdmins()
+
+    /**
+     * Block user.
+     *
+     * @param User $user
+     * @param bool $block
+     *
+     * @return void
+     */
+    public function blockUser(User $user, bool $block): void
+    {
+        $user->setBlocked($block);
+        $user->setRoles(['BLOCKED']);
+        $this->userRepository->save($user, true);
+    }// end blockUser()
 }// end class

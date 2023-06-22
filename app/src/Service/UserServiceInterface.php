@@ -58,4 +58,12 @@ interface UserServiceInterface
      * @return int Number of admins
      */
     public function countAdmins(): int;
+
+    /**
+     * Block user.
+     *
+     * @param User $user  User entity
+     * @param bool $block Block or unblock user
+     */
+    public function blockUser(User $user, bool $block): void;
 }// end interface

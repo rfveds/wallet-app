@@ -94,6 +94,15 @@ class Operation
     private ?Wallet $wallet = null;
 
     /**
+     * Current wallet balance.
+     *
+     * @var string|null Current wallet balance
+     */
+    #[ORM\Column(type: 'decimal', precision: 16, scale: 2)]
+    #[Assert\Type(type: 'numeric')]
+    private ?string $currentBalance = null;
+
+    /**
      * Tags.
      *
      * @var ArrayCollection<int, Tag>|Tag[] Tags
@@ -303,4 +312,24 @@ class Operation
     {
         $this->author = $author;
     }
+
+    /**
+     * Getter for currentBalance.
+     *
+     * @return string|null Current wallet balance
+     */
+    public function getCurrentBalance(): ?string
+    {
+        return $this->currentBalance;
+    }// end getCurrentBalance()
+
+    /**
+     * Setter for currentBalance.
+     *
+     * @param string|null $currentBalance Current wallet balance
+     */
+    public function setCurrentBalance(?string $currentBalance): void
+    {
+        $this->currentBalance = $currentBalance;
+    }// end setCurrentBalance()
 }// end class
