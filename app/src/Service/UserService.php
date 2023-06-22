@@ -190,7 +190,6 @@ class UserService implements UserServiceInterface
     public function blockUser(User $user, bool $block): void
     {
         $user->setBlocked($block);
-        $user->setRoles(['BLOCKED']);
         $this->userRepository->save($user, true);
     }// end blockUser()
 }// end class
