@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\FormType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -112,6 +113,13 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $formUserId = $form->getData()->getId();
+            $currentUserId = $user->getId();
+            if ($currentUserId == $formUserId) {
+                $session = new Session();
+                $session->invalidate();
+            }
+
             $this->userService->delete($user);
             $this->addFlash('success', 'message.deleted_successfully');
 

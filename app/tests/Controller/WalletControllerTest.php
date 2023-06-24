@@ -129,7 +129,7 @@ class WalletControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.save',
+            'zapisz',
             ['wallet' => [
                     'title' => $walletTitle,
                     'balance' => 0,
@@ -199,7 +199,7 @@ class WalletControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.edit',
+            'edytuj',
             ['wallet' => ['title' => $expectedNewWalletTitle]]
         );
 
@@ -244,7 +244,7 @@ class WalletControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.delete'
+            'usuń'
         );
 
         // then

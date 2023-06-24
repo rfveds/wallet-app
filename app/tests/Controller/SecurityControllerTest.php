@@ -27,7 +27,7 @@ class SecurityControllerTest extends WebTestCase
     {
         // given
         $expectedStatusCode = 200;
-        $expectedTitle = 'action.login';
+        $expectedTitle = 'zaloguj';
 
         // when
         $client = static::createClient();
@@ -94,10 +94,10 @@ class SecurityControllerTest extends WebTestCase
         // when
         $client->loginUser($testUser);
         $crawler = $client->request('GET', '/');
-        $divElement = $crawler->filter('a:contains("test_admin_login@example.com")');
+        $aElement = $crawler->filter('a:contains("profil użytkownika")');
 
         // then
-        $this->assertCount(1, $divElement);
+        $this->assertCount(1, $aElement);
         $this->assertResponseIsSuccessful();
     }
 

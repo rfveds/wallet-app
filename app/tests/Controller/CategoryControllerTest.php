@@ -127,7 +127,7 @@ class CategoryControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.save',
+            'zapisz',
             [
                 'category' => [
                         'title' => $categoryTitle,
@@ -202,7 +202,7 @@ class CategoryControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.edit',
+            'edytuj',
             ['category' => ['title' => $expectedNewCategoryTitle]]
         );
 
@@ -236,7 +236,7 @@ class CategoryControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.delete'
+            'usuń'
         );
 
         // then

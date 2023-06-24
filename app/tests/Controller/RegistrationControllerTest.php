@@ -67,7 +67,7 @@ class RegistrationControllerTest extends WebTestCase
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE);
         $this->httpClient->submitForm(
-            'action.register',
+            'zarejestruj',
             [
                'registration' => [
                    'email' => $expectedEmail,

@@ -148,11 +148,13 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testUserId.'/delete');
 
         // then
-        $this->httpClient->submitForm('action.delete');
+        $this->httpClient->submitForm('usuń');
 
         // then
         $savedUser = $userRepository->findOneBy(['id' => $testUserId]);
         $this->assertNull($savedUser);
+        $this->assertEquals(302, $this->httpClient->getResponse()->getStatusCode());
+        $this->assertResponseRedirects('/');
     }
 
     /**
@@ -172,7 +174,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
 
         // when
-        $this->httpClient->submitForm('action.delete');
+        $this->httpClient->submitForm('usuń');
 
         // then
         $savedWallet = $walletRepository->findOneBy(['id' => $testWallet->getId()]);
@@ -195,7 +197,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$user->getId().'/edit-password');
 
         // when
-        $this->httpClient->submitForm('action.edit',
+        $this->httpClient->submitForm('edytuj',
             [
                 'user_password' => [
                     'password' => [
@@ -260,7 +262,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$user->getId().'/edit-role');
 
         // when
-        $this->httpClient->submitForm('action.edit',
+        $this->httpClient->submitForm('edytuj',
             [
                 'user_role' => [
                     'roles' => [
@@ -298,7 +300,7 @@ class UserControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/delete');
 
         // when
-        $this->httpClient->submitForm('action.delete');
+        $this->httpClient->submitForm('usuń');
 
         // then
         $savedOperation = $operationRepository->findOneBy(['id' => $testOperation->getId()]);

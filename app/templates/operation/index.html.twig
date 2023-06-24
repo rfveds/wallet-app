@@ -8,8 +8,6 @@
 
     {% if app.user %}
 
-        {{ app.user.roles|join(', ') }}
-
         {% if is_granted('ROLE_USER') %}
 
             <form action="{{ path('operation_index') }}" >

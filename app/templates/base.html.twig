@@ -1,78 +1,66 @@
 <!DOCTYPE html>
 <html lang='en'>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div>
+    {% include 'default/_flash_messages.html.twig' %}
+</div>
+<nav>
 
-        <div>
-            {% include 'default/_flash_messages.html.twig' %}
-        </div>
+    <a href="{{ path('homepage') }}">
+        {{ 'title.homepage'|trans }}
+    </a>
 
-        <nav>
+    {% if is_granted('ROLE_USER') %}
 
-
-            <a href="{{ path('homepage') }}">
-                {{ 'title.homepage'|trans }}
-            </a>
-
-            {% if is_granted('ROLE_USER') %}
-
-            <a href="{{ path('operation_index') }}">
-                {{ 'title.operation_list'|trans }}
-            </a>
-            <a href="{{ path('wallet_index') }}">
-                {{ 'title.wallet_list'|trans }}
-            </a>
-            <a href="{{ path('tag_index') }}">
-                {{ 'title.tag_list'|trans }}
-            </a>
-            <a href="{{ path('category_index') }}">
-                {{ 'title.category_list'|trans }}
-            </a>
-
-                <a href="{{ path('report_index') }}">
-                    {{ 'title.report_list'|trans }}
-                </a>
-
-            {% endif %}
-
-            {%  if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('user_index') }}">
-                {{ 'title.user_list'|trans }}
-            </a>
-            {% endif %}
-
-            {% if app.user %}
-
-            {% if is_granted('ROLE_USER') %}
-
-            <a href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'my_profile'|trans }}">
-                {{ app.user.email }}
-            </a>
-
-            {% endif %}
-
-            {% endif %}
-
-            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <a href="{{ url('app_logout') }}">{{ 'action.logout'|trans }}</a>
-            {% else %}
-                <a href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
-            {% endif %}
-        </nav>
+    <a href="{{ path('operation_index') }}">
+        {{ 'title.operation_list'|trans }}
+    </a>
+    <a href="{{ path('wallet_index') }}">
+        {{ 'title.wallet_list'|trans }}
+    </a>
+    <a href="{{ path('tag_index') }}">
+        {{ 'title.tag_list'|trans }}
+    </a>
+    <a href="{{ path('category_index') }}">
+        {{ 'title.category_list'|trans }}
+    </a>
+    <a href="{{ path('report_index') }}">
+        {{ 'title.report_list'|trans }}
+    </a>
+    <a href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'title.user_profile'|trans }}">
+        {{ 'title.user_profile'|trans }}
+    </a>
+    {% endif %}
 
 
-        {% block body %}{% endblock %}
-    </body>
+    {% if is_granted('ROLE_ADMIN') %}
+        <a href="{{ path('user_index') }}">
+            {{ 'title.user_list'|trans }}
+        </a>
+    {% endif %}
+
+    {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+        <a href="{{ url('app_logout') }}">{{ 'action.logout'|trans }}</a>
+    {% else %}
+        <a href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
+    {% endif %}
+</nav>
+
+
+{% block body %}{% endblock %}
+</body>
 </html>

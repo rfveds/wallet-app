@@ -121,7 +121,7 @@ class TagControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
 
         // when
-        $this->httpClient->submitForm('action.save', [
+        $this->httpClient->submitForm('zapisz', [
             'tag' => ['title' => $tagTitle],
         ]);
 
@@ -159,7 +159,7 @@ class TagControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testTagId.'/edit');
 
         // when
-        $this->httpClient->submitForm('action.edit', [
+        $this->httpClient->submitForm('edytuj', [
             'tag' => ['title' => $expectedNewTagTitle],
         ]);
 
@@ -192,7 +192,7 @@ class TagControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testTagId.'/delete');
 
         // when
-        $this->httpClient->submitForm('action.delete');
+        $this->httpClient->submitForm('usuń');
 
         // then
         $this->assertNull($tagRepository->findOneBy(['title' => $tagTitle]));

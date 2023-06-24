@@ -172,7 +172,7 @@ class OperationControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.save',
+            'zapisz',
             ['operation' => [
                 'title' => $operationTitle,
                 'amount' => '100',
@@ -212,7 +212,7 @@ class OperationControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.save',
+            'zapisz',
             ['operation' => [
                 'title' => $operationTitle,
                 'amount' => $operationAmount,
@@ -260,7 +260,7 @@ class OperationControllerTest extends WebTestCase
 
         // when
         $this->httpClient->submitForm(
-            'action.edit',
+            'edytuj',
             ['operation' => [
                 'title' => $expectedNewOperationTitle,
                 'amount' => 200,
@@ -343,7 +343,7 @@ class OperationControllerTest extends WebTestCase
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testOperationId.'/delete');
 
         // when
-        $this->httpClient->submitForm('action.delete');
+        $this->httpClient->submitForm('usuń');
 
         // then
         $savedOperation = $operationRepository->findOneById($testOperationId);
