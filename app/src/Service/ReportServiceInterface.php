@@ -7,6 +7,7 @@ namespace App\Service;
 
 use App\Entity\Report;
 use App\Entity\User;
+use App\Entity\Wallet;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 
 /**
@@ -37,7 +38,21 @@ interface ReportServiceInterface
 
     public function getReportData(array $list);
 
+    /**
+     * Prepare filters.
+     *
+     * @param Report $report Report entity
+     */
     public function prepareFilters(Report $report);
+
+    /**
+     * Find by wallet.
+     *
+     * @param Wallet $wallet Wallet entity
+     *
+     * @return Report|null Report entity
+     */
+    public function findByWallet(Wallet $wallet);
 
 
 }// end interface

@@ -56,25 +56,6 @@ class WalletRepository extends ServiceEntityRepository
     }// end queryAll()
 
     /**
-     * Find by id.
-     *
-     * @param int $id Id
-     *
-     * @throws NonUniqueResultException
-     *
-     * @return Wallet|null Wallet entity
-     */
-    public function findById(int $id): ?Wallet
-    {
-        return $this->createQueryBuilder('wallet')
-            ->select('partial wallet.{id, title, user, balance, type}')
-            ->andWhere('wallet.id = :id')
-            ->setParameter('id', $id)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }// end findById()
-
-    /**
      * Query wallets by author.
      *
      * @param User $user Author entity

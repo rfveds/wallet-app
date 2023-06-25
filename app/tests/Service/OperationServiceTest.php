@@ -149,15 +149,15 @@ class OperationServiceTest extends KernelTestCase
         while ($counter < $dataSetSize) {
             $operation = new Operation();
             $operation->setAuthor($author);
-            $operation->setTitle('Test Operation Delete #'.$counter);
+            $operation->setTitle('Test Operation Pagination #'.$counter);
             $operation->setAmount('100.00');
             $operation->setCreatedAt(new \DateTimeImmutable('now'));
             $operation->setUpdatedAt(new \DateTimeImmutable('now'));
-            $operation->addTag($this->createTag('delete'.$counter, $author));
-            $wallet = $this->createWallet($author, 'delete'.$counter);
+            $operation->addTag($this->createTag('pagination'.$counter, $author));
+            $wallet = $this->createWallet($author, 'pagination'.$counter);
             $operation->setWallet($wallet);
             $operation->setCurrentBalance($wallet->getBalance());
-            $operation->setCategory($this->createCategory('delete'.$counter, $author));
+            $operation->setCategory($this->createCategory('pagination'.$counter, $author));
             $this->operationService->save($operation);
 
             ++$counter;
@@ -168,9 +168,8 @@ class OperationServiceTest extends KernelTestCase
 
         // then
         $this->assertEquals($expectedResultSize, $result->count());
-
-
     }
+
 
     /**
      * Create Wallet.

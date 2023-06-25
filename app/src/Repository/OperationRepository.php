@@ -137,21 +137,6 @@ class OperationRepository extends ServiceEntityRepository
     }
 
     /**
-     * Query by category.
-     *
-     * @param mixed $category Category
-     *
-     * @return mixed
-     */
-    public function queryByCategory(Category $category): QueryBuilder
-    {
-        return $this->createQueryBuilder('operation')
-            ->select('operation')
-            ->andWhere('operation.category = :category')
-            ->setParameter('category', $category);
-    }
-
-    /**
      * Save entity.
      *
      * @param Operation $operation Operation entity

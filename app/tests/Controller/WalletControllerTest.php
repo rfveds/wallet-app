@@ -8,10 +8,12 @@ namespace App\Tests\Controller;
 use App\Entity\Category;
 use App\Entity\Enum\UserRole;
 use App\Entity\Operation;
+use App\Entity\Report;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Repository\CategoryRepository;
 use App\Repository\OperationRepository;
+use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use App\Repository\WalletRepository;
 use Doctrine\ORM\OptimisticLockException;
@@ -220,6 +222,7 @@ class WalletControllerTest extends WebTestCase
         $this->httpClient->loginUser($user);
         $walletRepository = static::getContainer()->get(WalletRepository::class);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $reportRepository = static::getContainer()->get(ReportRepository::class);
         $testWallet = new Wallet();
         $testWallet->setTitle('TestWalletCreated');
         $testWallet->setBalance(0);
@@ -235,8 +238,14 @@ class WalletControllerTest extends WebTestCase
         $operation->setAuthor($user);
         $operation->setCurrentBalance($testWallet->getBalance());
 
-        $walletRepository->save($testWallet);
-        $operationRepository->save($operation);
+        $report = new Report();
+        $report->setTitle('TestReportDeleteWallet');
+        $report->setAuthor($user);
+        $report->setWallet($testWallet);
+
+        $walletRepository->save($testWallet, true);
+        $operationRepository->save($operation, true);
+        $reportRepository->save($report, true);
 
         $testWalletId = $testWallet->getId();
 

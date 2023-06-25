@@ -10,7 +10,7 @@
 
         {% if is_granted('ROLE_USER') %}
 
-            <form action="{{ path('operation_index') }}" >
+            <form action="{{ path('operation_index') }}" name="search" >
                 <input name="filters.operation_title"
                        type="text"
                        placeholder="Search" aria-label="Search">

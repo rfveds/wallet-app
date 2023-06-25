@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Report;
 use App\Entity\User;
+use App\Entity\Wallet;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -61,7 +62,13 @@ class ReportRepository extends ServiceEntityRepository
         return $queryBuilder;
     }// end queryByAuthor()
 
-    public function save(Report $entity, bool $flush = false): void
+    /**
+     * Save record.
+     *
+     * @param Report $entity Report entity
+     * @param bool   $flush  Flush entity manager?
+     */
+    public function save(Report $entity, bool $flush = true): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -70,7 +77,13 @@ class ReportRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Report $entity, bool $flush = false): void
+    /**
+     * Remove record.
+     *
+     * @param Report $entity Report entity
+     * @param bool   $flush  Flush entity manager?
+     */
+    public function remove(Report $entity, bool $flush = true): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -90,4 +103,15 @@ class ReportRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('report');
     }// end getOrCreateQueryBuilder()
+
+    public function findByWallet(Wallet $wallet)
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('report')
+            ->andWhere('report.wallet = :wallet')
+            ->setParameter('wallet', $wallet)
+            ->orderBy('report.title', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

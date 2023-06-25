@@ -10,15 +10,19 @@
         <dl>
             <dt>{{ 'label.id'|trans }}</dt>
             <dd>{{ report.id }}</dd>
-            <dt>{{ 'label.date_from'|trans }}</dt>
-            <dd>{{ report.dateFrom|date('Y/m/d') }}</dd>
-            <dt>{{ 'label.date_to'|trans }}</dt>
-            <dd>{{ report.dateTo|date('Y/m/d') }}</dd>
+            {% if report.dateFrom %}
+                <dt>{{ 'label.date_from'|trans }}</dt>
+                <dd>{{ report.dateFrom|date('Y/m/d') }}</dd>
+            {% endif %}
+            {% if report.dateTo %}
+                <dt>{{ 'label.date_to'|trans }}</dt>
+                <dd>{{ report.dateTo|date('Y/m/d') }}</dd>
+            {% endif %}
             <dt>{{ 'label.title'|trans }}</dt>
             <dd>{{  report.title }}</dd>
             {% if report.wallet %}
-            <dt>{{ 'label.wallet'|trans }}</dt>
-            <dd>{{ report.wallet.title }}</dd>
+                <dt>{{ 'label.wallet'|trans }}</dt>
+                <dd>{{ report.wallet.title }}</dd>
                 <dt>{{ 'label.balance'|trans }}</dt>
                 <dd>{{ report.wallet.balance }}</dd>
             {% endif %}

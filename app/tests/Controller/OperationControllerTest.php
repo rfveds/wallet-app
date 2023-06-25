@@ -1,6 +1,6 @@
 <?php
 /**
- * Operation Controller test.
+ * Operation Controller tests.
  */
 
 namespace App\Tests\Controller;
@@ -31,7 +31,7 @@ class OperationControllerTest extends WebTestCase
     /**
      * Test route.
      *
-     * @const string
+     * @const string TEST_ROUTE
      */
     public const TEST_ROUTE = '/operation';
 
@@ -106,7 +106,7 @@ class OperationControllerTest extends WebTestCase
         $expectedOperation->setCurrentBalance($wallet->getBalance());
         $expectedOperation->setAuthor($adminUser);
         $operationRepository = static::getContainer()->get(OperationRepository::class);
-        $operationRepository->save($expectedOperation);
+        $operationRepository->save($expectedOperation, true);
 
         // when
         $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$expectedOperation->getId());
@@ -256,7 +256,10 @@ class OperationControllerTest extends WebTestCase
         $testOperationId = $testOperation->getId();
         $expectedNewOperationTitle = 'TestOperationEdited';
 
-        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testOperationId.'/edit');
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$testOperationId.'/edit'
+        );
 
         // when
         $this->httpClient->submitForm(
@@ -348,6 +351,56 @@ class OperationControllerTest extends WebTestCase
         // then
         $savedOperation = $operationRepository->findOneById($testOperationId);
         $this->assertNull($savedOperation);
+    }
+
+    /**
+     * Test search operation by title.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testSearchOperationByTitle(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_search_operation@exampl.com');
+        $this->httpClient->loginUser($user);
+        $testOperation = new Operation();
+        $testOperation->setTitle('TestOperationSearch');
+        $testOperation->setAmount(100);
+        $testOperation->setCategory($this->createCategory('testCategorySearchOperation', $user));
+        $testWallet = $this->createWallet('wallet_search_operation', $user, '0');
+        $testOperation->setWallet($testWallet);
+        $testOperation->setCurrentBalance($testWallet->getBalance());
+        $testOperation->setAuthor($user);
+        $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
+        $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $operationRepository->save($testOperation);
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'?filters.operation_title='.$testOperation->getTitle());
+
+        // then
+        $this->assertResponseIsSuccessful();
+    }
+
+    /**
+     * Test operation that is not in the database.
+     *
+     *  @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testOperationThatIsNotInTheDatabase(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_null_user@example.com');
+        $this->httpClient->loginUser($user);
+        $operationTitle = 'TestOperationThatIsNotInTheDatabase';
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'?filters.operation_title='.$operationTitle);
+
+        // then
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('html', 'brak elementów');
     }
 
     /**

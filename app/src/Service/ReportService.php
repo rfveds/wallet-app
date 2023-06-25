@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Entity\Report;
 use App\Entity\User;
+use App\Entity\Wallet;
 use App\Repository\OperationRepository;
 use App\Repository\ReportRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
@@ -143,4 +144,9 @@ class ReportService implements ReportServiceInterface
 
         return $filters;
     }// end prepareFilters()
+
+    public function findByWallet(Wallet $wallet)
+    {
+       return $this->reportRepository->findByWallet($wallet);
+    }
 }// end class

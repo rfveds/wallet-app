@@ -309,6 +309,7 @@ class UserControllerTest extends WebTestCase
         $this->assertNull($savedUser);
     }
 
+
     /**
      * Create user.
      *

@@ -17,7 +17,6 @@ use Knp\Component\Pager\PaginatorInterface;
  */
 class WalletService implements WalletServiceInterface
 {
-
     /**
      * Wallet repository.
      */
@@ -28,7 +27,6 @@ class WalletService implements WalletServiceInterface
      */
     private PaginatorInterface $paginator;
 
-
     /**
      * WalletService constructor.
      *
@@ -38,16 +36,14 @@ class WalletService implements WalletServiceInterface
     public function __construct(WalletRepository $walletRepository, PaginatorInterface $paginator)
     {
         $this->walletRepository = $walletRepository;
-        $this->paginator        = $paginator;
-
-    }//end __construct()
-
+        $this->paginator = $paginator;
+    }// end __construct()
 
     /**
      * Get paginated list.
      *
-     * @param integer $page   Page number
-     * @param User    $author Author
+     * @param int  $page   Page number
+     * @param User $author Author
      *
      * @return PaginationInterface Paginated list
      */
@@ -58,9 +54,7 @@ class WalletService implements WalletServiceInterface
             $page,
             WalletRepository::PAGINATOR_ITEMS_PER_PAGE
         );
-
-    }//end createPaginatedList()
-
+    }// end createPaginatedList()
 
     /**
      * Save entity.
@@ -70,9 +64,7 @@ class WalletService implements WalletServiceInterface
     public function save(Wallet $wallet): void
     {
         $this->walletRepository->save($wallet);
-
-    }//end save()
-
+    }// end save()
 
     /**
      * Delete entity.
@@ -82,9 +74,7 @@ class WalletService implements WalletServiceInterface
     public function delete(Wallet $wallet): void
     {
         $this->walletRepository->delete($wallet);
-
-    }//end delete()
-
+    }// end delete()
 
     /**
      * Find by user.
@@ -96,22 +86,19 @@ class WalletService implements WalletServiceInterface
     public function findByUser(User $user): array
     {
         return $this->walletRepository->findByUser($user)->getQuery()->getResult();
-
-    }//end findByUser()
-
+    }// end findByUser()
 
     /**
      * Find one by id.
      *
-     * @param integer $wallet_id Wallet id
+     * @param int $wallet_id Wallet id
      *
      * @return Wallet|null Wallet entity
+     *
      * @throws NonUniqueResultException
      */
     public function findOneById(int $wallet_id): ?Wallet
     {
         return $this->walletRepository->findOneById($wallet_id);
-
-    }//end findOneById()
-}//end class
-
+    }// end findOneById()
+}// end class

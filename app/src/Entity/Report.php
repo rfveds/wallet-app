@@ -35,7 +35,7 @@ class Report
      * @var \DateTimeImmutable|null Created at
      */
     #[ORM\Column(type: 'datetime_immutable')]
-    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'create')]
     private ?\DateTimeImmutable $createdAt = null;
 
@@ -44,7 +44,7 @@ class Report
      *
      * @var \DateTimeImmutable|null Updated at
      */
-    #[Assert\Type(\DateTimeInterface::class)]
+    #[Assert\Type(\DateTimeImmutable::class)]
     #[Gedmo\Timestampable(on: 'update')]
     #[ORM\Column]
     private ?\DateTimeImmutable $updatedAt = null;
@@ -54,8 +54,7 @@ class Report
      *
      * @var \DateTimeInterface|null Date from
      */
-    #[ORM\Column(type: 'date')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\Column(type: 'date', nullable: true)]
     private ?\DateTimeInterface $dateFrom = null;
 
     /**
@@ -63,8 +62,7 @@ class Report
      *
      * @var \DateTimeInterface|null Date to
      */
-    #[ORM\Column(type: 'date')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\Column(type: 'date', nullable: true)]
     private ?\DateTimeInterface $dateTo = null;
 
     /**
@@ -93,7 +91,7 @@ class Report
      * @var Category|null $category Category
      */
     #[Assert\Type(type: 'App\Entity\Category')]
-    #[ORM\OneToOne(targetEntity: Category::class)]
+    #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Category $category = null;
 
@@ -103,7 +101,7 @@ class Report
      * @var Wallet|null $wallet Wallet
      */
     #[Assert\Type(type: 'App\Entity\Wallet')]
-    #[ORM\OneToOne(targetEntity: Wallet::class)]
+    #[ORM\ManyToOne(targetEntity: Wallet::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Wallet $wallet = null;
 
@@ -113,7 +111,7 @@ class Report
      * @var Tag|null $tag Tag
      */
     #[Assert\Type(type: 'App\Entity\Tag')]
-    #[ORM\OneToOne(targetEntity: Tag::class)]
+    #[ORM\ManyToOne(targetEntity: Tag::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Tag $tag = null;
 

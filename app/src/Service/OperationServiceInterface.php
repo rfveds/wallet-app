@@ -64,13 +64,4 @@ interface OperationServiceInterface
      * @return Operation|null Operation entity
      */
     public function findOneByTitle(string $operationTitle): ?Operation;
-
-    /**
-     * Find by category.
-     *
-     * @param Category $category Category
-     *
-     * @return array<string, mixed> Result
-     */
-    public function findByCategory(Category $category): array;
 }

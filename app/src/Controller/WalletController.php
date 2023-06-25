@@ -11,6 +11,7 @@ use App\Entity\Wallet;
 use App\Form\Type\WalletType;
 use App\Service\OperationService;
 use App\Service\OperationServiceInterface;
+use App\Service\ReportServiceInterface;
 use App\Service\WalletServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -42,17 +43,24 @@ class WalletController extends AbstractController
     private TranslatorInterface $translator;
 
     /**
+     * Report service.
+     */
+    private ReportServiceInterface $reportService;
+
+    /**
      * WalletController constructor.
      *
      * @param WalletServiceInterface $walletService    Wallet service interface
+     * @param ReportServiceInterface $reportService    Report service interface
      * @param OperationService       $operationService Operation service
      * @param TranslatorInterface    $translator       Translator interface
      */
-    public function __construct(WalletServiceInterface $walletService, OperationService $operationService, TranslatorInterface $translator)
+    public function __construct(WalletServiceInterface $walletService, OperationService $operationService, TranslatorInterface $translator, ReportServiceInterface $reportService)
     {
         $this->walletService = $walletService;
         $this->operationService = $operationService;
         $this->translator = $translator;
+        $this->reportService = $reportService;
     }
 
     /**
@@ -226,6 +234,12 @@ class WalletController extends AbstractController
             foreach ($operations as $operation) {
                 $this->operationService->delete($operation);
             }
+
+            $reports = $this->reportService->findByWallet($wallet);
+            foreach ($reports as $report) {
+                $this->reportService->delete($report);
+            }
+
             $this->walletService->delete($wallet);
 
             $this->addFlash(

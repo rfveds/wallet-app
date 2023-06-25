@@ -105,10 +105,6 @@ class OperationService implements OperationServiceInterface
     {
         $filters = $this->prepareFilters($filters, $user);
 
-        if (isset($filters['empty'])) {
-            return [];
-        }
-
         return $this->operationRepository->queryByAuthor($user, $filters)->getQuery()->getResult();
     }// end createList()
 
@@ -171,30 +167,6 @@ class OperationService implements OperationServiceInterface
     }// end findOneByTitle()
 
     /**
-     * Find by id.
-     *
-     * @param int $id Operation id
-     *
-     * @return Operation|null Operation entity
-     */
-    public function findOneById(int $id): ?Operation
-    {
-        return $this->operationRepository->findOneBy(['id' => $id]);
-    }// end findOneById()
-
-    /**
-     * Find by category.
-     *
-     * @param Category $category Category entity
-     *
-     * @return array Result
-     */
-    public function findByCategory(Category $category): array
-    {
-        return $this->operationRepository->queryByCategory($category)->getQuery()->getResult();
-    }// end findByCategory()
-
-    /**
      * Prepare filters for the operation list.
      *
      * @param array<string, int> $filters Raw filters from request
@@ -218,13 +190,6 @@ class OperationService implements OperationServiceInterface
             $tag = $this->tagService->findOneById($filters['tag_id']);
             if (null !== $tag) {
                 $resultFilters['tag'] = $tag;
-            }
-        }
-
-        if (!empty($filters['operation_id'])) {
-            $operation = $this->findOneById($filters['operation_id']);
-            if (null !== $operation) {
-                $resultFilters['operation'] = $operation;
             }
         }
 

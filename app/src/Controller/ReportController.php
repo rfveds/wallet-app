@@ -99,6 +99,10 @@ class ReportController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET',
     )]
+    #[IsGranted(
+        'VIEW',
+        subject: 'report',
+    )]
     public function show(Request $request, Report $report): Response
     {
         $filters = $this->reportService->prepareFilters($report);
@@ -188,7 +192,10 @@ class ReportController extends AbstractController
         requirements: ['id' => '[1-9]\d*'],
         methods: ['GET|PUT']
     )]
-    #[isGranted('EDIT', subject: 'report')]
+    #[isGranted(
+        'EDIT',
+        subject: 'report'
+    )]
     public function edit(Request $request, Report $report): Response
     {
         $form = $this->createForm(
@@ -237,6 +244,10 @@ class ReportController extends AbstractController
         name: 'report_delete',
         requirements: ['id' => '[1-9]\d*'],
         methods: 'GET|DELETE'
+    )]
+    #[isGranted(
+        'DELETE',
+        subject: 'report'
     )]
     public function delete(Request $request, Report $report): Response
     {
