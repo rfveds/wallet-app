@@ -309,6 +309,50 @@ class UserControllerTest extends WebTestCase
         $this->assertNull($savedUser);
     }
 
+    /**
+     * Test block user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testBlockUser(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'admin_block_user@example.com');
+        $this->httpClient->loginUser($adminUser);
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'user_to_block@example.com');
+        $userId = $user->getId();
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$userId.'/block');
+
+        // then
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $blockedUser = $userRepository->findOneBy(['id' => $userId]);
+        $this->assertTrue($blockedUser->getBlocked());
+    }
+
+    /**
+     * Test unblock user.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testUnblockUser(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'admin_unblock_user@example.com');
+        $this->httpClient->loginUser($adminUser);
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'user_to_unblock@example.com');
+        $user->setBlocked(true);
+        $userId = $user->getId();
+
+        // when
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$userId.'/unblock');
+
+        // then
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $blockedUser = $userRepository->findOneBy(['id' => $userId]);
+        $this->assertFalse($blockedUser->getBlocked());
+    }
 
     /**
      * Create user.
