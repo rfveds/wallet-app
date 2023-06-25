@@ -162,14 +162,24 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->reportService->save($report);
+            if (null != $report->getWallet() ||
+                null != $report->getCategory() ||
+                null != $report->getTag() ||
+                null != $report->getDateTo() ||
+                null != $report->getDateFrom()) {
+                $this->reportService->save($report);
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.created_successfully')
+                );
+
+                return $this->redirectToRoute('report_index');
+            }
 
             $this->addFlash(
-                'success',
-                $this->translator->trans('message.created_successfully')
+                'warning',
+                $this->translator->trans('message.select_at_least_one_criteria')
             );
-
-            return $this->redirectToRoute('report_index');
         }
 
         return $this->render(

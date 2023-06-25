@@ -1,4 +1,7 @@
 <?php
+/**
+ * Report service.
+ */
 
 namespace App\Service;
 
@@ -10,9 +13,15 @@ use App\Repository\ReportRepository;
 use Knp\Component\Pager\Pagination\PaginationInterface;
 use Knp\Component\Pager\PaginatorInterface;
 
+/**
+ * Class ReportService.
+ */
 class ReportService implements ReportServiceInterface
 {
-    private $reportRepository;
+    /**
+     * Report repository.
+     */
+    private ReportRepository $reportRepository;
 
     /**
      * Paginator.
@@ -145,8 +154,15 @@ class ReportService implements ReportServiceInterface
         return $filters;
     }// end prepareFilters()
 
-    public function findByWallet(Wallet $wallet)
+    /**
+     * Find by wallet.
+     *
+     * @param Wallet $wallet Wallet entity
+     *
+     * @return Report|null Report entity
+     */
+    public function findByWallet(Wallet $wallet): ?Report
     {
-       return $this->reportRepository->findByWallet($wallet);
+        return $this->reportRepository->findByWallet($wallet);
     }
 }// end class

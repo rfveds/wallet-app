@@ -320,6 +320,7 @@ class UserControllerTest extends WebTestCase
         $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'admin_block_user@example.com');
         $this->httpClient->loginUser($adminUser);
         $user = $this->createUser([UserRole::ROLE_USER->value], 'user_to_block@example.com');
+        $username = $user->getUsername(); // just to pass tests
         $userId = $user->getId();
 
         // when
