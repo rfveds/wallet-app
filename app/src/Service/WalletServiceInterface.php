@@ -50,9 +50,9 @@ interface WalletServiceInterface
     /**
      * Find one by id.
      *
-     * @param int $wallet_id Wallet id
+     * @param int $walletId Wallet id
      *
      * @return Wallet|null Wallet entity
      */
-    public function findOneById(int $wallet_id): ?Wallet;
+    public function findOneById(int $walletId): ?Wallet;
 }

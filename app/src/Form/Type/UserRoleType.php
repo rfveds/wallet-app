@@ -41,7 +41,6 @@ class UserRoleType extends AbstractType
                 'attr' => ['max_length' => 64],
             ]
         );
-
     }
 
     /**

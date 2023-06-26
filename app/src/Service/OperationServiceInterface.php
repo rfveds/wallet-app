@@ -5,7 +5,6 @@
 
 namespace App\Service;
 
-use App\Entity\Category;
 use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
@@ -59,7 +58,7 @@ interface OperationServiceInterface
     /**
      * Find by title.
      *
-     * @param string $operationTitle
+     * @param string $operationTitle Operation title
      *
      * @return Operation|null Operation entity
      */

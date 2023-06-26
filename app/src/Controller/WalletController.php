@@ -50,12 +50,12 @@ class WalletController extends AbstractController
     /**
      * WalletController constructor.
      *
-     * @param WalletServiceInterface $walletService    Wallet service interface
-     * @param ReportServiceInterface $reportService    Report service interface
-     * @param OperationService       $operationService Operation service
-     * @param TranslatorInterface    $translator       Translator interface
+     * @param WalletServiceInterface    $walletService    Wallet service interface
+     * @param OperationServiceInterface $operationService Operation service interface
+     * @param TranslatorInterface       $translator       Translator interface
+     * @param ReportServiceInterface    $reportService    Report service interface
      */
-    public function __construct(WalletServiceInterface $walletService, OperationService $operationService, TranslatorInterface $translator, ReportServiceInterface $reportService)
+    public function __construct(WalletServiceInterface $walletService, OperationServiceInterface $operationService, TranslatorInterface $translator, ReportServiceInterface $reportService)
     {
         $this->walletService = $walletService;
         $this->operationService = $operationService;

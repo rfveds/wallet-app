@@ -91,14 +91,14 @@ class WalletService implements WalletServiceInterface
     /**
      * Find one by id.
      *
-     * @param int $wallet_id Wallet id
+     * @param int $walletId Wallet id
      *
      * @return Wallet|null Wallet entity
      *
      * @throws NonUniqueResultException
      */
-    public function findOneById(int $wallet_id): ?Wallet
+    public function findOneById(int $walletId): ?Wallet
     {
-        return $this->walletRepository->findOneById($wallet_id);
+        return $this->walletRepository->findOneById($walletId);
     }// end findOneById()
 }// end class

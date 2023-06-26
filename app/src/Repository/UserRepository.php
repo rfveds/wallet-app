@@ -109,6 +109,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Query by role that is in json format [ROLE_USER, ROLE_ADMIN].
+     *
+     * @param string $role Role
+     *
+     * @return QueryBuilder QueryBuilder
      */
     public function queryByRole(string $role): QueryBuilder
     {

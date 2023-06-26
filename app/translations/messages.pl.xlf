@@ -347,6 +347,10 @@
         <source>title.user_profile</source>
         <target>profil użytkownika</target>
       </trans-unit>
+      <trans-unit id="message.only_one_admin">
+        <source>message.only_one_admin</source>
+        <target>nie można zmienić roli ostatniego administratora</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

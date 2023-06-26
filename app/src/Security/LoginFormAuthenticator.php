@@ -55,7 +55,8 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     /**
      * Constructor.
      *
-     * @param UrlGeneratorInterface $urlGenerator Url generator
+     * @param UrlGeneratorInterface  $urlGenerator  Url generator
+     * @param EntityManagerInterface $entityManager Entity manager
      */
     public function __construct(UrlGeneratorInterface $urlGenerator, EntityManagerInterface $entityManager)
     {

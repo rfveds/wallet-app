@@ -117,6 +117,8 @@ class Report
 
     /**
      * Getter for Id.
+     *
+     * @return int|null Id
      */
     public function getId(): ?int
     {
@@ -125,6 +127,8 @@ class Report
 
     /**
      * Getter for createdAt.
+     *
+     * @return \DateTimeImmutable|null Created at date
      */
     public function getCreatedAt(): ?\DateTimeImmutable
     {
@@ -143,6 +147,8 @@ class Report
 
     /**
      * Getter for updatedAt.
+     *
+     * @return \DateTimeImmutable|null Updated at date
      */
     public function getUpdatedAt(): ?\DateTimeImmutable
     {
@@ -151,6 +157,10 @@ class Report
 
     /**
      * Setter for updatedAt.
+     *
+     * @param \DateTimeImmutable $updatedAt Updated at date
+     *
+     * @return void
      */
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
     {

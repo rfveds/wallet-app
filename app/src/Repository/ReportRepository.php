@@ -1,4 +1,7 @@
 <?php
+/**
+ * Report repository.
+ */
 
 namespace App\Repository;
 
@@ -30,6 +33,11 @@ class ReportRepository extends ServiceEntityRepository
      */
     public const PAGINATOR_ITEMS_PER_PAGE = 10;
 
+    /**
+     * ReportRepository constructor.
+     *
+     * @param ManagerRegistry $registry Manager registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Report::class);
@@ -46,6 +54,7 @@ class ReportRepository extends ServiceEntityRepository
             ->select('report')
             ->orderBy('report.title', 'DESC');
     }// end queryAll()
+
 
     /**
      * Query wallets by author.
@@ -93,6 +102,24 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find by wallet.
+     *
+     * @param Wallet $wallet Wallet entity
+     *
+     * @return array
+     */
+    public function findByWallet(Wallet $wallet): array
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('report')
+            ->andWhere('report.wallet = :wallet')
+            ->setParameter('wallet', $wallet)
+            ->orderBy('report.title', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Get or create new query builder.
      *
      * @param QueryBuilder|null $queryBuilder Query builder
@@ -103,15 +130,4 @@ class ReportRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('report');
     }// end getOrCreateQueryBuilder()
-
-    public function findByWallet(Wallet $wallet)
-    {
-        return $this->getOrCreateQueryBuilder()
-            ->select('report')
-            ->andWhere('report.wallet = :wallet')
-            ->setParameter('wallet', $wallet)
-            ->orderBy('report.title', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
 }

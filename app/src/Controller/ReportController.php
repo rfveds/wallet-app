@@ -86,8 +86,8 @@ class ReportController extends AbstractController
     /**
      * Show action.
      *
-     * @param Report  $report  Report entity
      * @param Request $request HTTP request
+     * @param Report  $report  Report entity
      *
      * @return Response HTTP response
      *
@@ -162,11 +162,11 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (null != $report->getWallet() ||
-                null != $report->getCategory() ||
-                null != $report->getTag() ||
-                null != $report->getDateTo() ||
-                null != $report->getDateFrom()) {
+            if (null !== $report->getWallet() ||
+                null !== $report->getCategory() ||
+                null !== $report->getTag() ||
+                null !== $report->getDateTo() ||
+                null !== $report->getDateFrom()) {
                 $this->reportService->save($report);
                 $this->addFlash(
                     'success',

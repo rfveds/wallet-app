@@ -82,6 +82,8 @@ class UserService implements UserServiceInterface
      *
      * @param User   $user     User entity
      * @param string $password Password
+     *
+     * @return void
      */
     public function save(User $user, string $password): void
     {
@@ -102,6 +104,8 @@ class UserService implements UserServiceInterface
      * Delete entity.
      *
      * @param User $user User entity
+     *
+     * @return void
      */
     public function delete(User $user): void
     {
@@ -128,6 +132,8 @@ class UserService implements UserServiceInterface
      *
      * @param User   $user     User entity
      * @param string $password Password
+     *
+     * @return void
      */
     public function upgradePassword(User $user, string $password): void
     {
@@ -144,6 +150,8 @@ class UserService implements UserServiceInterface
      * Edit data.
      *
      * @param User $user User entity
+     *
+     * @return void
      */
     public function editData(User $user): void
     {
@@ -152,6 +160,10 @@ class UserService implements UserServiceInterface
 
     /**
      * Edit role.
+     *
+     * @param User $user User entity
+     *
+     * @return void
      */
     public function editRole(User $user): void
     {
@@ -162,9 +174,9 @@ class UserService implements UserServiceInterface
         // if there is only one admin, do not change role
         if ($adminsCount < 2 && !in_array('ROLE_ADMIN', $user->getRoles(), true)) {
             return;
-        } else {
-            $this->userRepository->save($user, true);
         }
+
+        $this->userRepository->save($user, true);
     }// end editRole()
 
     /**
@@ -182,8 +194,8 @@ class UserService implements UserServiceInterface
     /**
      * Block user.
      *
-     * @param User $user
-     * @param bool $block
+     * @param User $user  User entity
+     * @param bool $block Block value
      *
      * @return void
      */

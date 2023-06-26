@@ -49,9 +49,11 @@ class OperationService implements OperationServiceInterface
      *
      * @param OperationRepository      $operationRepository Operation repository
      * @param PaginatorInterface       $paginator           Paginator
+     * @param WalletServiceInterface   $walletService       Wallet service
      * @param CategoryServiceInterface $categoryService     Category service
      * @param TagServiceInterface      $tagService          Tag service
-     * @param WalletServiceInterface   $walletService       Wallet service
+     *
+     * @return void
      */
     public function __construct(OperationRepository $operationRepository, PaginatorInterface $paginator, WalletServiceInterface $walletService, CategoryServiceInterface $categoryService, TagServiceInterface $tagService)
     {
@@ -97,7 +99,10 @@ class OperationService implements OperationServiceInterface
     /**
      * Create filtered list.
      *
+     * @param User  $user    User entity
      * @param array $filters Filters
+     *
+     * @return array Result
      *
      * @throws NonUniqueResultException
      */
@@ -112,6 +117,8 @@ class OperationService implements OperationServiceInterface
      * Save entity.
      *
      * @param Operation $operation Operation entity
+     *
+     * @return void
      */
     public function save(Operation $operation): void
     {
@@ -122,6 +129,8 @@ class OperationService implements OperationServiceInterface
      * Delete entity.
      *
      * @param Operation $operation Operation entity
+     *
+     * @return void
      */
     public function delete(Operation $operation): void
     {
@@ -170,6 +179,7 @@ class OperationService implements OperationServiceInterface
      * Prepare filters for the operation list.
      *
      * @param array<string, int> $filters Raw filters from request
+     * @param User               $author  Author entity
      *
      * @return array<string, object> Result array of filters
      *

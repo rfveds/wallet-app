@@ -279,6 +279,25 @@ class UserControllerTest extends WebTestCase
     }
 
     /**
+     * Test change role of last admin user.
+     */
+    public function testChangeRoleOfLastAdminUser(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value], 'last_admin@example.com');
+        $userRepository = static::getContainer()->get(UserRepository::class);
+        $this->httpClient->loginUser($adminUser);
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$adminUser->getId().'/edit-role');
+
+
+        // then
+        $adminUser = $userRepository->findOneBy(['email' => 'last_admin@example.com']);
+        $this->assertContains(UserRole::ROLE_ADMIN->value, $adminUser->getRoles());
+
+    }
+
+    /**
      * Test delete user with operation.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException

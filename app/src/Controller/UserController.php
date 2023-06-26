@@ -115,7 +115,7 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $formUserId = $form->getData()->getId();
             $currentUserId = $user->getId();
-            if ($currentUserId == $formUserId) {
+            if ($currentUserId === $formUserId) {
                 $session = new Session();
                 $session->invalidate();
             }
@@ -286,6 +286,10 @@ class UserController extends AbstractController
 
     /**
      * Block action.
+     *
+     * @param User $user User entity
+     *
+     * @return Response HTTP response
      */
     #[Route(
         '/{id}/block',
@@ -304,6 +308,10 @@ class UserController extends AbstractController
 
     /**
      * Unblock action.
+     *
+     * @param User $user User entity
+     *
+     * @return Response HTTP response
      */
     #[Route(
         '/{id}/unblock',

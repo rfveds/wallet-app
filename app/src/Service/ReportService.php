@@ -37,8 +37,8 @@ class ReportService implements ReportServiceInterface
      * ReportService constructor.
      *
      * @param ReportRepository    $reportRepository    Report repository
-     * @param OperationRepository $operationRepository Operation repository
      * @param PaginatorInterface  $paginator           Paginator
+     * @param OperationRepository $operationRepository Operation repository
      */
     public function __construct(ReportRepository $reportRepository, PaginatorInterface $paginator, OperationRepository $operationRepository)
     {
@@ -49,6 +49,11 @@ class ReportService implements ReportServiceInterface
 
     /**
      * Create paginated list.
+     *
+     * @param int  $getInt Page number
+     * @param User $user   User entity
+     *
+     * @return PaginationInterface Paginated list
      */
     public function createPaginatedList(int $getInt, User $user): PaginationInterface
     {
@@ -63,6 +68,8 @@ class ReportService implements ReportServiceInterface
      * Save report.
      *
      * @param Report $report Report entity
+     *
+     * @return void
      */
     public function save(Report $report): void
     {
@@ -73,6 +80,8 @@ class ReportService implements ReportServiceInterface
      * Delete report.
      *
      * @param Report $report Report entity
+     *
+     * @return void
      */
     public function delete(Report $report): void
     {
@@ -81,6 +90,10 @@ class ReportService implements ReportServiceInterface
 
     /**
      * Prepare data in JSON format for report.
+     *
+     * @param array $list List
+     *
+     * @return array Result
      */
     public function getReportData(array $list): array
     {
@@ -121,33 +134,35 @@ class ReportService implements ReportServiceInterface
      * Prepare filters for report.
      *
      * @param Report $report Report entity
+     *
+     * @return array Filters
      */
     public function prepareFilters(Report $report): array
     {
         $filters = [];
 
-        if (null != $report->getCategory()) {
+        if (null !== $report->getCategory()) {
             $filters['category_id'] = $report->getCategory()->getId();
         }
 
-        if (null != $report->getTag()) {
+        if (null !== $report->getTag()) {
             $filters['tag_id'] = $report->getTag()->getId();
         }
 
-        if (null != $report->getWallet()) {
+        if (null !== $report->getWallet()) {
             $filters['wallet_id'] = $report->getWallet()->getId();
         }
 
-        if (null != $report->getAuthor()) {
+        if (null !== $report->getAuthor()) {
             $filters['author_id'] = $report->getAuthor()->getId();
         }
 
-        if (null != $report->getDateFrom()) {
+        if (null !== $report->getDateFrom()) {
             // format with datetime
             $filters['operation_date_from'] = $report->getDateFrom()->format('Y-m-d');
         }
 
-        if (null != $report->getDateTo()) {
+        if (null !== $report->getDateTo()) {
             $filters['operation_date_to'] = $report->getDateTo()->format('Y-m-d');
         }
 
@@ -159,9 +174,9 @@ class ReportService implements ReportServiceInterface
      *
      * @param Wallet $wallet Wallet entity
      *
-     * @return Report|null Report entity
+     * @return array Report entity
      */
-    public function findByWallet(Wallet $wallet): ?Report
+    public function findByWallet(Wallet $wallet): array
     {
         return $this->reportRepository->findByWallet($wallet);
     }
