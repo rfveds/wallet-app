@@ -55,7 +55,6 @@ class ReportRepository extends ServiceEntityRepository
             ->orderBy('report.title', 'DESC');
     }// end queryAll()
 
-
     /**
      * Query wallets by author.
      *
@@ -106,7 +105,7 @@ class ReportRepository extends ServiceEntityRepository
      *
      * @param Wallet $wallet Wallet entity
      *
-     * @return array
+     * @return array Result
      */
     public function findByWallet(Wallet $wallet): array
     {

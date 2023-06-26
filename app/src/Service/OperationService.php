@@ -117,8 +117,6 @@ class OperationService implements OperationServiceInterface
      * Save entity.
      *
      * @param Operation $operation Operation entity
-     *
-     * @return void
      */
     public function save(Operation $operation): void
     {
@@ -129,8 +127,6 @@ class OperationService implements OperationServiceInterface
      * Delete entity.
      *
      * @param Operation $operation Operation entity
-     *
-     * @return void
      */
     public function delete(Operation $operation): void
     {

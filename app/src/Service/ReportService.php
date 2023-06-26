@@ -68,8 +68,6 @@ class ReportService implements ReportServiceInterface
      * Save report.
      *
      * @param Report $report Report entity
-     *
-     * @return void
      */
     public function save(Report $report): void
     {
@@ -80,8 +78,6 @@ class ReportService implements ReportServiceInterface
      * Delete report.
      *
      * @param Report $report Report entity
-     *
-     * @return void
      */
     public function delete(Report $report): void
     {

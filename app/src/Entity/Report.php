@@ -159,8 +159,6 @@ class Report
      * Setter for updatedAt.
      *
      * @param \DateTimeImmutable $updatedAt Updated at date
-     *
-     * @return void
      */
     public function setUpdatedAt(\DateTimeImmutable $updatedAt): void
     {

@@ -9,7 +9,6 @@ use App\Entity\Operation;
 use App\Entity\User;
 use App\Entity\Wallet;
 use App\Form\Type\WalletType;
-use App\Service\OperationService;
 use App\Service\OperationServiceInterface;
 use App\Service\ReportServiceInterface;
 use App\Service\WalletServiceInterface;
