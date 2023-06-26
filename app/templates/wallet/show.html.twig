@@ -5,38 +5,46 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ wallet.title }}</h1>
-    {% if wallet is defined and wallet|length %}
-        <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ wallet.id }}</dd>
-            <dt>{{ 'label.title'|trans }}</dt>
-            <dd>{{  wallet.title }}</dd>
-            <dt>{{ 'label.type'|trans }}</dt>
-            <dd>{{ wallet.type }}</dd>
-            <dt>{{ 'label.balance'|trans }}</dt>
-            <dd>{{ wallet.balance }}</dd>
-        </dl>
-        <p>
-            <a href="{{ url('wallet_index') }}" title="{{ 'action.back_to_list'|trans }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
-
-    {% if is_granted('EDIT', wallet) %}
-
-        <a href="{{ url('wallet_edit', {'id': wallet.id}) }}" title="{{ 'action.edit'|trans }}">
-                {{ 'action.edit'|trans }}
-            </a>
-    {% endif %}
-
-            <a href="{{ url('wallet_delete', {'id': wallet.id}) }}" title="{{ 'action.delete'|trans }}">
-                {{ 'action.delete'|trans }}
-            </a>
-
-        </p>
-    {% else %}
-        <p>
-            {{ 'message.record_not_found'|trans }}
-        </p>
-    {% endif %}
+    <div class="d-flex justify-content-center">
+        <div class="card p-3">
+            <h1 class="display-3 text-center">{{ wallet.title }}</h1>
+            {% if wallet is defined and wallet|length %}
+                <dl class="list-group list-group-horizontal py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.id'|trans }}</dt>
+                    <dd class="list-group-item">{{ wallet.id }}</dd>
+                    <dt class="list-group-item">{{ 'label.title'|trans }}</dt>
+                    <dd class="list-group-item">{{ wallet.title }}</dd>
+                </dl>
+                <dl class="list-group list-group py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.type'|trans }}</dt>
+                    <dd class="list-group-item">{{ wallet.type|trans  }}</dd>
+                    <dt class="list-group-item">{{ 'label.balance'|trans }}</dt>
+                    <dd class="list-group-item">{{ wallet.balance }}</dd>
+                </dl>
+                <div class="btn-group" role="group" aria-label="actions">
+                    <a type="button" class="btn btn-outline-info" href="{{ url('wallet_index') }}"
+                       title="{{ 'action.back_to_list'|trans }}">
+                        {{ 'action.back_to_list'|trans }}
+                    </a>
+                    {% if is_granted('EDIT', wallet) %}
+                        <a type="button" class="btn btn-outline-warning"
+                           href="{{ url('wallet_edit', {'id': wallet.id}) }}" title="{{ 'action.edit'|trans }}">
+                            {{ 'action.edit'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if is_granted('DELETE', wallet) %}
+                        <a type="button" class="btn btn-outline-danger"
+                           href="{{ url('wallet_delete', {'id': wallet.id}) }}"
+                           title="{{ 'action.delete'|trans }}">
+                            {{ 'action.delete'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>
+                    {{ 'message.record_not_found'|trans }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

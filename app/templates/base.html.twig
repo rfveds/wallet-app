@@ -5,62 +5,98 @@
     <title>{% block title %}Welcome!{% endblock %}</title>
     <link rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-    {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-
-    {% block javascripts %}
-        {{ encore_entry_script_tags('app') }}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM"
+              crossorigin="anonymous">
+        <link rel="stylesheet" href="{{ asset('css/styles.css') }}">
     {% endblock %}
 </head>
 <body>
 <div>
     {% include 'default/_flash_messages.html.twig' %}
 </div>
-<nav>
-
-    <a href="{{ path('homepage') }}">
-        {{ 'title.homepage'|trans }}
-    </a>
-
+<nav class="my-2">
+    <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="{{ path('homepage') }}">
+                {{ 'title.homepage'|trans }}
+            </a>
+        </li>
     {% if is_granted('ROLE_USER') %}
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('operation_index') }}">
+                {{ 'title.operation_list'|trans }}
+            </a>
+        </li>
 
-    <a href="{{ path('operation_index') }}">
-        {{ 'title.operation_list'|trans }}
-    </a>
-    <a href="{{ path('wallet_index') }}">
-        {{ 'title.wallet_list'|trans }}
-    </a>
-    <a href="{{ path('tag_index') }}">
-        {{ 'title.tag_list'|trans }}
-    </a>
-    <a href="{{ path('category_index') }}">
-        {{ 'title.category_list'|trans }}
-    </a>
-    <a href="{{ path('report_index') }}">
-        {{ 'title.report_list'|trans }}
-    </a>
-    <a href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'title.user_profile'|trans }}">
-        {{ 'title.user_profile'|trans }}
-    </a>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('wallet_index') }}">
+                {{ 'title.wallet_list'|trans }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('tag_index') }}">
+                {{ 'title.tag_list'|trans }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('category_index') }}">
+                {{ 'title.category_list'|trans }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('report_index') }}">
+                {{ 'title.report_list'|trans }}
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('user_show', {'id': app.user.id}) }}" title="{{ 'title.user_profile'|trans }}">
+                {{ 'title.user_profile'|trans }}
+            </a>
+        </li>
     {% endif %}
 
 
     {% if is_granted('ROLE_ADMIN') %}
-        <a href="{{ path('user_index') }}">
-            {{ 'title.user_list'|trans }}
-        </a>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('user_index') }}">
+                {{ 'title.user_list'|trans }}
+            </a>
+        </li>
     {% endif %}
 
     {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-        <a href="{{ url('app_logout') }}">{{ 'action.logout'|trans }}</a>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ path('app_logout') }}">
+                {{ 'action.logout'|trans }}
+            </a>
+        </li>
     {% else %}
-        <a href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('app_login') }}">{{ 'action.login'|trans }}</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ url('app_register') }}">{{ 'action.register'|trans }}</a>
+        </li>
     {% endif %}
+    </ul>
 </nav>
 
+<main class="container align-content-center py-4 mt-5">
+    {% block body %}{% endblock %}
+</main>
 
-{% block body %}{% endblock %}
+{% block javascripts %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+            crossorigin="anonymous"></script>
+    <script src="{{ asset('js/scripts.js') }}"></script>
+{% endblock %}
 </body>
 </html>

@@ -1,0 +1,11 @@
+{# templates/bundles/TwigBundle/Exception/error403.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Page not found</h1>
+
+    <p>
+        {{ text.forbidden_content }}
+        <a href="{{ path('homepage') }}"></a>.
+    </p>
+{% endblock %}

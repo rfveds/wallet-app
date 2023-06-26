@@ -6,17 +6,29 @@
 
 {% block body %}
 
-    <h1>{{ 'title.report_list'|trans }}</h1>
-    <a href="{{ url('report_create') }}" title="{{ 'action.create'|trans }}">
-        {{ 'action.create'|trans }}
-    </a>
+    <header class="d-flex justify-content-center align-content-center pb-4">
+
+        <div class="mx-3">
+            <h1 class="display-1">{{ 'title.report_list'|trans }}</h1>
+        </div>
+
+        <div class="d-flex h-25 align-self-center mx-3">
+            <a href="{{ url('report_create') }}"
+               title="{{ 'action.create'|trans }}"
+               class=" btn btn-outline-info mt-3"
+            >
+                {{ 'action.create'|trans }}
+            </a>
+        </div>
+
+    </header>
     {% if pagination is defined and pagination.items|length %}
 
         <div class="navigation text-center">
             {{ knp_pagination_render(pagination) }}
         </div>
 
-        <table class="table table-striped">
+        <table class="table">
             <thead>
             <tr>
                 <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'report.id') }}</th>
@@ -37,9 +49,11 @@
                     <td>{{ report.author.email }}</td>
                     <td>
                         {% if is_granted('VIEW', report ) %}
-                        <a href="{{ url('report_show', {id: report.id}) }}" title="{{ 'action.show'|trans }}">
-                            {{ 'action.show'|trans }}
-                        </a>
+                            <a href="{{ url('report_show', {id: report.id}) }}" title="{{ 'action.show'|trans }}">
+                                <button class="btn btn-sm btn-outline-dark">
+                                    {{ 'action.show'|trans }}
+                                </button>
+                            </a>
                         {% endif %}
                     </td>
                 </tr>

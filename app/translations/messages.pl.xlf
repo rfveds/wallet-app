@@ -90,10 +90,6 @@
         <source>label.roles</source>
         <target>role</target>
       </trans-unit>
-      <trans-unit id="label.action">
-        <source>label.action</source>
-        <target>??????</target>
-      </trans-unit>
       <trans-unit id="title.admin">
         <source>title.admin</source>
         <target>admin</target>
@@ -148,7 +144,7 @@
       </trans-unit>
       <trans-unit id="label.balance">
         <source>label.balance</source>
-        <target>balans</target>
+        <target>saldo</target>
       </trans-unit>
       <trans-unit id="label.user">
         <source>label.user</source>
@@ -350,6 +346,50 @@
       <trans-unit id="message.only_one_admin">
         <source>message.only_one_admin</source>
         <target>nie można zmienić roli ostatniego administratora</target>
+      </trans-unit>
+      <trans-unit id="label.admin">
+        <source>label.admin</source>
+        <target>administrator</target>
+      </trans-unit>
+      <trans-unit id="label.none">
+        <source>label.none</source>
+        <target>---</target>
+      </trans-unit>
+      <trans-unit id="text.logged_as">
+        <source>text.logged_as</source>
+        <target>jesteś zalogowany jako</target>
+      </trans-unit>
+      <trans-unit id="cash">
+        <source>cash</source>
+        <target>gotówka</target>
+      </trans-unit>
+      <trans-unit id="bank">
+        <source>bank</source>
+        <target>bank</target>
+      </trans-unit>
+      <trans-unit id="credit_card">
+        <source>credit_card</source>
+        <target>karta kredytowa</target>
+      </trans-unit>
+      <trans-unit id="other">
+        <source>other</source>
+        <target>inny</target>
+      </trans-unit>
+      <trans-unit id="label.type.cash">
+        <source>label.type.cash</source>
+        <target>gotówka</target>
+      </trans-unit>
+      <trans-unit id="label.type.bank">
+        <source>label.type.bank</source>
+        <target>bank</target>
+      </trans-unit>
+      <trans-unit id="label.type.credit_card">
+        <source>label.type.credit_card</source>
+        <target>karta kredytowa</target>
+      </trans-unit>
+      <trans-unit id="label.type.other">
+        <source>label.type.other</source>
+        <target>inny</target>
       </trans-unit>
     </body>
   </file>

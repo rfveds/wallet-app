@@ -5,28 +5,40 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.tag_details'|trans({'%id%': tag.id|default('')}) }}</h1>
-    {% if tag is defined and tag|length %}
-        <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ tag.id }}</dd>
-            <dt>{{ 'label.title'|trans }}</dt>
-            <dd>{{  tag.title }}</dd>
-        </dl>
-        <p>
-            <a href="{{ url('tag_index') }}" title="{{ 'action.back_to_list'|trans }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
-            <a href="{{ url('tag_edit', {'id': tag.id}) }}" title="{{ 'action.edit'|trans }}">
-                {{ 'action.edit'|trans }}
-            </a>
-            <a href="{{ url('tag_delete', {'id': tag.id}) }}" title="{{ 'action.delete'|trans }}">
-                {{ 'action.delete'|trans }}
-            </a>
-        </p>
-    {% else %}
-        <p>
-            {{ 'message.record_not_found'|trans }}
-        </p>
-    {% endif %}
+    <div class="d-flex justify-content-center">
+        <div class="card p-3">
+            <h1 class="text-center display-3">{{ tag.title }}</h1>
+            {% if tag is defined and tag|length %}
+                <dl class="list-group list-group-horizontal py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.id'|trans }}</dt>
+                    <dd class="list-group-item">{{ tag.id }}</dd>
+                    <dt class="list-group-item">{{ 'label.title'|trans }}</dt>
+                    <dd class="list-group-item">{{ tag.title }}</dd>
+                </dl>
+                <div class="btn-group" role="group" aria-label="actions">
+                    <a type="button" class="btn btn-outline-info" href="{{ url('tag_index') }}"
+                       title="{{ 'action.back_to_list'|trans }}">
+                        {{ 'action.back_to_list'|trans }}
+                    </a>
+                    {% if is_granted('EDIT', tag) %}
+                        <a type="button" class="btn btn-outline-warning"
+                           href="{{ url('tag_edit', {'id': tag.id}) }}" title="{{ 'action.edit'|trans }}">
+                            {{ 'action.edit'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if is_granted('DELETE', tag) %}
+                        <a type="button" class="btn btn-outline-danger"
+                           href="{{ url('tag_delete', {'id': tag.id}) }}"
+                           title="{{ 'action.delete'|trans }}">
+                            {{ 'action.delete'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>
+                    {{ 'message.record_not_found'|trans }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

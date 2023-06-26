@@ -13,24 +13,39 @@ parameters:
 {% endblock %}
 
 {% block body %}
-    <h1>{{ page_title }}</h1>
-    {{ form_start(form) }}
-    {% if false == form.vars.valid %}
-        {% include 'default/_single_alert_message.html.twig' with {
-            type: 'danger',
-            message: 'message.form_error'|trans,
-        }%}
-    {% endif %}
-    {{ form_widget(form) }}
-    <div>
-        <input id="form--button" type="submit" value="{{ submit_label }}"/>
-    </div>
-    {% if back_to_list_path|default(false) %}
-        <div>
-            <a href="{{ url(back_to_list_path) }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-lg-6 col-md-10 col-sm-12 mb-3">
+                <h1 class="display-5 text-center mb-5">{{ page_title }}</h1>
+
+                {{ form_start(form) }}
+                {% if false == form.vars.valid %}
+                    {% include 'default/_single_alert_message.html.twig' with {
+                        type: 'danger',
+                        message: 'message.form_error'|trans,
+                    } %}
+                {% endif %}
+                {{ form_widget(form) }}
+
+                <div class="container d-flex justify-content-around">
+                    {% if back_to_list_path|default(false) %}
+                        <div class="my-3">
+                            <a class="btn  btn-outline-info" href="{{ url(back_to_list_path) }}">
+                                {{ 'action.back_to_list'|trans }}
+                            </a>
+                        </div>
+                    {% endif %}
+
+                    <div class="my-3">
+                        <input
+                                class="btn btn-outline-info btn-block"
+                                id="form--button" type="submit" value="{{ submit_label }}"
+                        />
+                    </div>
+                </div>
+
+                {{ form_end(form) }}
+            </div>
         </div>
-    {% endif %}
-    {{ form_end(form) }}
+    </div>
 {% endblock %}

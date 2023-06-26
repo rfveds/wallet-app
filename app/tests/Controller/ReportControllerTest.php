@@ -160,12 +160,43 @@ class ReportControllerTest extends WebTestCase
     public function testCreateReport(): void
     {
         // given
-        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report@example.com');
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_with_no_value@example.com');
+        $this->httpClient->loginUser($user);
+        $reportTitle = 'Test create report';
+        $reportRepository = static::getContainer()->get(ReportRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'utwórz',
+            ['report' => [
+                'title' => $reportTitle,
+            ],
+            ]);
+
+        // then
+        $savedReport = $reportRepository->findOneBy(['title' => $reportTitle]);
+        $this->assertNull($savedReport);
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(200, $result->getStatusCode());
+    }
+
+    /**
+     * Test create report with category.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateReportWithCategory(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_cat@example.com');
         $this->httpClient->loginUser($user);
         $reportTitle = 'Test create report';
         $reportCategory = $this->createCategory('Test Category Report Create', $user);
-        $reportTag = $this->createTag('Test Tag Report Create', $user);
-        $reportWallet = $this->createWallet('Test Wallet Report Create', $user);
         $reportRepository = static::getContainer()->get(ReportRepository::class);
         $this->httpClient->request(
             'GET',
@@ -178,10 +209,78 @@ class ReportControllerTest extends WebTestCase
             ['report' => [
                 'title' => $reportTitle,
                 'category' => $reportCategory->getId(),
-                'tag' => $reportTag->getId(),
-                'wallet' => $reportWallet->getId(),
             ],
         ]);
+
+        // then
+        $savedReport = $reportRepository->findOneBy(['title' => $reportTitle]);
+        $this->assertEquals($reportTitle, $savedReport->getTitle());
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
+     * Test create report with wallet.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateReportWithWallet(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_wallet@example.com');
+        $this->httpClient->loginUser($user);
+        $reportTitle = 'Test create report';
+        $reportWallet = $this->createWallet('Test Wallet Report Create', $user);
+        $reportRepository = static::getContainer()->get(ReportRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'utwórz',
+            ['report' => [
+                'title' => $reportTitle,
+                'wallet' => $reportWallet->getId(),
+            ],
+            ]);
+
+        // then
+        $savedReport = $reportRepository->findOneBy(['title' => $reportTitle]);
+        $this->assertEquals($reportTitle, $savedReport->getTitle());
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
+     * Test create report with tag.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateReportWithTag(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_tag@example.com');
+        $this->httpClient->loginUser($user);
+        $reportTitle = 'Test create report';
+        $reportTag = $this->createTag('Test Tag Report Create', $user);
+        $reportRepository = static::getContainer()->get(ReportRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'utwórz',
+            ['report' => [
+                'title' => $reportTitle,
+                'tag' => $reportTag->getId(),
+            ],
+            ]);
 
         // then
         $savedReport = $reportRepository->findOneBy(['title' => $reportTitle]);

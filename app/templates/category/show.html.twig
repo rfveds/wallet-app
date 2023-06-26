@@ -5,32 +5,46 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ category.title|default('') }}</h1>
-    {% if category is defined and category|length %}
-        <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ category.id }}</dd>
-            <dt>{{ 'label.created_at'|trans }}</dt>
-            <dd>{{ category.createdAt|date('Y/m/d') }}</dd>
-            <dt>{{ 'label.updated_at'|trans }}</dt>
-            <dd>{{ category.updatedAt|date('Y/m/d') }}</dd>
-            <dt>{{ 'label.title'|trans }}</dt>
-            <dd>{{  category.title }}</dd>
-        </dl>
-        <p>
-            <a href="{{ url('category_index') }}" title="{{ 'action.back_to_list'|trans }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
-            <a href="{{ url('category_edit', {'id': category.id}) }}" title="{{ 'action.edit'|trans }}">
-                {{ 'action.edit'|trans }}
-            </a>
-            <a href="{{ url('category_delete', {'id': category.id}) }}" title="{{ 'action.delete'|trans }}">
-                {{ 'action.delete'|trans }}
-            </a>
-        </p>
-    {% else %}
-        <p>
-            {{ 'message.record_not_found'|trans }}
-        </p>
-    {% endif %}
+    <div class="d-flex justify-content-center">
+        <div class="card p-3">
+            <h1 class="text-center display-3">{{ category.title }}</h1>
+            {% if category is defined and category|length %}
+                <dl class="list-group list-group-horizontal py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.id'|trans }}</dt>
+                    <dd class="list-group-item">{{ category.id }}</dd>
+                    <dt class="list-group-item">{{ 'label.title'|trans }}</dt>
+                    <dd class="list-group-item">{{ category.title }}</dd>
+                </dl>
+                <dl class="list-group  py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.created_at'|trans }}</dt>
+                    <dd class="list-group-item">{{ category.createdAt|date('Y/m/d') }}</dd>
+                    <dt class="list-group-item">{{ 'label.updated_at'|trans }}</dt>
+                    <dd class="list-group-item">{{ category.updatedAt|date('Y/m/d') }}</dd>
+                </dl>
+                <div class="btn-group" role="group" aria-label="actions">
+                    <a type="button" class="btn btn-outline-info" href="{{ url('category_index') }}"
+                       title="{{ 'action.back_to_list'|trans }}">
+                        {{ 'action.back_to_list'|trans }}
+                    </a>
+                    {% if is_granted('EDIT', category) %}
+                        <a type="button" class="btn btn-outline-warning"
+                           href="{{ url('category_edit', {'id': category.id}) }}" title="{{ 'action.edit'|trans }}">
+                            {{ 'action.edit'|trans }}
+                        </a>
+                    {% endif %}
+                    {% if is_granted('DELETE', category) %}
+                        <a type="button" class="btn btn-outline-danger"
+                           href="{{ url('category_delete', {'id': category.id}) }}"
+                           title="{{ 'action.delete'|trans }}">
+                            {{ 'action.delete'|trans }}
+                        </a>
+                    {% endif %}
+                </div>
+            {% else %}
+                <p>
+                    {{ 'message.record_not_found'|trans }}
+                </p>
+            {% endif %}
+        </div>
+    </div>
 {% endblock %}

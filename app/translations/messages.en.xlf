@@ -346,6 +346,35 @@
         <source>title.user_profile</source>
         <target>user's prfile</target>
       </trans-unit>
+      <trans-unit id="label.admin">
+        <source>label.admin</source>
+        <target>admin</target>
+      </trans-unit>
+      <trans-unit id="label.none">
+        <source>label.none</source>
+        <target>---</target>
+      </trans-unit>
+      <trans-unit id="text.logged_as">
+        <source>text.logged_as</source>
+        <target>you are logged in as</target>
+      </trans-unit>
+
+      <trans-unit id="label.type.cash">
+        <source>label.type.cash</source>
+        <target>cash</target>
+      </trans-unit>
+      <trans-unit id="label.type.bank">
+        <source>label.type.bank</source>
+        <target>bank</target>
+      </trans-unit>
+      <trans-unit id="label.type.credit_card">
+        <source>label.type.credit_card</source>
+        <target>credit card</target>
+      </trans-unit>
+      <trans-unit id="label.type.other">
+        <source>label.type.other</source>
+        <target>other</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

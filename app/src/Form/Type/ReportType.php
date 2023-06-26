@@ -102,8 +102,8 @@ class ReportType extends AbstractType
                 'choice_label' => function ($wallet) {
                     return $wallet->getTitle();
                 },
-                'label' => 'label_wallet',
-                'placeholder' => 'label_none',
+                'label' => 'label.wallet',
+                'placeholder' => 'label.none',
                 'required' => false,
             ]
         );
