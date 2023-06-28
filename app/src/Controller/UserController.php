@@ -232,7 +232,10 @@ class UserController extends AbstractController
             $admins = $this->userService->countAdmins();
             // if there is only one admin in database, do not allow change role to user
             if ($admins < 2 && !in_array('ROLE_ADMIN', $form->get('roles')->getData(), true)) {
-                $this->addFlash('danger', 'message.only_one_admin');
+                $this->addFlash(
+                    'danger',
+                    $this->translator->trans('message.only_one_admin')
+                );
 
                 return $this->redirectToRoute('user_index');
             }

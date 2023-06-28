@@ -112,6 +112,11 @@ class UserService implements UserServiceInterface
      */
     public function delete(User $user): void
     {
+        $reports = $this->reportService->findByUser($user);
+        foreach ($reports as $report) {
+            $this->reportService->delete($report);
+        }
+
         $operations = $this->operationService->findByUser($user);
         foreach ($operations as $operation) {
             $this->operationService->delete($operation);
@@ -125,11 +130,6 @@ class UserService implements UserServiceInterface
         $categories = $this->categoryService->findByUser($user);
         foreach ($categories as $category) {
             $this->categoryService->delete($category);
-        }
-
-        $reports = $this->reportService->findByUser($user);
-        foreach ($reports as $report) {
-            $this->reportService->delete($report);
         }
 
         $this->userRepository->remove($user, true);

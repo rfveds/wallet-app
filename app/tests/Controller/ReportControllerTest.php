@@ -230,7 +230,7 @@ class ReportControllerTest extends WebTestCase
         // given
         $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_wallet@example.com');
         $this->httpClient->loginUser($user);
-        $reportTitle = 'Test create report';
+        $reportTitle = 'Test create report wallet';
         $reportWallet = $this->createWallet('Test Wallet Report Create', $user);
         $reportRepository = static::getContainer()->get(ReportRepository::class);
         $this->httpClient->request(
@@ -265,7 +265,7 @@ class ReportControllerTest extends WebTestCase
         // given
         $user = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_report_tag@example.com');
         $this->httpClient->loginUser($user);
-        $reportTitle = 'Test create report';
+        $reportTitle = 'Test create report tag';
         $reportTag = $this->createTag('Test Tag Report Create', $user);
         $reportRepository = static::getContainer()->get(ReportRepository::class);
         $this->httpClient->request(

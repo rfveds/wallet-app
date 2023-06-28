@@ -206,21 +206,24 @@ class OperationController extends AbstractController
             $amount = intval($amount);
             $balance = intval($balance);
 
+
             if (($balance + $amount) <= 0) {
                 $this->addFlash(
                     'warning',
                     $this->translator->trans('message.insufficient_funds')
                 );
-            } else {
-                $wallet->setBalance($balance + $amount);
-                $operation->setCurrentBalance($wallet->getBalance());
-                $this->operationService->save($operation);
 
-                $this->addFlash(
-                    'success',
-                    $this->translator->trans('message.created_successfully')
-                );
+                return $this->redirectToRoute('operation_index');
             }
+
+            $wallet->setBalance($balance + $amount);
+            $operation->setCurrentBalance($wallet->getBalance());
+            $this->operationService->save($operation);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
 
             return $this->redirectToRoute('operation_index');
         }

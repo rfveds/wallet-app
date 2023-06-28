@@ -7,12 +7,14 @@ namespace App\Entity;
 
 use App\Repository\WalletRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class Wallet.
  */
 #[ORM\Entity(repositoryClass: WalletRepository::class)]
+#[UniqueEntity(fields: ['title'])]
 class Wallet
 {
     /**

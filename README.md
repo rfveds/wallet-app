@@ -1,27 +1,27 @@
 # WalletApp
 
-The application that I writting for a course assignment at university using Test Driven Development approach.
+The application that I wrote for a course assignment at university using Test Driven Development approach.
 
 ## Features that will be implemented
 
 ### Wallet
-- [ ] CRUD for Wallet
-- [ ] creating and managing wallets (cards, cash, etc.)
-- [ ] recording inflows and outflows (account balance cannot drop below zero)
-### Transactions
-- [ ] CRUD for Transactions
-- [ ] searching for transactions
-- [ ] viewing a list of transactions within a specified period along with the balance information
+- [x] CRUD for Wallet
+- [x] creating and managing wallets (cards, cash, etc.)
+- [x] recording inflows and outflows (account balance cannot drop below zero)
+### Operation
+- [x] CRUD for operations
+- [x] searching for operations by title
+- [x] viewing list of operations within a specified period
 ### Reports
-- [ ] CRUD for Reports
-- [ ] creating reports based on period, category, tag, etc.
-- [ ] creating charts for reports
+- [x] CRUD for Reports
+- [x] creating reports based on period, category, tag, etc.
+- [x] creating charts for reports
 ### Categories
-- [ ] CRUD for Categories, categorizing transactions in the wallet
-- [ ] filtering the list of transactions by categories
+- [x] CRUD for Categories, categorizing operations in the wallet
+- [x] filtering the list of operations by categories
 ### Tags
-- [ ] CRUD for Tags, tagging expenses
-- [ ] filtering the list of expenses by tags
+- [x] CRUD for Tags, tagging operations
+- [x] filtering the list of operations by tags
 
 ## Users
 
@@ -32,14 +32,21 @@ The application that I writting for a course assignment at university using Test
 ### Logged in user:
 Guest user +
 * Editing their own information, deleting their account, editing their password
-* Creating their own wallets, recording expenses
-* Creating their own reports, categories, and tags, and editing them. Users cannot delete reports, categories, and tags created by other people.
-* The user can create and edit their own reports, categories, and tags visible only to them.
+* Creating their own wallets, recording operations
+* Creating their own reports, categories, and tags, and editing them.
+* Users cannot delete reports, categories, and tags created by other people.
+* User can create and edit their own reports, categories, and tags visible only to them.
 
 ### Administrator:
 Logged in user +
-* Managing other users -> changing passwords, changing information + changing to an administrator, revoking permissions, inability to revoke permissions from the last administrator + blocking user accounts
-* The administrator does not have access to the wallets, transactions, and reports of other users.
+* Managing other users 
+  * changing passwords, 
+  * changing information
+  * changing roles 
+  * revoking permissions
+  * inability to revoke admin permissions from the last administrator 
+  * blocking user accounts
+* Administrator does not have access to the wallets, transactions, and reports of other users.
 * Basic categories and tags created by the administrator are visible to all users, only the administrator can modify them.
 
 ## Database schema
