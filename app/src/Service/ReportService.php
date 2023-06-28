@@ -105,12 +105,17 @@ class ReportService implements ReportServiceInterface
 
         $balanceHistoryData = [];
         foreach ($list as $operation) {
+            var_dump($operation->getTitle());
+            var_dump($operation->getCurrentBalance()); // tu sie wypierdala
+            echo '<br>';
+            var_dump($operation->getAmount());
+            echo '<br>';
             $balanceHistoryData[] = (float) $operation->getCurrentBalance();
         }
 
         $labelData = [];
         foreach ($list as $operation) {
-            $labelData[] = $operation->getCreatedAt()->format('Y-m-d');
+            $labelData[] = $operation->getUpdatedAt()->format('Y-m-d: H:i:s');
         }
 
         $amountDataJSON = json_encode($amountData);
@@ -175,5 +180,17 @@ class ReportService implements ReportServiceInterface
     public function findByWallet(Wallet $wallet): array
     {
         return $this->reportRepository->findByWallet($wallet);
+    }
+
+    /**
+     * Find by user.
+     *
+     * @param User $user User entity
+     *
+     * @return array Report entity
+     */
+    public function findByUser(User $user): array
+    {
+        return $this->reportRepository->findByUser($user);
     }
 }// end class

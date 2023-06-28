@@ -66,4 +66,13 @@ interface ReportServiceInterface
      * @return array Result
      */
     public function findByWallet(Wallet $wallet): array;
+
+    /**
+     * Find by user.
+     *
+     * @param User $user User entity
+     *
+     * @return array Result
+     */
+    public function findByUser(User $user): array;
 }// end interface

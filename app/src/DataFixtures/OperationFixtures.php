@@ -26,20 +26,14 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             return;
         }
 
-        $this->createMany(100, 'operations', function () {
+        $this->createMany(50, 'operations', function ($i) {
             $operation = new Operation();
             $operation->setTitle($this->faker->word);
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
-            $operation->setCreatedAt(
-                \DateTimeImmutable::createFromMutable(
-                    $this->faker->dateTimeBetween('-30 days', '-10 days')
-                )
-            );
-            $operation->setUpdatedAt(
-                \DateTimeImmutable::createFromMutable(
-                    $this->faker->dateTimeBetween('-9 days', '-1 days')
-                )
-            );
+            $date = \DateTimeImmutable::createFromMutable(
+                $this->faker->dateTimeBetween('-50 days', '-'. 50 - $i.'days'));
+            $operation->setCreatedAt($date);
+            $operation->setUpdatedAt($date);
 
             /** @var Category $category */
             $category = $this->getRandomReference('categories');
@@ -48,8 +42,8 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             /** @var Wallet $wallet */
             $wallet = $this->getRandomReference('wallets');
             $operation->setWallet($wallet);
+            $operation->setCurrentBalance($wallet->getBalance() + $operation->getAmount());
             $wallet->setBalance($wallet->getBalance() + $operation->getAmount());
-            $operation->setCurrentBalance($wallet->getBalance());
 
             /** @var Tag $tag */
             $tags = $this->getRandomReferences('tags', $this->faker->numberBetween(0, 5));

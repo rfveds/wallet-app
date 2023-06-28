@@ -109,6 +109,13 @@ class CategoryController extends AbstractController
         $category = new Category();
         $user = $this->getUser();
         $category->setAuthor($user);
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $category->setUserOrAdmin('admin');
+        }else{
+            $category->setUserOrAdmin('user');
+        }
+
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 

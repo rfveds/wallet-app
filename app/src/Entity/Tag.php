@@ -61,6 +61,15 @@ class Tag
     private ?string $title = null;
 
     /**
+     * User or admin string.
+     *
+     * @var string User or admin string
+     */
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $userOrAdmin;
+
+
+    /**
      * Slug.
      *
      * @var string|null Slug
@@ -169,4 +178,24 @@ class Tag
     {
         $this->author = $author;
     }// end setAuthor()
+
+    /**
+     * Getter for userOrAdmin.
+     *
+     * @return string|null User or admin string
+     */
+    public function getUserOrAdmin(): ?string
+    {
+        return $this->userOrAdmin;
+    }
+
+    /**
+     * Setter for userOrAdmin.
+     *
+     * @param string $userOrAdmin User or admin string
+     */
+    public function setUserOrAdmin(string $userOrAdmin): void
+    {
+        $this->userOrAdmin = $userOrAdmin;
+    }
 }

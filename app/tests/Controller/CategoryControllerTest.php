@@ -95,6 +95,7 @@ class CategoryControllerTest extends WebTestCase
 
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test 2 category');
+        $expectedCategory->setUserOrAdmin('admin');
         $expectedCategory->setAuthor($adminUser);
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($expectedCategory);
@@ -158,6 +159,7 @@ class CategoryControllerTest extends WebTestCase
         $this->httpClient->loginUser($unauthorizedUser);
         $category = new Category();
         $category->setTitle('TestEditAnAuthCategory');
+        $category->setUserOrAdmin('admin');
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $category->setUpdatedAt(new \DateTimeImmutable('now'));
         $category->setAuthor($user);
@@ -186,6 +188,7 @@ class CategoryControllerTest extends WebTestCase
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $testCategory = new Category();
         $testCategory->setTitle('edited Category');
+        $testCategory->setUserOrAdmin('admin');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $testCategory->setSlug('edited-category');
@@ -226,6 +229,7 @@ class CategoryControllerTest extends WebTestCase
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $testCategory = new Category();
         $testCategory->setTitle('TestCategoryCreated');
+        $testCategory->setUserOrAdmin('admin');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $testCategory->setAuthor($user);
@@ -257,6 +261,7 @@ class CategoryControllerTest extends WebTestCase
         $categoryRepository = static::getContainer()->get(CategoryRepository::class);
         $testCategory = new Category();
         $testCategory->setTitle('TestCategoryCreated2');
+        $testCategory->setUserOrAdmin('admin');
         $testCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $testCategory->setUpdatedAt(new \DateTimeImmutable('now'));
         $testCategory->setAuthor($user);

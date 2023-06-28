@@ -84,6 +84,11 @@ class TagsDataTransformer implements DataTransformerInterface
                     $tag = new Tag();
                     $tag->setTitle($tagTitle);
                     $tag->setAuthor($this->security->getUser());
+                    if ($this->security->isGranted('ROLE_ADMIN')) {
+                        $tag->setUserOrAdmin('admin');
+                    } else {
+                        $tag->setUserOrAdmin('user');
+                    }
 
                     $this->tagService->save($tag);
                 }

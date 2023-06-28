@@ -42,6 +42,11 @@ class UserService implements UserServiceInterface
     private CategoryServiceInterface $categoryService;
 
     /**
+     * Report service.
+     */
+    private ReportServiceInterface $reportService;
+
+    /**
      * UserService constructor.
      *
      * @param UserRepository              $userRepository   User repository
@@ -51,7 +56,7 @@ class UserService implements UserServiceInterface
      * @param OperationServiceInterface   $operationService Operation service
      * @param WalletServiceInterface      $walletService    Wallet service
      */
-    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, CategoryServiceInterface $categoryService, OperationServiceInterface $operationService, WalletServiceInterface $walletService)
+    public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, CategoryServiceInterface $categoryService, OperationServiceInterface $operationService, WalletServiceInterface $walletService, ReportServiceInterface $reportService)
     {
         $this->userRepository = $userRepository;
         $this->paginator = $paginator;
@@ -59,6 +64,7 @@ class UserService implements UserServiceInterface
         $this->operationService = $operationService;
         $this->walletService = $walletService;
         $this->categoryService = $categoryService;
+        $this->reportService = $reportService;
     }// end __construct()
 
     /**
@@ -118,6 +124,11 @@ class UserService implements UserServiceInterface
         $categories = $this->categoryService->findByUser($user);
         foreach ($categories as $category) {
             $this->categoryService->delete($category);
+        }
+
+        $reports = $this->reportService->findByUser($user);
+        foreach ($reports as $report) {
+            $this->reportService->delete($report);
         }
 
         $this->userRepository->remove($user, true);

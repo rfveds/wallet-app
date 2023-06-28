@@ -51,7 +51,9 @@ class TagRepository extends ServiceEntityRepository
      */
     public function queryAll(): QueryBuilder
     {
-        return $this->getOrCreateQueryBuilder()->orderBy('tag.title', 'DESC');
+        return $this->getOrCreateQueryBuilder()
+            ->select('tag', 'partial tag.{id, title, userOrAdmin}')
+            ->orderBy('tag.title', 'DESC');
     }// end queryAll()
 
     /**
@@ -65,7 +67,9 @@ class TagRepository extends ServiceEntityRepository
      */
     public function findOneByTitle(string $title): ?Tag
     {
-        $queryBuilder = $this->createQueryBuilder('tag')->where('tag.title = :title')->setParameter('title', $title);
+        $queryBuilder = $this->createQueryBuilder('tag')
+            ->where('tag.title = :title')
+            ->setParameter('title', $title);
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }// end findOneByTitle()

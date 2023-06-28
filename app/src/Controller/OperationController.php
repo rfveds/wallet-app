@@ -133,13 +133,16 @@ class OperationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $wallet = $form->get('wallet')->getData();
-            $amount = $form->get('amount')->getData();
-            $balance = $wallet->getBalance();
-            if (($balance + $amount) < $balance) {
+            $amount =  $form->get('amount')->getData();
+            $balance =   $wallet->getBalance();
+
+            if(($balance + $amount) < $balance) {
                 $this->addFlash(
                     'warning',
                     'message.insufficient_funds'
                 );
+
+                return $this->redirectToRoute('operation_index');
             } else {
                 $wallet->setBalance($balance + $amount);
                 $operation->setCurrentBalance($wallet->getBalance());
@@ -149,9 +152,9 @@ class OperationController extends AbstractController
                     'success',
                     $this->translator->trans('message.created_successfully')
                 );
-            }
 
-            return $this->redirectToRoute('operation_index');
+                return $this->redirectToRoute('operation_index');
+            }
         }// end if
 
         return $this->render(
@@ -191,15 +194,28 @@ class OperationController extends AbstractController
                 ),
             ]
         );
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->operationService->save($operation);
+            $wallet = $form->get('wallet')->getData();
+            $amount = $form->get('amount')->getData();
+            $balance = $wallet->getBalance();
+            if (($balance + $amount) < $balance) {
+                $this->addFlash(
+                    'warning',
+                    'message.insufficient_funds'
+                );
+            } else {
+                $wallet->setBalance($balance + $amount);
+                $operation->setCurrentBalance($wallet->getBalance());
+                $this->operationService->save($operation);
 
-            $this->addFlash(
-                'success',
-                $this->translator->trans('message.updated_successfully')
-            );
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('message.created_successfully')
+                );
+            }
 
             return $this->redirectToRoute('operation_index');
         }

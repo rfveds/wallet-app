@@ -9,49 +9,54 @@
     <div class="card p-3">
     <h1 class="text-center display-3">{{ report.title }}</h1>
     {% if report is defined and report|length %}
-        <dl>
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ report.id }}</dd>
+        <dl class="list-group list-group-horizontal py-2 px-2" style="border: none">
+{#            <dt class="list-group-item">{{ 'label.id'|trans }}</dt>#}
+{#            <dd class="list-group-item">{{ report.id }}</dd>#}
             {% if report.dateFrom %}
-                <dt>{{ 'label.date_from'|trans }}</dt>
-                <dd>{{ report.dateFrom|date('Y/m/d') }}</dd>
+                <dt class="list-group-item">{{ 'label.date_from'|trans }}</dt>
+                <dd class="list-group-item">{{ report.dateFrom|date('Y/m/d') }}</dd>
             {% endif %}
             {% if report.dateTo %}
-                <dt>{{ 'label.date_to'|trans }}</dt>
-                <dd>{{ report.dateTo|date('Y/m/d') }}</dd>
+                <dt class="list-group-item">{{ 'label.date_to'|trans }}</dt>
+                <dd class="list-group-item">{{ report.dateTo|date('Y/m/d') }}</dd>
             {% endif %}
-            <dt>{{ 'label.title'|trans }}</dt>
-            <dd>{{ report.title }}</dd>
+            <dt class="list-group-item">{{ 'label.title'|trans }}</dt>
+            <dd class="list-group-item">{{ report.title }}</dd>
             {% if report.wallet %}
-                <dt>{{ 'label.wallet'|trans }}</dt>
-                <dd>{{ report.wallet.title }}</dd>
-                <dt>{{ 'label.balance'|trans }}</dt>
-                <dd>{{ report.wallet.balance }}</dd>
+                <dt class="list-group-item">{{ 'label.wallet'|trans }}</dt>
+                <dd class="list-group-item">{{ report.wallet.title }}</dd>
+                <dt class="list-group-item">{{ 'label.balance'|trans }}</dt>
+                <dd class="list-group-item">{{ report.wallet.balance }}</dd>
             {% endif %}
             {% if report.tag %}
-                <dt>{{ 'label.tag'|trans }}</dt>
-                <dd>{{ report.tag.title }}</dd>
+                <dt class="list-group-item">{{ 'label.tag'|trans }}</dt>
+                <dd class="list-group-item">{{ report.tag.title }}</dd>
             {% endif %}
             {% if report.category %}
-                <dt>{{ 'label.category'|trans }}</dt>
-                <dd>{{ report.category.title }}</dd>
+                <dt class="list-group-item">{{ 'label.category'|trans }}</dt>
+                <dd class="list-group-item">{{ report.category.title }}</dd>
             {% endif %}
+            <div class="btn-group ml-4" role="group" aria-label="actions">
+                <a type="button" class="btn btn-outline-info" href="{{ url('report_index') }}"
+                   title="{{ 'action.back_to_list'|trans }}">
+                    {{ 'action.back_to_list'|trans }}
+                </a>
+                {% if is_granted('EDIT', report) %}
+                    <a type="button" class="btn btn-outline-warning"
+                       href="{{ url('report_edit', {'id': report.id}) }}" title="{{ 'action.edit'|trans }}">
+                        {{ 'action.edit'|trans }}
+                    </a>
+                {% endif %}
+                {% if is_granted('DELETE', report) %}
+                    <a type="button" class="btn btn-outline-danger"
+                       href="{{ url('report_delete', {'id': report.id}) }}"
+                       title="{{ 'action.delete'|trans }}">
+                        {{ 'action.delete'|trans }}
+                    </a>
+                {% endif %}
+            </div>
         </dl>
-        <p>
-            <a href="{{ url('report_index') }}" title="{{ 'action.back_to_list'|trans }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
-            {% if is_granted('EDIT', report) %}
-                <a href="{{ url('report_edit', {'id': report.id}) }}" title="{{ 'action.edit'|trans }}">
-                    {{ 'action.edit'|trans }}
-                </a>
-            {% endif %}
-            {% if is_granted('DELETE', report) %}
-                <a href="{{ url('report_delete', {'id': report.id}) }}" title="{{ 'action.delete'|trans }}">
-                    {{ 'action.delete'|trans }}
-                </a>
-            {% endif %}
-        </p>
+
 
         {% if pagination is defined and pagination.items|length %}
 
@@ -59,7 +64,7 @@
                 {{ knp_pagination_render(pagination) }}
             </div>
 
-            <table>
+            <table class="table">
                 <thead>
                 <tr>
                     <th>{{ knp_pagination_sortable(pagination, 'label.id'|trans, 'operation.id') }}</th>

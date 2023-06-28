@@ -31,7 +31,7 @@ class WalletFixtures extends AbstractBaseFixtures implements DependentFixtureInt
         $this->createMany(10, 'wallets', function () {
             $wallet = new Wallet();
             $wallet->setTitle($this->faker->word);
-            $wallet->setBalance($this->faker->randomFloat(2, 10, 1000));
+            $wallet->setBalance(0);
             $wallet->setType($this->faker->randomElement(['cash', 'bank', 'credit_card', 'other']));
 
             /** @var User $user */

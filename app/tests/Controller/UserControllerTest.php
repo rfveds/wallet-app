@@ -445,6 +445,7 @@ class UserControllerTest extends WebTestCase
         $category = new Category();
         $category->setTitle($title);
         $category->setAuthor($user);
+        $category->setUserOrAdmin('user');
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($category, true);
 

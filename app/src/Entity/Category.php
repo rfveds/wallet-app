@@ -82,6 +82,14 @@ class Category
     private ?User $author;
 
     /**
+     * User or admin string.
+     *
+     * @var string User or admin string
+     */
+    #[ORM\Column(type: 'string', length: 32)]
+    private string $userOrAdmin;
+
+    /**
      * Getter for id.
      *
      * @return int|null Id
@@ -190,4 +198,24 @@ class Category
     {
         $this->author = $author;
     }// end setAuthor()
+
+    /**
+     * Getter for userOrAdmin.
+     *
+     * @return string|null userOrAdmin
+     */
+    public function getUserOrAdmin(): ?string
+    {
+        return $this->userOrAdmin;
+    }// end getUserOrAdmin()
+
+    /**
+     * Setter for userOrAdmin.
+     *
+     * @param string $userOrAdmin userOrAdmin
+     */
+    public function setUserOrAdmin(string $userOrAdmin): void
+    {
+        $this->userOrAdmin = $userOrAdmin;
+    }// end setUserOrAdmin()
 }// end class

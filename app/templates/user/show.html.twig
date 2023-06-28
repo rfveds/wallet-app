@@ -5,73 +5,73 @@
 {% endblock %}
 
 {% block body %}
-    <h1>{{ 'title.user_details'|trans({'%id%': user.id|default('')}) }}</h1>
-    {% if user is defined and user|length %}
-        <dl class="dl-horizontal">
-            <dt>{{ 'label.id'|trans }}</dt>
-            <dd>{{ user.id }}</dd>
-            <dt>{{ 'label.firstname'|trans }}</dt>
-            <dd>{{ user.firstname }}</dd>
-            <dt>{{ 'label.lastname'|trans }}</dt>
-            <dd>{{ user.lastname }}</dd>
-            <dt>{{ 'label.roles'|trans }}</dt>
-            {% if 'ROLE_ADMIN' in  user.roles|json_encode() %}
-                <td>{{ 'title.admin'|trans  }}</td>
+    <div class="d-flex justify-content-center">
+        <div class="card p-3">
+            <h1 class="text-center display-3">{{ user.firstname }} {{ user.lastname }} </h1>
+            {% if user is defined and user|length %}
+                <dl class="list-group py-2 px-2" style="border: none">
+                    <dt class="list-group-item">{{ 'label.id'|trans }}</dt>
+                    <dd class="list-group-item">{{ user.id }}</dd>
+                    <dt class="list-group-item">{{ 'label.firstname'|trans }}</dt>
+                    <dd class="list-group-item">{{ user.firstname }}</dd>
+                    <dt class="list-group-item">{{ 'label.lastname'|trans }}</dt>
+                    <dd class="list-group-item">{{ user.lastname }}</dd>
+                    <dt class="list-group-item">{{ 'label.roles'|trans }}</dt>
+                    {% if 'ROLE_ADMIN' in  user.roles|json_encode() %}
+                        <dd class="list-group-item">{{ 'title.admin'|trans }}</dd>
+                    {% else %}
+                        <dd class="list-group-item">{{ 'title.user'|trans }}</dd>
+                    {% endif %}
+                    <dt class="list-group-item">{{ 'label.email'|trans }}</dt>
+                    <dd class="list-group-item">{{ user.email }}</dd>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <dt class="list-group-item">{{ 'label.blocked'|trans }}</dt>
+                        <dd class="list-group-item">{{ user.blocked ? 'title.yes'|trans : 'title.no'|trans }}</dd>
+                    {% endif %}
+                </dl>
+                <div class="btn-group" role="group" aria-label="actions">
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-outline-info" type="button" href="{{ url('user_index') }}"
+                           title="{{ 'action.back_to_list'|trans }}">
+                            {{ 'action.back_to_list'|trans }}
+                        </a>
+                    {% endif %}
+                    <a class="btn btn-outline-info" type="button" href="{{ url('user_edit', {id: user.id}) }}"
+                       title="{{ 'action.edit'|trans }}">
+                        {{ 'action.edit'|trans }}</a>
+                    <a class="btn btn-outline-warning" type="button" href="{{ url('user_edit_password', {id: user.id}) }}"
+                       title="{{ 'action.edit_password'|trans }}">
+                        {{ 'action.edit_password'|trans }}
+                    </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="btn btn-outline-info" type="button" href="{{ url('user_edit_role', {id: user.id}) }}"
+                           title="{{ 'action.edit_role'|trans }}">
+                            {{ 'action.edit_role'|trans }}
+                        </a>
+
+                        {% if app.user.id != user.id %}
+                            <a class="btn btn-outline-warning" type="button" href="{{ url('user_block', {id: user.id}) }}"
+                               title="{{ 'action.user_block'|trans }}">
+                                {{ 'action.user_block'|trans }}
+                            </a>
+                            <a class="btn btn-outline-success" type="button"
+                               href="{{ url('user_unblock', {id: user.id}) }}"
+                               title="{{ 'action.user_unblock'|trans }}">
+                                {{ 'action.user_unblock'|trans }}
+                            </a>
+                        {% endif %}
+
+                    {% endif %}
+                    <a class="btn btn-outline-danger" type="button" href="{{ url('user_delete', {id: user.id}) }}"
+                       title="{{ 'action.delete'|trans }}">
+                        {{ 'action.delete'|trans }}</a>
+                </div>
             {% else %}
-                <td>{{ 'title.user'|trans }}</td>
+                <p>
+                    {{ 'message.record_not_found'|trans }}
+                </p>
             {% endif %}
-            <dt>{{ 'label.email'|trans }}</dt>
-            <dd>{{ user.email }}</dd>
-            {%  if is_granted('ROLE_ADMIN') %}
-            <dt>{{ 'label.blocked'|trans }}</dt>
-            <dd>{{ user.blocked ? 'title.yes'|trans : 'title.no'|trans }}</dd>
-            {% endif %}
-
-
-        </dl>
-        {%  if is_granted('ROLE_ADMIN') %}
-        <p>
-            <a href="{{ url('user_index') }}" title="{{ 'action.back_to_list'|trans }}">
-                {{ 'action.back_to_list'|trans }}
-            </a>
-        </p>
-        {% endif %}
-        <div class="btn btn-light">
-            <a href="{{ url('user_edit', {id: user.id}) }}" title="{{ 'action.edit'|trans }}">
-                {{ 'action.edit'|trans }}</a>
         </div>
-        <div class="btn btn-light">
-            <a href="{{ url('user_edit_password', {id: user.id}) }}" title="{{ 'action.edit_password'|trans }}">
-                {{ 'action.edit_password'|trans }}</a>
-        </div>
-        {%  if is_granted('ROLE_ADMIN') %}
-            <div class="btn btn-light">
-                <a href="{{ url('user_edit_role', {id: user.id}) }}" title="{{ 'action.edit_role'|trans }}">
-                    {{ 'action.edit_role'|trans }}
-                </a>
-            </div>
-
-            {% if app.user.id != user.id %}
-            <div class="btn btn-light">
-                <a href="{{ url('user_block', {id: user.id}) }}" title="{{ 'action.user_block'|trans }}">
-                    {{ 'action.user_block'|trans }}
-                </a>
-            </div>
-            <div class="btn btn-light">
-                <a href="{{ url('user_unblock', {id: user.id}) }}" title="{{ 'action.user_unblock'|trans }}">
-                    {{ 'action.user_unblock'|trans }}
-                </a>
-            </div>
-            {% endif %}
-
-        {% endif %}
-        <div class="btn btn-light">
-            <a href="{{ url('user_delete', {id: user.id}) }}" title="{{ 'action.delete'|trans }}">
-                {{ 'action.delete'|trans }}</a>
-        </div>
-    {% else %}
-        <p>
-            {{ 'message.record_not_found'|trans }}
-        </p>
-    {% endif %}
+    </div>
 {% endblock %}

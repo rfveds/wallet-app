@@ -391,6 +391,22 @@
         <source>label.type.other</source>
         <target>inny</target>
       </trans-unit>
+      <trans-unit id="label.repeat_password">
+        <source>label.repeat_password</source>
+        <target>powtórz hasło</target>
+      </trans-unit>
+      <trans-unit id="message.unblocked_successfully">
+        <source>message.unblocked_successfully</source>
+        <target>użytkownik został odblokowany</target>
+      </trans-unit>
+      <trans-unit id="message.blocked_successfully">
+        <source>message.blocked_successfully</source>
+        <target>użytkownik został zablokowany</target>
+      </trans-unit>
+      <trans-unit id="message.select_at_least_one_criteria">
+        <source>message.select_at_least_one_criteria</source>
+        <target>wybierz przynajmniej jedną opcję</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

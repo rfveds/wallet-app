@@ -110,6 +110,13 @@ class TagController extends AbstractController
         $tag = new Tag();
         $user = $this->getUser();
         $tag->setAuthor($user);
+
+        if ($this->isGranted('ROLE_ADMIN')) {
+            $tag->setUserOrAdmin('admin');
+        } else {
+            $tag->setUserOrAdmin('user');
+        }
+
         $form = $this->createForm(TagType::class, $tag);
         $form->handleRequest($request);
 

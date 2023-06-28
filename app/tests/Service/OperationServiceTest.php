@@ -198,6 +198,7 @@ class OperationServiceTest extends KernelTestCase
         $category = new Category();
         $category->setTitle($categoryTitle);
         $category->setAuthor($user);
+        $category->setUserOrAdmin('user');
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $category->setCreatedAt(new \DateTimeImmutable('now'));
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
@@ -214,6 +215,7 @@ class OperationServiceTest extends KernelTestCase
         $tag = new Tag();
         $tag->setTitle($tagTitle);
         $tag->setAuthor($user);
+        $tag->setUserOrAdmin('user');
         $tag->setCreatedAt(new \DateTimeImmutable('now'));
         $tag->setUpdatedAt(new \DateTimeImmutable('now'));
         $tagRepository = self::getContainer()->get(TagRepository::class);

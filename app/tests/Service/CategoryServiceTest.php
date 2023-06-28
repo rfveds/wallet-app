@@ -67,6 +67,7 @@ class CategoryServiceTest extends KernelTestCase
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Category');
+        $expectedCategory->setUserOrAdmin('admin');
         $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'test_save@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -98,6 +99,7 @@ class CategoryServiceTest extends KernelTestCase
         // given
         $categoryToDelete = new Category();
         $categoryToDelete->setTitle('Test Delete Category');
+        $categoryToDelete->setUserOrAdmin('admin');
         $categoryToDelete->setAuthor($this->createUser(['ROLE_USER'], 'test_delete_cat@example.com'));
         $categoryToDelete->setCreatedAt(new \DateTimeImmutable('now'));
         $categoryToDelete->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -130,6 +132,7 @@ class CategoryServiceTest extends KernelTestCase
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Find By Id Category');
+        $expectedCategory->setUserOrAdmin('admin');
         $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'find_id_cat@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -155,6 +158,7 @@ class CategoryServiceTest extends KernelTestCase
         // given
         $expectedCategory = new Category();
         $expectedCategory->setTitle('Test Find By Title Category');
+        $expectedCategory->setUserOrAdmin('admin');
         $expectedCategory->setAuthor($this->createUser(['ROLE_USER'], 'user_find_cat@example.com'));
         $expectedCategory->setCreatedAt(new \DateTimeImmutable('now'));
         $expectedCategory->setUpdatedAt(new \DateTimeImmutable('now'));
@@ -183,6 +187,7 @@ class CategoryServiceTest extends KernelTestCase
         while ($counter < $dataSetSize) {
             $category = new Category();
             $category->setTitle('Test Category #'.$counter);
+            $category->setUserOrAdmin('admin');
             $category->setAuthor($this->createUser(['ROLE_USER'], 'user_test_create_cat'.$counter.'@example.com'));
             $category->setCreatedAt(new \DateTimeImmutable('now'));
             $category->setUpdatedAt(new \DateTimeImmutable('now'));

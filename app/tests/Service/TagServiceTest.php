@@ -57,6 +57,7 @@ class TagServiceTest extends KernelTestCase
         // given
         $expectedTag = new Tag();
         $expectedTag->setTitle('Test Tag');
+        $expectedTag->setUserOrAdmin('user');
         $expectedTag->setAuthor($this->createUser(['ROLE_USER'], 'user_test_create_tag@example.com'));
 
         // when
@@ -85,6 +86,7 @@ class TagServiceTest extends KernelTestCase
         // given
         $tagToDelete = new Tag();
         $tagToDelete->setTitle('Test Tag');
+        $tagToDelete->setUserOrAdmin('user');
         $tagToDelete->setAuthor($this->createUser(['ROLE_USER'], 'test_delete_tag_user@example.com'));
         $this->entityManager->persist($tagToDelete);
         $this->entityManager->flush();
@@ -121,6 +123,7 @@ class TagServiceTest extends KernelTestCase
         while ($counter < $dataSetSize) {
             $tag = new Tag();
             $tag->setTitle('Test Tag #'.$counter);
+            $tag->setUserOrAdmin('user');
             $tag->setAuthor($this->createUser(['ROLE_USER'], 'test_pagination_tag'.$counter.'@example.com'));
             $this->tagService->save($tag);
 
@@ -144,6 +147,7 @@ class TagServiceTest extends KernelTestCase
         // given
         $expectedTag = new Tag();
         $expectedTag->setTitle('Test Tag 1');
+        $expectedTag->setUserOrAdmin('user');
         $expectedTag->setAuthor($this->createUser(['ROLE_USER'], 'test_find_id_tag@example.com'));
         $this->entityManager->persist($expectedTag);
         $this->entityManager->flush();
@@ -166,6 +170,7 @@ class TagServiceTest extends KernelTestCase
         // given
         $expectedTag = new Tag();
         $expectedTag->setTitle('Test Tag 2');
+        $expectedTag->setUserOrAdmin('user');
         $expectedTag->setAuthor($this->createUser(['ROLE_USER'], 'test_find_title_tag@example.com'));
         $this->entityManager->persist($expectedTag);
         $this->entityManager->flush();

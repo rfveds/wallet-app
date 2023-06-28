@@ -63,16 +63,16 @@ class OperationRepository extends ServiceEntityRepository
         $queryBuilder = $this->getOrCreateQueryBuilder()
             ->select(
                 'partial operation.{id, amount, title, createdAt, updatedAt, currentBalance}',
-                'partial category.{id, title}',
+                'partial category.{id, title, userOrAdmin}',
                 'partial wallet.{id, title}',
-                'partial tags.{id, title}',
+                'partial tags.{id, title, userOrAdmin}',
                 'partial author.{id, email}'
             )
             ->join('operation.wallet', 'wallet')
             ->join('operation.category', 'category')
             ->leftJoin('operation.tags', 'tags')
             ->join('operation.author', 'author')
-            ->orderBy('operation.createdAt', 'ASC');
+            ->orderBy('operation.updatedAt', 'ASC');
 
         return $this->applyFiltersToList($queryBuilder, $filters);
     }
@@ -91,7 +91,8 @@ class OperationRepository extends ServiceEntityRepository
 
         $queryBuilder
             ->andWhere('operation.author = :author')
-            ->setParameter('author', $user);
+            ->setParameter('author', $user)
+            ->orderBy('operation.updatedAt', 'ASC');
 
         return $queryBuilder;
     }

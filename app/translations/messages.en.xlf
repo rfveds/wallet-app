@@ -375,6 +375,26 @@
         <source>label.type.other</source>
         <target>other</target>
       </trans-unit>
+      <trans-unit id="label.repeat_password">
+        <source>label.repeat_password</source>
+        <target>repeat password</target>
+      </trans-unit>
+      <trans-unit id="message.unblocked_successfully">
+        <source>message.unblocked_successfully</source>
+        <target>user unblocked successfully</target>
+      </trans-unit>
+      <trans-unit id="message.blocked_successfully">
+        <source>message.blocked_successfully</source>
+        <target>user blocked successfully</target>
+      </trans-unit>
+      <trans-unit id="message.select_at_least_one_criteria">
+        <source>message.select_at_least_one_criteria</source>
+        <target>select at least one criteria</target>
+      </trans-unit>
+      <trans-unit id="message.insufficient_funds">
+        <source>message.insufficient_funds</source>
+        <target>insufficient funds</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

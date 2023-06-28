@@ -432,6 +432,7 @@ class ReportControllerTest extends WebTestCase
     {
         $category = new Category();
         $category->setTitle($title);
+        $category->setUserOrAdmin('user');
         $category->setAuthor($user);
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($category);
@@ -449,6 +450,7 @@ class ReportControllerTest extends WebTestCase
         $tag = new Tag();
         $tag->setTitle($string);
         $tag->setAuthor($user);
+        $tag->setUserOrAdmin('user');
         $tagRepository = self::getContainer()->get(TagRepository::class);
         $tagRepository->save($tag);
 

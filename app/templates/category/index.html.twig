@@ -39,28 +39,32 @@
             </thead>
             <tbody>
             {% for category in pagination.items %}
-                <tr>
-                    <td>{{ category.id }}</td>
-                    <td>{{ category.createdAt|format_date('long') }}</td>
-                    <td>{{ category.updatedAt|date('Y/m/d') }}</td>
-                    <td>{{ category.title }}</td>
-                    <td>
-                        {% if app.user.id is same as (category.author.id) %}
-                            <a href="{{ url('category_show', {id: category.id}) }}" title="{{ 'action.show'|trans }}">
-                                <button class="btn btn-sm btn-outline-dark">
-                                    {{ 'action.show'|trans }}
-                                </button>
-                            </a>
-                        {% endif %}
-                        {% if  is_granted('ROLE_ADMIN') %}
-                            <a href="{{ url('category_show', {id: category.id}) }}" title="{{ 'action.show'|trans }}">
-                                <button class="btn btn-sm btn-outline-dark">
-                                    {{ 'action.show'|trans }}
-                                </button>
-                            </a>
-                        {% endif %}
-                    </td>
-                </tr>
+                {% if app.user.id is same as category.author.id or category.userOrAdmin is same as ('admin') %}
+                    <tr>
+                        <td>{{ category.id }}</td>
+                        <td>{{ category.createdAt|format_date('long') }}</td>
+                        <td>{{ category.updatedAt|date('Y/m/d') }}</td>
+                        <td>{{ category.title }}</td>
+                        <td>
+                            {% if app.user.id is same as (category.author.id) %}
+                                <a href="{{ url('category_show', {id: category.id}) }}"
+                                   title="{{ 'action.show'|trans }}">
+                                    <button class="btn btn-sm btn-outline-dark">
+                                        {{ 'action.show'|trans }}
+                                    </button>
+                                </a>
+                            {% endif %}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ url('category_show', {id: category.id}) }}"
+                                   title="{{ 'action.show'|trans }}">
+                                    <button class="btn btn-sm btn-outline-dark">
+                                        {{ 'action.show'|trans }}
+                                    </button>
+                                </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
@@ -70,7 +74,7 @@
         </div>
 
     {% else %}
-        <p>
+        <p class="text-center display-2 mt-5">
             {{ 'message.empty_list'|trans }}
         </p>
     {% endif %}

@@ -178,7 +178,7 @@ class OperationControllerTest extends WebTestCase
                 'amount' => '100',
                 'category' => $category->getId(),
                 'wallet' => $wallet->getId(),
-                'tags' => $tag->getTitle().', '.$tag2->getTitle(),
+                'tags' => $tag->getTitle().','.$tag2->getTitle(),
                 ],
             ]
         );
@@ -465,6 +465,7 @@ class OperationControllerTest extends WebTestCase
         $category = new Category();
         $category->setTitle($title);
         $category->setAuthor($user);
+        $category->setUserOrAdmin('admin');
         $categoryRepository = self::getContainer()->get(CategoryRepository::class);
         $categoryRepository->save($category);
 
@@ -481,6 +482,7 @@ class OperationControllerTest extends WebTestCase
         $tag = new Tag();
         $tag->setTitle($string);
         $tag->setAuthor($user);
+        $tag->setUserOrAdmin('admin');
         $tagRepository = self::getContainer()->get(TagRepository::class);
         $tagRepository->save($tag);
 

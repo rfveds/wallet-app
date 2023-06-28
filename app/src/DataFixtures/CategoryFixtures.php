@@ -61,6 +61,7 @@ class CategoryFixtures extends AbstractBaseFixtures implements DependentFixtureI
         $this->createMany(5, 'categories', function () {
             $category = new Category();
             $category->setTitle($this->faker->unique()->word);
+            $category->setUserOrAdmin('admin');
             $category->setCreatedAt(
                 \DateTimeImmutable::createFromMutable(
                     $this->faker->dateTimeBetween('-100 days', '-1 days')

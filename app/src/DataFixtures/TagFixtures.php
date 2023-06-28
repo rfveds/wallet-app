@@ -59,6 +59,7 @@ class TagFixtures extends AbstractBaseFixtures
         $this->createMany(5, 'tags', function () {
             $tag = new Tag();
             $tag->setTitle($this->faker->word);
+            $tag->setUserOrAdmin('admin');
 
             $admin = $this->manager->getRepository(User::class)->findOneBy(['email' => 'admin_for_tags@example.com']);
             $tag->setAuthor($admin);

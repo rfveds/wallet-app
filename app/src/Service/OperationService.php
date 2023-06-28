@@ -110,7 +110,10 @@ class OperationService implements OperationServiceInterface
     {
         $filters = $this->prepareFilters($filters, $user);
 
-        return $this->operationRepository->queryByAuthor($user, $filters)->getQuery()->getResult();
+        return $this->operationRepository
+            ->queryByAuthor($user, $filters)
+            ->getQuery()
+            ->getResult();
     }// end createList()
 
     /**

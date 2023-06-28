@@ -119,6 +119,24 @@ class ReportRepository extends ServiceEntityRepository
     }
 
     /**
+     * Find by user.
+     *
+     * @param User $user User entity
+     *
+     * @return array Result
+     */
+    public function findByUser(User $user): array
+    {
+        return $this->getOrCreateQueryBuilder()
+            ->select('report')
+            ->andWhere('report.author = :user')
+            ->setParameter('user', $user)
+            ->orderBy('report.title', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Get or create new query builder.
      *
      * @param QueryBuilder|null $queryBuilder Query builder
@@ -129,4 +147,6 @@ class ReportRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('report');
     }// end getOrCreateQueryBuilder()
+
+
 }
