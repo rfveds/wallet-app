@@ -138,5 +138,14 @@
         <p class="text-center display-2 mt-5">
             {{ 'message.empty_list'|trans }}
         </p>
+        <p class="text-center display-5 mt-5">
+            {{ 'message.no_operations_create_wallet'|trans }}
+            <a href="{{ url('wallet_create') }}">
+                <button class="btn btn-outline-success">
+                {{ 'action.create_wallet'|trans }}
+                </button>
+            </a>
+        </p>
+
     {% endif %}
 {% endblock %}

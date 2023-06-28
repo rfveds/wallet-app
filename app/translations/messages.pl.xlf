@@ -415,6 +415,26 @@
         <source>message.balance_cannot_be_negative</source>
         <target>saldo nie może być ujemne</target>
       </trans-unit>
+      <trans-unit id="label.year">
+        <source>label.year</source>
+        <target>rok</target>
+      </trans-unit>
+      <trans-unit id="label.month">
+        <source>label.month</source>
+        <target>miesiąc</target>
+      </trans-unit>
+      <trans-unit id="label.day">
+        <source>label.day</source>
+        <target>dzień</target>
+      </trans-unit>
+      <trans-unit id="message.no_operations_create_wallet">
+        <source>message.no_operations_create_wallet</source>
+        <target>aby utworzyć operację, stwórz najpierw portfel</target>
+      </trans-unit>
+      <trans-unit id="action.create_wallet">
+        <source>action.create_wallet</source>
+        <target>stwórz portfel</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

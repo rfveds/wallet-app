@@ -399,6 +399,26 @@
         <source>message.balance_cannot_be_negative</source>
         <target>balance can not be negative</target>
       </trans-unit>
+      <trans-unit id="label.year">
+        <source>label.year</source>
+        <target>year</target>
+      </trans-unit>
+      <trans-unit id="label.month">
+        <source>label.month</source>
+        <target>month</target>
+      </trans-unit>
+      <trans-unit id="label.day">
+        <source>label.day</source>
+        <target>day</target>
+      </trans-unit>
+      <trans-unit id="message.no_operations_create_wallet">
+        <source>message.no_operations_create_wallet</source>
+        <target>to create operation, create wallet first</target>
+      </trans-unit>
+      <trans-unit id="action.create_wallet">
+        <source>action.create_wallet</source>
+        <target>create wallet</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

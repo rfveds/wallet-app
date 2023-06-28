@@ -114,6 +114,10 @@ class ReportType extends AbstractType
             [
                 'label' => 'label.date_from',
                 'required' => false,
+                'placeholder' => [
+                    'year' => 'label.year', 'month' => 'label.month', 'day' => 'label.day',
+                ],
+
             ]
         );
 
@@ -123,6 +127,9 @@ class ReportType extends AbstractType
             [
                 'label' => 'label.date_to',
                 'required' => false,
+                'placeholder' => [
+                    'year' => 'label.year', 'month' => 'label.month', 'day' => 'label.day',
+                ],
             ]
         );
     }
