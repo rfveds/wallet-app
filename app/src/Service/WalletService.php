@@ -70,6 +70,8 @@ class WalletService implements WalletServiceInterface
      * Delete entity.
      *
      * @param Wallet $wallet Wallet entity
+     *
+     * @return void
      */
     public function delete(Wallet $wallet): void
     {
