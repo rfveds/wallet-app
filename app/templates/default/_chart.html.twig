@@ -10,14 +10,21 @@
     const amountData = JSON.parse('{{ amountDataJSON|raw }}');
     const labelData = JSON.parse('{{ labelDataJSON|raw }}');
     {#const balanceData = JSON.parse('{{ balanceDataJSON|raw }}');#}
-    const balanceHistoryData = JSON.parse('{{ balanceHistoryDataJSON|raw }}');
+    const historyData = JSON.parse('{{ balanceHistoryDataJSON|raw }}');
+
+    console.log(historyData);
+    // get second value from array of objects
+    const historyDataBalance = historyData.map(function (item) {
+        return item.currentBalance
+    });
+    console.log(historyDataBalance);
 
     const data = {
         labels: labelData,
         datasets: [
             {
                 label: 'saldo',
-                data: balanceHistoryData,
+                data: historyDataBalance,
                 borderColor: 'red',
                 backgroundColor: 'red',
                 pointStyle: 'circle',

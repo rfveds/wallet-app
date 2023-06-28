@@ -148,6 +148,41 @@ class WalletControllerTest extends WebTestCase
     }
 
     /**
+     * Test create wallet with negative value.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateWalletNegativeValue(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_wallet_neg_create@example.com');
+        $this->httpClient->loginUser($user);
+        $walletTitle = 'createdWalletN';
+        $walletRepository = static::getContainer()->get(WalletRepository::class);
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/create'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'zapisz',
+            ['wallet' => [
+                'title' => $walletTitle,
+                'balance' => -100,
+            ],
+            ]
+        );
+
+        // then
+        $savedWallet = $walletRepository->findOneByTitle($walletTitle);
+        $this->assertNull($savedWallet);
+
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
+    }
+
+    /**
      * Test edit category with unauthorized user.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException

@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class UserController.
@@ -30,12 +31,19 @@ class UserController extends AbstractController
     private UserServiceInterface $userService;
 
     /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * UserController constructor.
      *
      * @param UserServiceInterface $userService User service
+     * @param TranslatorInterface  $translator  Translator
      */
-    public function __construct(UserServiceInterface $userService)
+    public function __construct(UserServiceInterface $userService, TranslatorInterface $translator)
     {
+        $this->translator = $translator;
         $this->userService = $userService;
     }// end __construct()
 
@@ -121,7 +129,9 @@ class UserController extends AbstractController
             }
 
             $this->userService->delete($user);
-            $this->addFlash('success', 'message.deleted_successfully');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.deleted_successfully'));
 
             return $this->redirectToRoute('homepage');
         }
@@ -168,7 +178,9 @@ class UserController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userService->upgradePassword($user, $form->get('password')->getData());
 
-            $this->addFlash('success', 'message.updated_successfully');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully'));
 
             return $this->redirectToRoute('homepage');
         }
@@ -224,7 +236,9 @@ class UserController extends AbstractController
             }
 
             $this->userService->editRole($user, $form->get('roles')->getData());
-            $this->addFlash('success', 'message.updated_successfully');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully'));
 
             return $this->redirectToRoute('user_index');
         }
@@ -270,7 +284,9 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userService->editData($user);
-            $this->addFlash('success', 'message.updated_successfully');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.updated_successfully'));
 
             return $this->redirectToRoute('homepage');
         }
@@ -301,7 +317,9 @@ class UserController extends AbstractController
     public function blockUser(User $user): Response
     {
         $this->userService->blockUser($user, true);
-        $this->addFlash('success', 'message.blocked_successfully');
+        $this->addFlash(
+            'success',
+            $this->translator->trans('message.blocked_successfully'));
 
         return $this->redirectToRoute('user_index');
     }// end blockUser()
@@ -323,7 +341,9 @@ class UserController extends AbstractController
     public function unblockUser(User $user): Response
     {
         $this->userService->blockUser($user, false);
-        $this->addFlash('success', 'message.unblocked_successfully');
+        $this->addFlash(
+            'success',
+            $this->translator->trans('message.unblocked_successfully'));
 
         return $this->redirectToRoute('user_index');
     }// end unblockUser()

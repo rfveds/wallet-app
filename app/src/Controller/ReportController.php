@@ -124,12 +124,6 @@ class ReportController extends AbstractController
 
         $data = $this->reportService->getReportData($list);
 
-//        var_dump($data['balanceDataJSON']);
-//        echo '<br>';
-//        var_dump($data['balanceHistoryDataJSON']);
-//        echo '<br>';
-//        var_dump($data['labelDataJSON']);
-
         return $this->render(
             'report/show.html.twig',
             [
@@ -155,6 +149,9 @@ class ReportController extends AbstractController
         '/create',
         name: 'report_create',
         methods: 'GET|POST',
+    )]
+    #[IsGranted(
+        'ROLE_USER',
     )]
     public function create(Request $request): Response
     {

@@ -395,6 +395,10 @@
         <source>message.insufficient_funds</source>
         <target>insufficient funds</target>
       </trans-unit>
+      <trans-unit id="message.balance_cannot_be_negative">
+        <source>message.balance_cannot_be_negative</source>
+        <target>balance can not be negative</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

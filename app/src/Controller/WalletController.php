@@ -132,6 +132,15 @@ class WalletController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getData()->getBalance() < 0) {
+                $this->addFlash(
+                    'warning',
+                    $this->translator->trans('message.balance_cannot_be_negative')
+                );
+
+                return $this->redirectToRoute('wallet_index');
+            }
+
             $this->walletService->save($wallet);
 
             $this->addFlash(

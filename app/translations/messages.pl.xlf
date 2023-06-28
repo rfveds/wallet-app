@@ -411,6 +411,10 @@
         <source>message.insufficient_funds</source>
         <target>niewystarczające środki</target>
       </trans-unit>
+      <trans-unit id="message.balance_cannot_be_negative">
+        <source>message.balance_cannot_be_negative</source>
+        <target>saldo nie może być ujemne</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
