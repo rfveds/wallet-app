@@ -55,6 +55,7 @@ class UserService implements UserServiceInterface
      * @param CategoryServiceInterface    $categoryService  Category service
      * @param OperationServiceInterface   $operationService Operation service
      * @param WalletServiceInterface      $walletService    Wallet service
+     * @param ReportServiceInterface      $reportService    Report service
      */
     public function __construct(UserRepository $userRepository, UserPasswordHasherInterface $passwordHasher, PaginatorInterface $paginator, CategoryServiceInterface $categoryService, OperationServiceInterface $operationService, WalletServiceInterface $walletService, ReportServiceInterface $reportService)
     {

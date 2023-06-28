@@ -68,7 +68,6 @@ class Tag
     #[ORM\Column(type: 'string', length: 32)]
     private string $userOrAdmin;
 
-
     /**
      * Slug.
      *

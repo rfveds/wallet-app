@@ -147,6 +147,4 @@ class ReportRepository extends ServiceEntityRepository
     {
         return $queryBuilder ?? $this->createQueryBuilder('report');
     }// end getOrCreateQueryBuilder()
-
-
 }

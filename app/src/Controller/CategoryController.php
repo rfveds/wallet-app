@@ -112,7 +112,7 @@ class CategoryController extends AbstractController
 
         if ($this->isGranted('ROLE_ADMIN')) {
             $category->setUserOrAdmin('admin');
-        }else{
+        } else {
             $category->setUserOrAdmin('user');
         }
 

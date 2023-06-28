@@ -31,7 +31,8 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             $operation->setTitle($this->faker->word);
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $date = \DateTimeImmutable::createFromMutable(
-                $this->faker->dateTimeBetween('-50 days', '-'. 50 - $i.'days'));
+                $this->faker->dateTimeBetween('-50 days', '-'.(50) - $i.'days')
+            );
             $operation->setCreatedAt($date);
             $operation->setUpdatedAt($date);
 

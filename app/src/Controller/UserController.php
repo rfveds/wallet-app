@@ -131,7 +131,8 @@ class UserController extends AbstractController
             $this->userService->delete($user);
             $this->addFlash(
                 'success',
-                $this->translator->trans('message.deleted_successfully'));
+                $this->translator->trans('message.deleted_successfully')
+            );
 
             return $this->redirectToRoute('homepage');
         }
@@ -180,7 +181,8 @@ class UserController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('message.updated_successfully'));
+                $this->translator->trans('message.updated_successfully')
+            );
 
             return $this->redirectToRoute('homepage');
         }
@@ -238,7 +240,8 @@ class UserController extends AbstractController
             $this->userService->editRole($user, $form->get('roles')->getData());
             $this->addFlash(
                 'success',
-                $this->translator->trans('message.updated_successfully'));
+                $this->translator->trans('message.updated_successfully')
+            );
 
             return $this->redirectToRoute('user_index');
         }
@@ -286,7 +289,8 @@ class UserController extends AbstractController
             $this->userService->editData($user);
             $this->addFlash(
                 'success',
-                $this->translator->trans('message.updated_successfully'));
+                $this->translator->trans('message.updated_successfully')
+            );
 
             return $this->redirectToRoute('homepage');
         }
@@ -319,7 +323,8 @@ class UserController extends AbstractController
         $this->userService->blockUser($user, true);
         $this->addFlash(
             'success',
-            $this->translator->trans('message.blocked_successfully'));
+            $this->translator->trans('message.blocked_successfully')
+        );
 
         return $this->redirectToRoute('user_index');
     }// end blockUser()
@@ -343,7 +348,8 @@ class UserController extends AbstractController
         $this->userService->blockUser($user, false);
         $this->addFlash(
             'success',
-            $this->translator->trans('message.unblocked_successfully'));
+            $this->translator->trans('message.unblocked_successfully')
+        );
 
         return $this->redirectToRoute('user_index');
     }// end unblockUser()

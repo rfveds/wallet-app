@@ -145,18 +145,18 @@ class OperationController extends AbstractController
                 );
 
                 return $this->redirectToRoute('operation_index');
-            } else {
-                $wallet->setBalance($balance + $amount);
-                $operation->setCurrentBalance($wallet->getBalance());
-                $this->operationService->save($operation);
-
-                $this->addFlash(
-                    'success',
-                    $this->translator->trans('message.created_successfully')
-                );
-
-                return $this->redirectToRoute('operation_index');
             }
+
+            $wallet->setBalance($balance + $amount);
+            $operation->setCurrentBalance($wallet->getBalance());
+            $this->operationService->save($operation);
+
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.created_successfully')
+            );
+
+            return $this->redirectToRoute('operation_index');
         }// end if
 
         return $this->render(
