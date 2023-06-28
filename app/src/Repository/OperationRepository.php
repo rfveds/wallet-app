@@ -64,7 +64,7 @@ class OperationRepository extends ServiceEntityRepository
             ->select(
                 'partial operation.{id, amount, title, createdAt, updatedAt, currentBalance}',
                 'partial category.{id, title, userOrAdmin}',
-                'partial wallet.{id, title}',
+                'partial wallet.{id, title, balance}',
                 'partial tags.{id, title, userOrAdmin}',
                 'partial author.{id, email}'
             )
