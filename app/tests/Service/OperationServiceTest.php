@@ -71,7 +71,7 @@ class OperationServiceTest extends KernelTestCase
         $expectedOperation->addTag($this->createTag('save', $author));
         $wallet = $this->createWallet($author, 'save');
         $expectedOperation->setWallet($wallet);
-        $expectedOperation->setCurrentBalance($wallet->getBalance());
+        $expectedOperation->setCurrentBalance($expectedOperation->getCurrentBalance() + $expectedOperation->getAmount());
         $expectedOperation->setCategory($this->createCategory('save', $author));
 
         // when

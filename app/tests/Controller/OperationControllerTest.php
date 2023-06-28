@@ -246,7 +246,7 @@ class OperationControllerTest extends WebTestCase
         $testOperation->setCategory($this->createCategory('testCategoryEditOperation', $user));
         $testOperationWallet = $this->createWallet('wallet_edit_operation', $user, '0');
         $testOperation->setWallet($testOperationWallet);
-        $testOperation->setCurrentBalance($testOperationWallet->getBalance());
+        $testOperation->setCurrentBalance($testOperationWallet->getBalance() + $testOperation->getAmount());
         $testOperation->setAuthor($user);
         $testOperation->addTag($this->createTag('testTagEditOperation', $user));
         $testOperation->addTag($this->createTag('testTagEditOperation2', $user));
@@ -280,6 +280,57 @@ class OperationControllerTest extends WebTestCase
 
         $this->assertNotNull($savedOperation->getUpdatedAt());
         $this->assertNotNull($savedOperation->getCreatedAt());
+    }
+
+    /**
+     * Test edit operation that would exceed wallet balance.
+     *
+     * @throws NotFoundExceptionInterface|ContainerExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditOperationExceedWalletBalance(): void
+    {
+        // given
+        $user = $this->createUser([UserRole::ROLE_USER->value], 'test_edit_exceed@example.com');
+        $this->httpClient->loginUser($user);
+
+        $operationRepository = static::getContainer()->get(OperationRepository::class);
+        $testOperation = new Operation();
+        $testOperation->setTitle('TestEditOperationExceed');
+        $testOperation->setAmount(100);
+        $testOperation->setCategory($this->createCategory('testCategoryEditOperationExceed', $user));
+        $testOperationWallet = $this->createWallet('wallet_edit_operation_exceed', $user, '0');
+        $testOperation->setWallet($testOperationWallet);
+        $testOperation->setCurrentBalance($testOperationWallet->getBalance());
+        $testOperation->setAuthor($user);
+        $testOperation->addTag($this->createTag('testTagEditOperationExceed', $user));
+        $testOperation->addTag($this->createTag('testTagEditOperationExceed2', $user));
+        $testOperation->setCreatedAt(new \DateTimeImmutable('now'));
+        $testOperation->setUpdatedAt(new \DateTimeImmutable('now'));
+        $operationRepository->save($testOperation);
+        $testOperationId = $testOperation->getId();
+        $expectedNewOperationTitle = 'TestOperationEditedExceed';
+
+        $this->httpClient->request(
+            'GET',
+            self::TEST_ROUTE.'/'.$testOperationId.'/edit'
+        );
+
+        // when
+        $this->httpClient->submitForm(
+            'edytuj',
+            ['operation' => [
+                'title' => $expectedNewOperationTitle,
+                'amount' => -200,
+                'category' => 2,
+                'wallet' => $testOperationWallet->getId(),
+                'tags' => 'abc, def',
+                ],
+            ]
+        );
+
+        // then
+        $result = $this->httpClient->getResponse();
+        $this->assertEquals(302, $result->getStatusCode());
     }
 
     /**

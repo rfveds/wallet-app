@@ -115,7 +115,34 @@ class TagControllerTest extends WebTestCase
     public function testCreateTag(): void
     {
         // given
-        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'tag_user_create@example.com');
+        $adminUser = $this->createUser([UserRole::ROLE_USER->value], 'tag_user_create@example.com');
+        $this->httpClient->loginUser($adminUser);
+        $tagTitle = 'Test tag 3';
+        $tagRepository = static::getContainer()->get(TagRepository::class);
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
+
+        // when
+        $this->httpClient->submitForm('zapisz', [
+            'tag' => ['title' => $tagTitle],
+        ]);
+
+        // then
+        $savedTag = $tagRepository->findOneBy(['title' => $tagTitle]);
+        $this->assertEquals($tagTitle, $savedTag->getTitle());
+
+        $response = $this->httpClient->getResponse();
+        $this->assertEquals(302, $response->getStatusCode());
+    }
+
+    /**
+     * Test create tag by admin.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateTagAdmin(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_tag_admin@example.com');
         $this->httpClient->loginUser($adminUser);
         $tagTitle = 'Test tag';
         $tagRepository = static::getContainer()->get(TagRepository::class);
@@ -129,6 +156,7 @@ class TagControllerTest extends WebTestCase
         // then
         $savedTag = $tagRepository->findOneBy(['title' => $tagTitle]);
         $this->assertEquals($tagTitle, $savedTag->getTitle());
+        $this->assertEquals('admin', $savedTag->getUserOrAdmin());
 
         $response = $this->httpClient->getResponse();
         $this->assertEquals(302, $response->getStatusCode());
@@ -149,10 +177,10 @@ class TagControllerTest extends WebTestCase
         $testTag = new Tag();
         $testTag->setTitle($tagTitle);
         $testTag->setAuthor($adminUser);
-        $testTag->setUserOrAdmin('admin');
         $testTag->setCreatedAt(new \DateTimeImmutable('now'));
         $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
         $testTag->setSlug('test-tag-edit');
+        $testTag->setUserOrAdmin('admin');
         $tagRepository->save($testTag);
         $testTagId = $testTag->getId();
         $expectedNewTagTitle = 'Test tag edited';
@@ -170,6 +198,44 @@ class TagControllerTest extends WebTestCase
         $this->assertEquals($expectedNewTagTitle, $savedTag->getTitle());
         $this->assertEquals($expectedNewTagTitleSlug, $savedTag->getSlug());
     }
+
+    /**
+     * Test edit tag by admin.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testEditTagAdmin(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_admin_edit_tag@eample.com');
+        $this->httpClient->loginUser($adminUser);
+        $tagRepository = static::getContainer()->get(TagRepository::class);
+        $tagTitle = 'Test tag edit admin';
+        $testTag = new Tag();
+        $testTag->setTitle($tagTitle);
+        $testTag->setAuthor($adminUser);
+        $testTag->setUserOrAdmin('admin');
+        $testTag->setCreatedAt(new \DateTimeImmutable('now'));
+        $testTag->setUpdatedAt(new \DateTimeImmutable('now'));
+        $testTag->setSlug('test-tag-edit-admin');
+        $tagRepository->save($testTag);
+        $testTagId = $testTag->getId();
+        $expectedNewTagTitle = 'Test tag edited admin';
+        $expectedNewTagTitleSlug = 'test-tag-edited-admin';
+
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/'.$testTagId.'/edit');
+
+        // when
+        $this->httpClient->submitForm('edytuj', [
+            'tag' => ['title' => $expectedNewTagTitle],
+        ]);
+
+        // then
+        $savedTag = $tagRepository->findOneBy(['title' => $expectedNewTagTitle]);
+        $this->assertEquals($expectedNewTagTitle, $savedTag->getTitle());
+        $this->assertEquals($expectedNewTagTitleSlug, $savedTag->getSlug());
+    }
+
 
     /**
      * Test delete tag.

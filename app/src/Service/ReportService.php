@@ -105,12 +105,13 @@ class ReportService implements ReportServiceInterface
 
         $balanceHistoryData = [];
         foreach ($list as $operation) {
-            var_dump($operation->getTitle());
-            var_dump($operation->getCurrentBalance()); // tu sie wypierdala
-            echo '<br>';
-            var_dump($operation->getAmount());
-            echo '<br>';
-            $balanceHistoryData[] = (float) $operation->getCurrentBalance();
+            $operationArr = [
+                'title' => $operation->getTitle(),
+                'currentBalance' => $operation->getCurrentBalance(),
+                'amount' => $operation->getAmount(),
+                'updatedAt' => $operation->getUpdatedAt()->format('Y-m-d: H:i:s'),
+                ];
+            $balanceHistoryData[] = $operationArr;
         }
 
         $labelData = [];

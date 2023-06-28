@@ -407,6 +407,10 @@
         <source>message.select_at_least_one_criteria</source>
         <target>wybierz przynajmniej jedną opcję</target>
       </trans-unit>
+      <trans-unit id="message.insufficient_funds">
+        <source>message.insufficient_funds</source>
+        <target>niewystarczające środki</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

@@ -145,6 +145,34 @@ class CategoryControllerTest extends WebTestCase
     }
 
     /**
+     * Test create tag by admin.
+     *
+     * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException
+     */
+    public function testCreateTagAdmin(): void
+    {
+        // given
+        $adminUser = $this->createUser([UserRole::ROLE_ADMIN->value, UserRole::ROLE_USER->value], 'test_create_cat_admin@example.com');
+        $this->httpClient->loginUser($adminUser);
+        $categoryTitle = 'test category admin';
+        $categoryRepository = static::getContainer()->get(CategoryRepository::class);
+        $this->httpClient->request('GET', self::TEST_ROUTE.'/create');
+
+        // when
+        $this->httpClient->submitForm('zapisz', [
+            'category' => ['title' => $categoryTitle],
+        ]);
+
+        // then
+        $savedCategory = $categoryRepository->findOneBy(['title' => $categoryTitle]);
+        $this->assertEquals($categoryTitle, $savedCategory->getTitle());
+        $this->assertEquals('admin', $savedCategory->getUserOrAdmin());
+
+        $response = $this->httpClient->getResponse();
+        $this->assertEquals(302, $response->getStatusCode());
+    }
+
+    /**
      * Test edit category with unauthorized user.
      *
      * @throws ContainerExceptionInterface|NotFoundExceptionInterface|ORMException|OptimisticLockException

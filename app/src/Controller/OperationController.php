@@ -133,13 +133,15 @@ class OperationController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $wallet = $form->get('wallet')->getData();
-            $amount =  $form->get('amount')->getData();
-            $balance =   $wallet->getBalance();
+            $amount = $form->get('amount')->getData();
+            $balance = $wallet->getBalance();
+            $amount = intval($amount);
+            $balance = intval($balance);
 
-            if(($balance + $amount) < $balance) {
+            if (($balance + $amount) <= 0) {
                 $this->addFlash(
                     'warning',
-                    'message.insufficient_funds'
+                    $this->translator->trans('message.insufficient_funds')
                 );
 
                 return $this->redirectToRoute('operation_index');
@@ -201,10 +203,13 @@ class OperationController extends AbstractController
             $wallet = $form->get('wallet')->getData();
             $amount = $form->get('amount')->getData();
             $balance = $wallet->getBalance();
-            if (($balance + $amount) < $balance) {
+            $amount = intval($amount);
+            $balance = intval($balance);
+
+            if (($balance + $amount) <= 0) {
                 $this->addFlash(
                     'warning',
-                    'message.insufficient_funds'
+                    $this->translator->trans('message.insufficient_funds')
                 );
             } else {
                 $wallet->setBalance($balance + $amount);
