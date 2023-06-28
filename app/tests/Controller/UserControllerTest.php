@@ -230,7 +230,7 @@ class UserControllerTest extends WebTestCase
         $editedLastName = 'edited_last_name';
 
         // when
-        $this->httpClient->submitForm('action.edit',
+        $this->httpClient->submitForm('edytuj',
             [
                 'user_data' => [
                     'email' => $editedEmail,
