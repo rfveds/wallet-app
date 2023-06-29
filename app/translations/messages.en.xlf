@@ -427,6 +427,10 @@
         <source>message.password_pattern</source>
         <target>password must contain at least one number and one special character</target>
       </trans-unit>
+      <trans-unit id="message.only_one_admin">
+        <source>message.only_one_admin</source>
+        <target>there is only one admin left</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
