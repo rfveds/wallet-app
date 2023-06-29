@@ -23,7 +23,7 @@ class RegistrationTypeTest extends TypeTestCase
         $formData =
             [
                 'email' => 'test_registration@example.com',
-                'password' => 'test_password',
+                'password' => 'test_password1234!@',
             ];
 
         $model = new User();

@@ -201,8 +201,8 @@ class UserControllerTest extends WebTestCase
             [
                 'user_password' => [
                     'password' => [
-                        'first' => 'new_password',
-                        'second' => 'new_password',
+                        'first' => 'new_password123!@#',
+                        'second' => 'new_password123!@#',
                     ],
                 ],
             ]);

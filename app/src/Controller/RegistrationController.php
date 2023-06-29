@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class RegistrationController.
@@ -26,13 +27,19 @@ class RegistrationController extends AbstractController
     private UserService $userService;
 
     /**
+     * Translator.
+     */
+    private TranslatorInterface $translator;
+
+    /**
      * RegistrationController constructor.
      *
      * @param UserService $userService User service
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, TranslatorInterface $translator)
     {
         $this->userService = $userService;
+        $this->translator = $translator;
     }// end __construct()
 
     /**
@@ -47,7 +54,10 @@ class RegistrationController extends AbstractController
     #[Route(
         '/register',
         name: 'app_register',
-        methods: ['GET', 'POST'],
+        methods: [
+            'GET',
+            'POST',
+        ],
     )]
     public function register(Request $request, UserAuthenticatorInterface $userAuthenticator, LoginFormAuthenticator $authenticator): Response
     {
@@ -61,7 +71,9 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userService->save($user, $form->get('password')->getData());
 
-            $this->addFlash('success', 'message.registered_successfully');
+            $this->addFlash(
+                'success',
+                $this->translator->trans('message.registered_successfully'));
 
             return $userAuthenticator->authenticateUser(
                 $user,
@@ -74,5 +86,5 @@ class RegistrationController extends AbstractController
             'registration/register.html.twig',
             ['form' => $form->createView()]
         );
-    }
-}
+    }// end register()
+}// end class

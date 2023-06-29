@@ -435,6 +435,14 @@
         <source>action.create_wallet</source>
         <target>stwórz portfel</target>
       </trans-unit>
+      <trans-unit id="message.registered_successfully">
+        <source>message.registered_successfully</source>
+        <target>zarejestrowano pomyślnie</target>
+      </trans-unit>
+      <trans-unit id="message.password_pattern">
+        <source>message.password_pattern</source>
+        <target>hasło musi zawierać co najmniej jedną liczbę i znak specjalny</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

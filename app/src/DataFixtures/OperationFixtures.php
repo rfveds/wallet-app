@@ -8,7 +8,6 @@ namespace App\DataFixtures;
 use App\Entity\Category;
 use App\Entity\Operation;
 use App\Entity\Tag;
-use App\Entity\User;
 use App\Entity\Wallet;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 
@@ -26,12 +25,12 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             return;
         }
 
-        $this->createMany(50, 'operations', function ($i) {
+        $this->createMany(10, 'operations', function ($i) {
             $operation = new Operation();
             $operation->setTitle($this->faker->sentence(2, true));
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $date = \DateTimeImmutable::createFromMutable(
-                $this->faker->dateTimeBetween('-100 days', '-1 days')
+                $this->faker->dateTimeInInterval('-30 years', '+5 days', 'Europe/Warsaw')
             );
             $operation->setCreatedAt($date);
             $operation->setUpdatedAt($date);
@@ -46,15 +45,13 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             $operation->setCurrentBalance($wallet->getBalance() + $operation->getAmount());
             $wallet->setBalance($wallet->getBalance() + $operation->getAmount());
 
+            $operation->setAuthor($wallet->getUser());
+
             /** @var Tag $tag */
             $tags = $this->getRandomReferences('tags', $this->faker->numberBetween(0, 5));
             foreach ($tags as $tag) {
                 $operation->addTag($tag);
             }
-
-            /** @var User $author */
-            $author = $wallet->getUser();
-            $operation->setAuthor($author);
 
             return $operation;
         });

@@ -11,12 +11,16 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class PasswordType.
  */
 class UserPasswordType extends AbstractType
 {
+
     /**
      * Build form.
      *
@@ -32,6 +36,16 @@ class UserPasswordType extends AbstractType
                 'type' => PasswordType::class,
                 'first_options' => ['label' => 'label.password'],
                 'second_options' => ['label' => 'label.repeat_password'],
+                'constraints' => [
+                    new NotBlank(),
+                    new Length(['min' => 8]),
+                    new Regex(
+                        [
+                            'pattern' => '/^(?=.*[0-9])(?=.*[^a-zA-Z0-9])/',
+                            'message' => 'hasło musi zawierać co najmniej jedną cyfrę i jeden znak specjalny',
+                        ]
+                    ),
+                ],
             ]
         );
     }

@@ -66,6 +66,10 @@
         <source>action.register</source>
         <target>register</target>
       </trans-unit>
+      <trans-unit id="message.registered_successfully">
+        <source>message.registered_successfully</source>
+        <target>registered successfully</target>
+      </trans-unit>
       <trans-unit id="message.deleted_successfully">
         <source>message.deleted_successfully</source>
         <target>deleted</target>
@@ -418,6 +422,10 @@
       <trans-unit id="action.create_wallet">
         <source>action.create_wallet</source>
         <target>create wallet</target>
+      </trans-unit>
+      <trans-unit id="message.password_pattern">
+        <source>message.password_pattern</source>
+        <target>password must contain at least one number and one special character</target>
       </trans-unit>
     </body>
   </file>

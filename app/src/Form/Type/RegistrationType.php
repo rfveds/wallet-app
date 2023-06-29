@@ -12,6 +12,9 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 /**
  * Class RegistrationType.
@@ -42,7 +45,10 @@ class RegistrationType extends AbstractType
             [
                 'label' => 'label.password',
                 'required' => true,
-                'attr' => ['max_length' => 255],
+                'attr' => [
+                    'max_length' => 255,
+                    'min_length' => 8,
+                ],
             ]
         );
 
@@ -65,7 +71,7 @@ class RegistrationType extends AbstractType
                 'attr' => ['max_length' => 64],
             ]
         );
-    }
+    }// end buildForm()
 
     /**
      * @param OptionsResolver $resolver resolver
@@ -74,8 +80,10 @@ class RegistrationType extends AbstractType
      */
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => User::class,
-        ]);
-    }
+        $resolver->setDefaults(
+            [
+                'data_class' => User::class,
+            ]
+        );
+    }// end configureOptions()
 }// end class
