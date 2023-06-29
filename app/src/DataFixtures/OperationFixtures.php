@@ -27,7 +27,7 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
 
         $this->createMany(10, 'operations', function ($i) {
             $operation = new Operation();
-            $operation->setTitle($this->faker->sentence(2, true));
+            $operation->setTitle($this->faker->word);
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $date = \DateTimeImmutable::createFromMutable(
                 $this->faker->dateTimeInInterval('-1 years', '+5 days', 'Europe/Warsaw')
