@@ -30,7 +30,7 @@ class OperationFixtures extends AbstractBaseFixtures implements DependentFixture
             $operation->setTitle($this->faker->sentence(2, true));
             $operation->setAmount($this->faker->randomFloat(2, 10, 1000));
             $date = \DateTimeImmutable::createFromMutable(
-                $this->faker->dateTimeInInterval('-30 years', '+5 days', 'Europe/Warsaw')
+                $this->faker->dateTimeInInterval('-1 years', '+5 days', 'Europe/Warsaw')
             );
             $operation->setCreatedAt($date);
             $operation->setUpdatedAt($date);
