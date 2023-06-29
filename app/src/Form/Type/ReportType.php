@@ -117,7 +117,6 @@ class ReportType extends AbstractType
                 'placeholder' => [
                     'year' => 'label.year', 'month' => 'label.month', 'day' => 'label.day',
                 ],
-
             ]
         );
 

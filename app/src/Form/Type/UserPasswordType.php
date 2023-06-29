@@ -20,7 +20,6 @@ use Symfony\Component\Validator\Constraints\Regex;
  */
 class UserPasswordType extends AbstractType
 {
-
     /**
      * Build form.
      *

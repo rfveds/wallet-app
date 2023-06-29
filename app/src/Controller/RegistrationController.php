@@ -34,7 +34,8 @@ class RegistrationController extends AbstractController
     /**
      * RegistrationController constructor.
      *
-     * @param UserService $userService User service
+     * @param UserService         $userService User service
+     * @param TranslatorInterface $translator  Translator
      */
     public function __construct(UserService $userService, TranslatorInterface $translator)
     {
@@ -73,7 +74,8 @@ class RegistrationController extends AbstractController
 
             $this->addFlash(
                 'success',
-                $this->translator->trans('message.registered_successfully'));
+                $this->translator->trans('message.registered_successfully')
+            );
 
             return $userAuthenticator->authenticateUser(
                 $user,

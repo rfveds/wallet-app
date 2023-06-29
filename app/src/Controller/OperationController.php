@@ -206,7 +206,6 @@ class OperationController extends AbstractController
             $amount = intval($amount);
             $balance = intval($balance);
 
-
             if (($balance + $amount) <= 0) {
                 $this->addFlash(
                     'warning',

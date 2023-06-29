@@ -109,8 +109,6 @@ class UserService implements UserServiceInterface
      * Delete entity.
      *
      * @param User $user User entity
-     *
-     * @return void
      */
     public function delete(User $user): void
     {
@@ -158,8 +156,6 @@ class UserService implements UserServiceInterface
      * Edit data.
      *
      * @param User $user User entity
-     *
-     * @return void
      */
     public function editData(User $user): void
     {
@@ -170,8 +166,6 @@ class UserService implements UserServiceInterface
      * Edit role.
      *
      * @param User $user User entity
-     *
-     * @return void
      */
     public function editRole(User $user): void
     {
@@ -204,8 +198,6 @@ class UserService implements UserServiceInterface
      *
      * @param User $user  User entity
      * @param bool $block Block value
-     *
-     * @return void
      */
     public function blockUser(User $user, bool $block): void
     {
