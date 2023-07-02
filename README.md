@@ -50,7 +50,7 @@ Logged in user +
 * Basic categories and tags created by the administrator are visible to all users, only the administrator can modify them.
 
 ## Database schema
-![screenshot](./diagram.png)
+![screenshot](./database.png)
 
 ## Docker Symfony Starter Kit
 
