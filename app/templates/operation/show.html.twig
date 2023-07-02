@@ -19,9 +19,9 @@
                 </dl>
                 <dl class="list-group py-2 px-2" style="border: none">
                     <dt class="list-group-item">{{ 'label.created_at'|trans }}</dt>
-                    <dd class="list-group-item">{{ operation.createdAt|date('Y/m/d') }}</dd>
+                    <dd class="list-group-item">{{ operation.createdAt|format_date('long') }}</dd>
                     <dt class="list-group-item">{{ 'label.updated_at'|trans }}</dt>
-                    <dd class="list-group-item">{{ operation.updatedAt|date('Y/m/d') }}</dd>
+                    <dd class="list-group-item">{{ operation.updatedAt|format_date('long') }}</dd>
                 </dl>
                 <dl class="list-group list-group-horizontal py-2 px-2" style="border: none">
 

@@ -45,14 +45,7 @@
                         <td>{{ tag.id }}</td>
                         <td>{{ tag.title }}</td>
                         <td>
-                            {% if app.user.id is same as (tag.author.id) %}
-                                <a href="{{ url('tag_show', {id: tag.id}) }}" title="{{ 'action.show'|trans }}">
-                                    <button class="btn btn-sm btn-outline-dark">
-                                        {{ 'action.show'|trans }}
-                                    </button>
-                                </a>
-                            {% endif %}
-                            {% if  is_granted('ROLE_ADMIN') %}
+                            {% if app.user.id is same as (tag.author.id)  or   is_granted('ROLE_ADMIN') %}
                                 <a href="{{ url('tag_show', {id: tag.id}) }}" title="{{ 'action.show'|trans }}">
                                     <button class="btn btn-sm btn-outline-dark">
                                         {{ 'action.show'|trans }}

@@ -59,7 +59,6 @@ class OperationController extends AbstractController
     public function index(Request $request): Response
     {
         $filters = $this->getFilters($request);
-        // var_dump($filters);
 
         /** @var User $user */
         $user = $this->getUser();

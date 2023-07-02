@@ -17,9 +17,9 @@
                 </dl>
                 <dl class="list-group  py-2 px-2" style="border: none">
                     <dt class="list-group-item">{{ 'label.created_at'|trans }}</dt>
-                    <dd class="list-group-item">{{ category.createdAt|date('Y/m/d') }}</dd>
+                    <dd class="list-group-item">{{ category.createdAt|format_date('short') }}</dd>
                     <dt class="list-group-item">{{ 'label.updated_at'|trans }}</dt>
-                    <dd class="list-group-item">{{ category.updatedAt|date('Y/m/d') }}</dd>
+                    <dd class="list-group-item">{{ category.updatedAt|format_date('short') }}</dd>
                 </dl>
                 <div class="btn-group" role="group" aria-label="actions">
                     <a type="button" class="btn btn-outline-info" href="{{ url('category_index') }}"

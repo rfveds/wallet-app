@@ -14,11 +14,11 @@
             {#            <dd class="list-group-item">{{ report.id }}</dd> #}
             {% if report.dateFrom %}
                 <dt class="list-group-item">{{ 'label.date_from'|trans }}</dt>
-                <dd class="list-group-item">{{ report.dateFrom|date('Y/m/d') }}</dd>
+                <dd class="list-group-item">{{ report.dateFrom|format_date('long') }}</dd>
             {% endif %}
             {% if report.dateTo %}
                 <dt class="list-group-item">{{ 'label.date_to'|trans }}</dt>
-                <dd class="list-group-item">{{ report.dateTo|date('Y/m/d') }}</dd>
+                <dd class="list-group-item">{{ report.dateTo|format_date('long') }}</dd>
             {% endif %}
             <dt class="list-group-item">{{ 'label.title'|trans }}</dt>
             <dd class="list-group-item">{{ report.title }}</dd>

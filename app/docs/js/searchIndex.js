@@ -126,6 +126,11 @@ Search.appendIndex(
             "summary": "User\u0020service.",
             "url": "classes/App-Controller-RegistrationController.html#property_userService"
         },                {
+            "fqsen": "\\App\\Controller\\RegistrationController\u003A\u003A\u0024translator",
+            "name": "translator",
+            "summary": "Translator.",
+            "url": "classes/App-Controller-RegistrationController.html#property_translator"
+        },                {
             "fqsen": "\\App\\Controller\\ReportController",
             "name": "ReportController",
             "summary": "Class\u0020ReportController.",
